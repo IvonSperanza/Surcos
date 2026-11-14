@@ -1,4 +1,4 @@
-import { getClima } from "../../api/clima";
+import { getClima, type ClimaParcela } from "../../api/clima";
 import { getHistoricoNdvi, type HistoricoNdvi } from "../../api/ndvi";
 import { getSuelo } from "../../api/suelo";
 import { Button, Card, Fuente } from "../../design-system";
@@ -21,7 +21,7 @@ function Instrucciones({ cantidadVertices, cerrada }: { cantidadVertices: number
     return <p className="body">Seguí marcando esquinas. Para cerrar la parcela, tocá el primer punto o el botón de abajo.</p>;
 }
 
-function Historico({ historico }: { historico: HistoricoNdvi }) {
+function Historico({ historico, clima }: { historico: HistoricoNdvi; clima: ClimaParcela | null }) {
     const { serie, analisis } = historico;
     const pasadasSinCultivo = serie.filter((p) => p.ndvi < historico.umbral_suelo_desnudo).length;
 
@@ -46,7 +46,7 @@ function Historico({ historico }: { historico: HistoricoNdvi }) {
             </p>
             <GraficoAguaVigor historico={historico} />
 
-            <ReporteCiclos historico={historico} />
+            <ReporteCiclos historico={historico} clima={clima} />
             <Fuente>
                 {historico.fuente} · {formatearFecha(historico.desde)} a {formatearFecha(historico.hasta)} · píxel de {historico.resolucion_m} m ·
                 parcela de <span className="dato">{historico.area_ha} ha</span> · consultado {formatearFecha(historico.consultado)}
@@ -92,7 +92,7 @@ export function ParcelaPage() {
                 titulo="Cómo la vio el satélite"
                 mensajeCargando="Buscando las pasadas de Sentinel-2 sobre tu parcela. La primera vez tarda alrededor de un minuto."
             >
-                {(historico) => <Historico historico={historico} />}
+                {(historico) => <Historico historico={historico} clima={clima.tipo === "listo" ? clima.datos : null} />}
             </SegunEstado>
 
             <div className={styles.grillaTarjetas}>

@@ -1,6 +1,9 @@
+import type { ClimaParcela } from "../../api/clima";
 import type { Ciclo, CoberturaSinCultivo, HistoricoNdvi, PeriodoSinCultivo } from "../../api/ndvi";
 import { Fuente } from "../../design-system";
 import { formatearDuracion, formatearFecha, formatearVentana } from "../../lib/fecha";
+import { formatearNumero } from "../../lib/numero";
+import { climaDeCiclo, type ClimaDeCiclo } from "./climaDeCiclo";
 import styles from "./parcela.module.css";
 
 function resumen({ analisis, desde, hasta }: HistoricoNdvi): string {
@@ -23,7 +26,17 @@ function resumenSinCultivo({ dias_sin_cultivo, dias_suelo_desnudo, dias_con_rast
     return detalle.length > 0 ? `${cuanto}: ${detalle.join(" y ")}.` : `${cuanto}.`;
 }
 
-function ItemCiclo({ ciclo }: { ciclo: Ciclo }) {
+function textoClima(c: ClimaDeCiclo): string {
+    const partes = [`llovió ${formatearNumero(c.lluvia_mm)} mm`];
+    if (c.dias_lluvia_intensa > 0) partes.push(c.dias_lluvia_intensa === 1 ? "con 1 tormenta fuerte" : `con ${c.dias_lluvia_intensa} tormentas fuertes`);
+    partes.push(c.heladas === 0 ? "sin heladas" : c.heladas === 1 ? "1 helada" : `${c.heladas} heladas`);
+    if (c.heladas > 0 && c.temperatura_minima !== null) partes.push(`mínima de ${formatearNumero(c.temperatura_minima, 1)} °C`);
+    partes.push(`${formatearNumero(c.grados_dia)} grados-día`);
+    return partes.join(" · ");
+}
+
+function ItemCiclo({ ciclo, clima }: { ciclo: Ciclo; clima: ClimaParcela | null }) {
+    const climaCiclo = clima ? climaDeCiclo(ciclo, clima) : null;
     const titulo = `Ciclo ${ciclo.numero}: ${ciclo.tipo === "cultivo" ? "cultivo" : "verdeo leve"}`;
 
     return (
@@ -53,6 +66,20 @@ function ItemCiclo({ ciclo }: { ciclo: Ciclo }) {
                             <dd className="body">{formatearDuracion(ciclo.dias_estimados)}</dd>
                         </>
                     )}
+                    {climaCiclo && (
+                        <>
+                            <dt className="etiqueta">Clima</dt>
+                            <dd className="body">{textoClima(climaCiclo)}</dd>
+                            {climaCiclo.agua_raices_minima !== null && (
+                                <>
+                                    <dt className="etiqueta">Agua en raíces</dt>
+                                    <dd className="body">
+                                        bajó hasta <span className="dato">{formatearNumero(climaCiclo.agua_raices_minima * 100)} %</span> en su momento más seco
+                                    </dd>
+                                </>
+                            )}
+                        </>
+                    )}
                 </dl>
             </div>
         </li>
@@ -78,7 +105,9 @@ function ItemSinCultivo({ periodo }: { periodo: PeriodoSinCultivo }) {
     );
 }
 
-export function ReporteCiclos({ historico }: { historico: HistoricoNdvi }) {
+// `clima` llega por su propia consulta: si todavía no está (o falló), el
+// reporte se muestra igual, sin el clima de cada ciclo.
+export function ReporteCiclos({ historico, clima }: { historico: HistoricoNdvi; clima: ClimaParcela | null }) {
     const { analisis } = historico;
 
     return (
@@ -89,7 +118,7 @@ export function ReporteCiclos({ historico }: { historico: HistoricoNdvi }) {
             {analisis.ciclos.length > 0 && (
                 <ol className={styles.listaCiclos}>
                     {analisis.ciclos.map((ciclo) => (
-                        <ItemCiclo key={ciclo.numero} ciclo={ciclo} />
+                        <ItemCiclo key={ciclo.numero} ciclo={ciclo} clima={clima} />
                     ))}
                 </ol>
             )}
@@ -110,6 +139,7 @@ export function ReporteCiclos({ historico }: { historico: HistoricoNdvi }) {
                 Las fechas son estimadas: muestran entre qué dos pasadas despejadas del satélite ocurrió cada cosa. La plantación pudo ser unos días
                 antes, porque el cultivo recién se ve cuando asoma. El satélite confirma que hubo un cultivo, no cuál fue. El rastrojo se distingue
                 con el índice NDTI, que también cambia con la humedad del suelo: cuando no alcanza para afirmar nada, lo decimos.
+                {clima && " El clima de cada ciclo es el de la zona (NASA POWER, celda de unos 50 km), sumado entre la plantación y la cosecha estimadas."}
             </Fuente>
         </div>
     );
