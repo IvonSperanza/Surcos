@@ -1,0 +1,13 @@
+/* Los tokens viven en /design-system (raíz del repo), compartidos con el
+   hero y el pitch: se importan de ahí, no se copian. */
+@import "../../../design-system/tokens.css";
+
+html,
+body,
+#root {
+    height: 100%;
+}
+
+a {
+    color: var(--arcilla);
+}

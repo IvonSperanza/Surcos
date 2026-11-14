@@ -5,3 +5,9 @@ __pycache__/
 *.pyc
 .env
 .DS_Store
+
+# Datos locales de Postgres (docker-compose)
+/postgres
+
+# Zip original del sistema de diseño (ya extraído en design-system/)
+surco.zip

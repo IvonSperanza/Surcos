@@ -1,0 +1,35 @@
+# Los `$DB_*` y `$PORT` los interpola `docker compose`, que sólo lee el `.env`
+# de la raíz: copiá `back/.env.example` a `back/.env` y creá el symlink
+# `ln -s back/.env .env` (mismo esquema que el template de Thorque).
+services:
+  postgresdb:
+    image: postgres:16
+    restart: unless-stopped
+    env_file: ./back/.env
+    environment:
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASS
+      - POSTGRES_DB=$DB_NAME
+    ports:
+      - $DB_PORT:5432
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+    build:
+      dockerfile: ./Dockerfile
+      context: ./back
+    restart: on-failure
+    env_file: ./back/.env
+    ports:
+      - $PORT:$PORT
+    environment:
+      - DB_HOST=postgresdb

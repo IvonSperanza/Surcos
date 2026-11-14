@@ -1,0 +1,8 @@
+.env
+node_modules/
+dist/
+coverage
+*.log
+
+# Las migraciones reales viven en db/migrations (ver drizzle.config.ts).
+/migrations
