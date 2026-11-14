@@ -1,6 +1,9 @@
 """Clima de la zona de una parcela con NASA POWER (comunidad agrícola, diario)."""
 
+import math
 from collections import defaultdict
+from collections.abc import Iterable
+from dataclasses import dataclass
 from datetime import date
 
 import requests
@@ -27,11 +30,11 @@ UMBRAL_DIA_DE_LLUVIA_MM = 1
 UMBRAL_LLUVIA_INTENSA_MM = 50
 
 
-def consultar(lat: float, lon: float, desde: date, hasta: date) -> dict:
+def consultar(lat: float, lon: float, desde: date, hasta: date, parametros: Iterable[str] = PARAMETROS) -> dict:
     respuesta = requests.get(
         URL,
         params={
-            "parameters": ",".join(PARAMETROS),
+            "parameters": ",".join(parametros),
             "community": "AG",
             "latitude": lat,
             "longitude": lon,
@@ -130,3 +133,76 @@ def clima(lat: float, lon: float, desde: date, hasta: date) -> dict:
         "mensual": mensual(dias),
         "diario": dias,
     }
+
+
+# --- Climatología de heladas --------------------------------------------------
+
+ANIOS_CLIMATOLOGIA = 20
+# Helada meteorológica: mínima a 2 m de 0 °C o menos. En el cultivo puede helar
+# con mínimas algo mayores (la hoja se enfría más que el aire), así que el
+# calendario es orientativo y del lado optimista.
+TEMPERATURA_HELADA = 0.0
+PROBABILIDAD_SEGURA = 0.9
+
+
+@dataclass(frozen=True)
+class ClimatologiaHeladas:
+    anios: list[int]
+    anios_con_helada: int
+    # "MM-DD": en el 90 % de los años no heló después (antes) de esta fecha.
+    ultima_helada_segura: str | None
+    primera_helada_segura: str | None
+    anios_sin_helada_despues_de_la_segura: int  # incluye los años sin heladas
+    ultima_helada_mas_tardia: str | None  # "YYYY-MM-DD"
+    primera_helada_mas_temprana: str | None
+    temperatura_helada: float
+
+
+def dias_con_helada(crudo: dict) -> list[date]:
+    minimas = crudo["properties"]["parameter"]["T2M_MIN"]
+    return [
+        date(int(k[:4]), int(k[4:6]), int(k[6:]))
+        for k, v in minimas.items()
+        if v != VALOR_FALTANTE and v <= TEMPERATURA_HELADA
+    ]
+
+
+def percentil_de_fechas(fechas: list[date], probabilidad: float, ultima: bool) -> str | None:
+    """Fecha "MM-DD" que deja del lado seguro a esa proporción de los años."""
+    if not fechas:
+        return None
+    # Se compara por día del año en un año fijo para que el año no influya.
+    ordenadas = sorted(date(2001, f.month, f.day) for f in fechas)
+    indice = math.ceil(probabilidad * len(ordenadas)) - 1
+    elegida = ordenadas[indice] if ultima else ordenadas[len(ordenadas) - 1 - indice]
+    return elegida.strftime("%m-%d")
+
+
+def calcular_climatologia(heladas: list[date], anios: list[int]) -> ClimatologiaHeladas:
+    # En la región pampeana la temporada de heladas va de mayo a septiembre y
+    # no cruza el fin de año: la primera y la última de cada año calendario son
+    # las de su invierno.
+    por_anio = [[h for h in heladas if h.year == anio] for anio in anios]
+    primeras = [min(del_anio) for del_anio in por_anio if del_anio]
+    ultimas = [max(del_anio) for del_anio in por_anio if del_anio]
+    # Un año sin heladas cuenta del lado seguro: no suma fechas al percentil,
+    # pero sí al total de años contra el que se mide.
+    proporcion = min(PROBABILIDAD_SEGURA * len(anios) / max(len(ultimas), 1), 1.0)
+    segura = percentil_de_fechas(ultimas, proporcion, ultima=True)
+    sin_helada_despues = len(anios) - sum(1 for u in ultimas if segura and u.strftime("%m-%d") > segura)
+    return ClimatologiaHeladas(
+        anios=anios,
+        anios_con_helada=len(ultimas),
+        ultima_helada_segura=segura,
+        anios_sin_helada_despues_de_la_segura=sin_helada_despues,
+        primera_helada_segura=percentil_de_fechas(primeras, proporcion, ultima=False),
+        ultima_helada_mas_tardia=max(ultimas, key=lambda f: (f.month, f.day)).isoformat() if ultimas else None,
+        primera_helada_mas_temprana=min(primeras, key=lambda f: (f.month, f.day)).isoformat() if primeras else None,
+        temperatura_helada=TEMPERATURA_HELADA,
+    )
+
+
+def climatologia_heladas(lat: float, lon: float, hoy: date) -> ClimatologiaHeladas:
+    anios = list(range(hoy.year - ANIOS_CLIMATOLOGIA, hoy.year))
+    crudo = consultar(lat, lon, date(anios[0], 1, 1), date(anios[-1], 12, 31), parametros=["T2M_MIN"])
+    return calcular_climatologia(dias_con_helada(crudo), anios)

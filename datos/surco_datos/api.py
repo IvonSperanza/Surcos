@@ -16,7 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, model_validator
 
-from surco_datos import ciclos, power, sentinel2, suelo
+from surco_datos import ciclos, insights, power, sentinel2, suelo
 from surco_datos.cache import clave, con_cache
 from surco_datos.geometria import area_ha, centroide
 
@@ -111,11 +111,7 @@ def geometria_valida(pedido: PedidoParcela) -> tuple[dict, float]:
     return geometria, hectareas
 
 
-@app.post("/ndvi")
-def ndvi(pedido: PedidoParcelaPeriodo) -> dict:
-    geometria, hectareas = geometria_valida(pedido)
-    desde, hasta = periodo(pedido)
-
+def obtener_historico(geometria: dict, hectareas: float, desde: date, hasta: date) -> dict:
     def calcular() -> dict:
         serie = sentinel2.serie_pasadas(geometria, desde, hasta)
         return {
@@ -134,7 +130,20 @@ def ndvi(pedido: PedidoParcelaPeriodo) -> dict:
     historico = con_cache("pasadas", clave(geometria, desde, hasta, date.today()), calcular)
     # El análisis no se cachea: es barato y así un ajuste del algoritmo se ve
     # sin volver a bajar imágenes.
-    return ok({**historico, "analisis": analizar_historico(historico)})
+    return {**historico, "analisis": analizar_historico(historico)}
+
+
+def obtener_clima(geometria: dict, desde: date, hasta: date) -> dict:
+    lat, lon = centroide(geometria)
+    datos = con_cache("clima", clave(lat, lon, desde, hasta, date.today()), lambda: power.clima(lat, lon, desde, hasta))
+    return {**datos, "consultado": date.today().isoformat()}
+
+
+@app.post("/ndvi")
+def ndvi(pedido: PedidoParcelaPeriodo) -> dict:
+    geometria, hectareas = geometria_valida(pedido)
+    desde, hasta = periodo(pedido)
+    return ok(obtener_historico(geometria, hectareas, desde, hasta))
 
 
 def analizar_historico(historico: dict) -> dict:
@@ -152,9 +161,7 @@ def analizar_historico(historico: dict) -> dict:
 def clima(pedido: PedidoParcelaPeriodo) -> dict:
     geometria, _ = geometria_valida(pedido)
     desde, hasta = periodo(pedido)
-    lat, lon = centroide(geometria)
-    datos = con_cache("clima", clave(lat, lon, desde, hasta, date.today()), lambda: power.clima(lat, lon, desde, hasta))
-    return ok({**datos, "consultado": date.today().isoformat()})
+    return ok(obtener_clima(geometria, desde, hasta))
 
 
 @app.post("/suelo")
@@ -166,3 +173,29 @@ def suelo_de_parcela(pedido: PedidoParcela) -> dict:
     if not datos["capas"]:
         raise ErrorDeDatos(404, "NotFound", "SoilGrids no tiene datos de suelo para este lugar (zona urbana o agua)")
     return ok(datos)
+
+
+@app.post("/insights")
+def insights_de_parcela(pedido: PedidoParcelaPeriodo) -> dict:
+    """Reutiliza lo que ya calcularon /ndvi y /clima (desde caché si ya se pidió)."""
+    geometria, hectareas = geometria_valida(pedido)
+    desde, hasta = periodo(pedido)
+    historico = obtener_historico(geometria, hectareas, desde, hasta)
+    clima_parcela = obtener_clima(geometria, desde, hasta)
+    lat, lon = centroide(geometria)
+    # La climatología cambia una vez por año: se cachea por año.
+    heladas = con_cache(
+        "heladas",
+        clave(lat, lon, date.today().year),
+        lambda: asdict(power.climatologia_heladas(lat, lon, date.today())),
+    )
+    resultado = insights.generar(historico["serie"], historico["analisis"], clima_parcela["diario"], power.ClimatologiaHeladas(**heladas))
+    return ok({**asdict_profundo(resultado), "generado": date.today().isoformat()})
+
+
+def asdict_profundo(resultado: dict) -> dict:
+    return {
+        "version_reglas": resultado["version_reglas"],
+        "insights": [asdict(i) for i in resultado["insights"]],
+        "descartados": [asdict(d) for d in resultado["descartados"]],
+    }

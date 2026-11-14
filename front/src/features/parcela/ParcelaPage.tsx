@@ -1,4 +1,5 @@
 import { getClima, type ClimaParcela } from "../../api/clima";
+import { getInsights } from "../../api/insights";
 import { getHistoricoNdvi, type HistoricoNdvi } from "../../api/ndvi";
 import { getSuelo } from "../../api/suelo";
 import { Button, Card, Fuente } from "../../design-system";
@@ -10,6 +11,7 @@ import { MapaParcela } from "./MapaParcela";
 import { ReporteCiclos } from "./ReporteCiclos";
 import { SegunEstado } from "./SegunEstado";
 import { TarjetaClima } from "./TarjetaClima";
+import { TarjetaInsights } from "./TarjetaInsights";
 import { TarjetaSuelo } from "./TarjetaSuelo";
 import { useConsultaParcela } from "./useConsultaParcela";
 import { useDibujoParcela } from "./useDibujoParcela";
@@ -60,6 +62,10 @@ export function ParcelaPage() {
     const ndvi = useConsultaParcela(dibujo.geometria, getHistoricoNdvi);
     const clima = useConsultaParcela(dibujo.geometria, getClima);
     const suelo = useConsultaParcela(dibujo.geometria, getSuelo);
+    // Los insights reutilizan lo que ya calcularon /ndvi y /clima: se piden
+    // cuando los dos llegaron, así el servicio los toma de su caché.
+    const listos = ndvi.tipo === "listo" && clima.tipo === "listo";
+    const insights = useConsultaParcela(listos ? dibujo.geometria : null, getInsights);
 
     return (
         <main className={styles.pagina}>
@@ -86,6 +92,10 @@ export function ParcelaPage() {
                     Empezar de nuevo
                 </Button>
             </div>
+
+            <SegunEstado estado={insights} titulo="Qué podés hacer" mensajeCargando="Revisando qué dicen los datos de tu parcela.">
+                {(datos) => <TarjetaInsights datos={datos} />}
+            </SegunEstado>
 
             <SegunEstado
                 estado={ndvi}
