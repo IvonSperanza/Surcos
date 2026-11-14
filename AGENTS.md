@@ -234,8 +234,8 @@ es un borrador**: usalo para tipar los fixtures, pero puede cambiar.
 | Endpoint | Devuelve |
 |---|---|
 | `GET /salud` | Que el servicio está vivo |
-| `GET /clima?lat&lon&desde&hasta` | Temperatura y precipitación de NASA POWER |
-| `GET /suelo?lat&lon` | Textura, carbono orgánico y pH (SoilGrids) |
+| `POST /clima` **(implementado)** | Body `{ geometria, desde?, hasta? }`. NASA POWER en el centro de la parcela: `{ resumen, mensual, diario }` con lluvia, temperaturas, heladas, agua en las raíces, evaporación y grados-día. Es el clima de la zona (~50 km). Tipos en `front/src/api/clima.ts` |
+| `POST /suelo` **(implementado)** | Body `{ geometria }`. SoilGrids en el centro de la parcela (prueba puntos vecinos si cae en zona urbana): textura en palabras y, por profundidad (0–5, 5–15, 15–30 cm), arcilla, limo, arena, carbono orgánico, pH, nitrógeno, densidad y CIC. 404 si no hay dato. Tipos en `front/src/api/suelo.ts` |
 | `POST /ndvi` **(implementado)** | Body `{ geometria: Polygon GeoJSON [lon, lat], desde?, hasta? }` (por defecto, el último año). Devuelve la serie NDVI de Sentinel-2 dentro del polígono: `{ fuente, resolucion_m, consultado, desde, hasta, area_ha, umbral_suelo_desnudo, serie: [{ fecha, ndvi, fraccion_despejada, escena }] }`. La primera consulta tarda ~1 min; después sale de caché. Tipos en `front/src/api/ndvi.ts` |
 | `POST /verificacion` | Recibe lote + campaña declarada; devuelve lo detectado (ciclos, días de suelo desnudo, cobertura invernal) y el estado |
 

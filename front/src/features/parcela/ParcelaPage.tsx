@@ -1,12 +1,16 @@
+import { getClima } from "../../api/clima";
+import { getHistoricoNdvi, type HistoricoNdvi } from "../../api/ndvi";
+import { getSuelo } from "../../api/suelo";
 import { Button, Card, Fuente } from "../../design-system";
-import type { HistoricoNdvi } from "../../api/ndvi";
 import { formatearFecha } from "../../lib/fecha";
 import { GraficoNdvi } from "./GraficoNdvi";
 import { MapaParcela } from "./MapaParcela";
 import { ReporteCiclos } from "./ReporteCiclos";
-import { resumirNdvi } from "./resumenNdvi";
+import { SegunEstado } from "./SegunEstado";
+import { TarjetaClima } from "./TarjetaClima";
+import { TarjetaSuelo } from "./TarjetaSuelo";
+import { useConsultaParcela } from "./useConsultaParcela";
 import { useDibujoParcela } from "./useDibujoParcela";
-import { useHistoricoNdvi } from "./useHistoricoNdvi";
 import styles from "./parcela.module.css";
 
 function Instrucciones({ cantidadVertices, cerrada }: { cantidadVertices: number; cerrada: boolean }) {
@@ -16,14 +20,16 @@ function Instrucciones({ cantidadVertices, cerrada }: { cantidadVertices: number
 }
 
 function Historico({ historico }: { historico: HistoricoNdvi }) {
-    const resumen = resumirNdvi(historico);
+    const { serie, analisis } = historico;
+    const pasadasSueloDesnudo = serie.filter((p) => p.ndvi < historico.umbral_suelo_desnudo).length;
 
     return (
-        <Card className={styles.historico}>
+        <Card className={styles.tarjeta}>
             <h2 className="subtitulo">Cómo la vio el satélite</h2>
             <p className="body">
-                En <span className="dato">{resumen.pasadas}</span> pasadas despejadas, el suelo se vio desnudo en{" "}
-                <span className="dato">{resumen.pasadasSueloDesnudo}</span>. La franja marrón marca el suelo desnudo; la curva verde, el cultivo.
+                En <span className="dato">{serie.length}</span> pasadas despejadas, el suelo se vio desnudo en{" "}
+                <span className="dato">{pasadasSueloDesnudo}</span>. La franja marrón marca el suelo desnudo; la curva verde, el cultivo; los números,
+                cada ciclo que se detectó ({analisis.ciclos.length}).
             </p>
             <GraficoNdvi historico={historico} />
             <ReporteCiclos historico={historico} />
@@ -37,7 +43,9 @@ function Historico({ historico }: { historico: HistoricoNdvi }) {
 
 export function ParcelaPage() {
     const dibujo = useDibujoParcela();
-    const estado = useHistoricoNdvi(dibujo.geometria);
+    const ndvi = useConsultaParcela(dibujo.geometria, getHistoricoNdvi);
+    const clima = useConsultaParcela(dibujo.geometria, getClima);
+    const suelo = useConsultaParcela(dibujo.geometria, getSuelo);
 
     return (
         <main className={styles.pagina}>
@@ -65,17 +73,22 @@ export function ParcelaPage() {
                 </Button>
             </div>
 
-            {estado.tipo === "cargando" && (
-                <Card>
-                    <p className="body">Buscando las pasadas de Sentinel-2 sobre tu parcela. La primera vez tarda alrededor de un minuto.</p>
-                </Card>
-            )}
-            {estado.tipo === "error" && (
-                <Card>
-                    <p className="body">No pudimos traer los datos del satélite: {estado.mensaje}</p>
-                </Card>
-            )}
-            {estado.tipo === "listo" && <Historico historico={estado.historico} />}
+            <SegunEstado
+                estado={ndvi}
+                titulo="Cómo la vio el satélite"
+                mensajeCargando="Buscando las pasadas de Sentinel-2 sobre tu parcela. La primera vez tarda alrededor de un minuto."
+            >
+                {(historico) => <Historico historico={historico} />}
+            </SegunEstado>
+
+            <div className={styles.grillaTarjetas}>
+                <SegunEstado estado={clima} titulo="Clima de la zona" mensajeCargando="Consultando el clima del último año en NASA POWER.">
+                    {(datos) => <TarjetaClima clima={datos} />}
+                </SegunEstado>
+                <SegunEstado estado={suelo} titulo="Suelo del lugar" mensajeCargando="Consultando el suelo en SoilGrids.">
+                    {(datos) => <TarjetaSuelo suelo={datos} />}
+                </SegunEstado>
+            </div>
         </main>
     );
 }

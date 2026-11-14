@@ -24,6 +24,13 @@ def area_anillo_m2(anillo: list[list[float]]) -> float:
     return float(abs(np.dot(x, np.roll(y, -1)) - np.dot(y, np.roll(x, -1))) / 2)
 
 
+def centroide(geometria: Geometria) -> tuple[float, float]:
+    """(lat, lon) del promedio de vértices: alcanza para fuentes de 250 m o más."""
+    exterior = np.array(geometria["coordinates"][0][:-1], dtype=float)
+    lon, lat = exterior.mean(axis=0)
+    return round(float(lat), 5), round(float(lon), 5)
+
+
 def area_ha(geometria: Geometria) -> float:
     exterior, *huecos = geometria["coordinates"]
     return (area_anillo_m2(exterior) - sum(area_anillo_m2(h) for h in huecos)) / 10_000
