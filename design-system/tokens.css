@@ -1,0 +1,83 @@
+/* Surco — generado desde tokens.json. Editá tokens.json, no este archivo. */
+@import url('https://fonts.googleapis.com/css2?family=Young+Serif&family=Karla:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap');
+
+:root {
+  --surface: #f3eadb;
+  --surface-raised: #fbf6ec;
+  --line: #dccdb6;
+  --ink: #2b1d14;
+  --ink-muted: #6e5b49;
+  --arcilla: #a04e25;
+  --on-color: #fff8ee;
+  --arcilla-soft: #efd7c3;
+  --tierra: #4a3020;
+  --malbec: #6a1d38;
+  --malbec-soft: #ebd3d9;
+  --oliva: #556229;
+  --oliva-soft: #e1e3c6;
+  --trigo: #d8a84e;
+  --cielo: #3d6177;
+  --cielo-soft: #dce5ea;
+  --suelo-desnudo: #a07d58;
+  --font-display: "Young Serif", Georgia, serif;
+  --font-sans: "Karla", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 40px;
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-pill: 999px;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-size: 56px;
+  line-height: 60px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+.titulo {
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 38px;
+  font-weight: 400;
+}
+.subtitulo {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+}
+.body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+.small {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
+.etiqueta {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.dato {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+/* Base */
+body { margin: 0; background: var(--surface); color: var(--ink); font-family: var(--font-sans); font-size: 16px; line-height: 24px; }
+:focus-visible { outline: 2px solid var(--cielo); outline-offset: 2px; box-shadow: 0 0 0 2px var(--surface); }
