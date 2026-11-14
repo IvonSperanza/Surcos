@@ -5,6 +5,7 @@ Cada lote es un cuadrado de LADO_M metros centrado en el punto.
 """
 
 import csv
+from dataclasses import asdict
 import sys
 from datetime import date
 from pathlib import Path
@@ -17,7 +18,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from surco_datos.geometria import poligono_desde_bbox
-from surco_datos.sentinel2 import FUENTE, PuntoNdvi, serie_ndvi
+from surco_datos.sentinel2 import FUENTE, PasadaSentinel, serie_pasadas
 
 UMBRAL_SUELO_DESNUDO = 0.3
 METROS_POR_GRADO_LAT = 111_320
@@ -41,15 +42,15 @@ def parsear_lote(texto: str) -> tuple[str, float, float]:
     return nombre, float(lat), float(lon)
 
 
-def guardar_csv(ruta: Path, nombre: str, serie: list[PuntoNdvi]) -> None:
+def guardar_csv(ruta: Path, nombre: str, serie: list[PasadaSentinel]) -> None:
     with ruta.open("w", newline="") as f:
-        escritor = csv.writer(f)
-        escritor.writerow(["lote", "fecha", "ndvi", "fraccion_despejada", "escena"])
+        escritor = csv.DictWriter(f, fieldnames=["lote", *PasadaSentinel.__dataclass_fields__])
+        escritor.writeheader()
         for p in serie:
-            escritor.writerow([nombre, p.fecha.isoformat(), round(p.ndvi, 4), p.fraccion_despejada, p.escena])
+            escritor.writerow({"lote": nombre, **asdict(p)})
 
 
-def graficar(ax, nombre: str, lat: float, lon: float, serie: list[PuntoNdvi]) -> None:
+def graficar(ax, nombre: str, lat: float, lon: float, serie: list[PasadaSentinel]) -> None:
     fechas = [p.fecha for p in serie]
     valores = np.array([p.ndvi for p in serie])
     ax.set_facecolor(SURFACE)
@@ -68,7 +69,7 @@ def main(desde: date, hasta: date, lado_m: float, salida: str, lotes: list[str])
     fig, ejes = plt.subplots(len(lotes_parseados), 1, figsize=(13, 2.6 * len(lotes_parseados)), sharex=True, squeeze=False)
 
     for ax, (nombre, lat, lon) in zip(ejes[:, 0], lotes_parseados):
-        serie = serie_ndvi(poligono_desde_bbox(*bbox_lote(lat, lon, lado_m)), desde, hasta)
+        serie = serie_pasadas(poligono_desde_bbox(*bbox_lote(lat, lon, lado_m)), desde, hasta)
         guardar_csv(Path(salida).with_name(f"ndvi_{nombre}.csv"), nombre, serie)
         graficar(ax, nombre, lat, lon, serie)
         print(nombre, len(serie), "pasadas despejadas")

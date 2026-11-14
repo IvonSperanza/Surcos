@@ -7,9 +7,19 @@ export type PoligonoGeoJson = {
     coordinates: Coordenada[][];
 };
 
+// Una pasada despejada sobre la parcela: mediana de cada índice en sus píxeles.
 export type PasadaNdvi = {
     fecha: string;
-    ndvi: number;
+    ndvi: number; // vegetación verde
+    ndmi: number; // agua en la vegetación
+    ndre: number; // clorofila; sigue diferenciando donde el NDVI se satura
+    ndti: number; // residuos secos (rastrojo) sobre el suelo
+    bsi: number; // suelo expuesto
+    // Qué cubría cada píxel despejado (suman 1).
+    fraccion_cultivo: number;
+    fraccion_rastrojo: number;
+    fraccion_desnudo: number;
+    fraccion_incierta: number;
     fraccion_despejada: number;
     escena: string;
 };
@@ -30,16 +40,25 @@ export type Ciclo = {
     dias_estimados: number | null;
 };
 
-export type SueloDesnudo = {
+export type CoberturaSinCultivo = "rastrojo" | "desnudo" | "incierta" | "mixta";
+
+export type PeriodoSinCultivo = {
     desde: string;
     hasta: string;
     dias_estimados: number;
+    cobertura: CoberturaSinCultivo;
+    dias_rastrojo: number;
+    dias_desnudo: number;
+    dias_inciertos: number;
 };
 
 export type AnalisisCiclos = {
     ciclos: Ciclo[];
-    suelo_desnudo: SueloDesnudo[];
+    sin_cultivo: PeriodoSinCultivo[];
+    dias_sin_cultivo: number;
     dias_suelo_desnudo: number;
+    dias_con_rastrojo: number;
+    dias_inciertos: number;
     pasadas_atipicas: string[];
 };
 

@@ -30,6 +30,15 @@ SCL_DESPEJADO = (4, 5, 6, 7)
 # nube o una sombra puede bajar la mediana y simular suelo desnudo.
 FRACCION_MINIMA_DESPEJADA = 0.8
 
+# Cobertura de cada píxel. Sin cultivo verde (NDVI bajo), el NDTI separa el
+# rastrojo del suelo desnudo. Calibrado el 14/11/2026 con seis lotes de prueba
+# del oeste de Rosario: justo después de cosechar el NDTI da 0,13–0,21 y con
+# el suelo ya trabajado, 0,00–0,08. Entre medio no se puede afirmar ninguna de
+# las dos (la humedad del suelo también baja el NDTI): queda como incierto.
+NDVI_CULTIVO = 0.3
+NDTI_RASTROJO = 0.12
+NDTI_DESNUDO = 0.08
+
 # GDAL lista el directorio del COG antes de abrirlo si no se le dice lo
 # contrario: en S3 público eso es una request extra por banda y fecha.
 GDAL_ENV = {
@@ -41,9 +50,20 @@ GDAL_ENV = {
 
 
 @dataclass(frozen=True)
-class PuntoNdvi:
+class PasadaSentinel:
+    """Una pasada despejada sobre la parcela: mediana de cada índice en sus píxeles."""
+
     fecha: date
-    ndvi: float
+    ndvi: float  # vegetación verde
+    ndmi: float  # agua en la vegetación
+    ndre: float  # clorofila; sigue diferenciando donde el NDVI se satura
+    ndti: float  # residuos secos (rastrojo) sobre el suelo
+    bsi: float  # suelo expuesto
+    # Qué cubría cada píxel despejado de la parcela (suman 1).
+    fraccion_cultivo: float
+    fraccion_rastrojo: float
+    fraccion_desnudo: float
+    fraccion_incierta: float
     fraccion_despejada: float
     escena: str
 
@@ -119,35 +139,68 @@ def reflectancia(escena: Item, banda: str, crudo: np.ndarray) -> np.ndarray:
     return crudo.astype("float32") * meta.get("scale", 1e-4)
 
 
-def calcular_ndvi(rojo: np.ndarray, nir: np.ndarray) -> np.ndarray:
-    suma = nir + rojo
+def indice_normalizado(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+    suma = a + b
     with np.errstate(divide="ignore", invalid="ignore"):
-        return np.where(suma > 0, (nir - rojo) / suma, np.nan)
+        return np.where(suma > 0, (a - b) / suma, np.nan)
 
 
-def ndvi_de_escena(escena: Item, geometria: Geometria) -> PuntoNdvi | None:
+def calcular_ndvi(rojo: np.ndarray, nir: np.ndarray) -> np.ndarray:
+    return indice_normalizado(nir, rojo)
+
+
+def calcular_indices(r: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
+    # B8A (nir08), B05, B11 y B12 vienen a 20 m y se leen remuestreados a la
+    # grilla de 10 m del rojo: cada valor de 20 m se repite en 4 píxeles.
+    return {
+        "ndvi": indice_normalizado(r["nir"], r["red"]),
+        "ndmi": indice_normalizado(r["nir08"], r["swir16"]),
+        "ndre": indice_normalizado(r["nir08"], r["rededge1"]),
+        "ndti": indice_normalizado(r["swir16"], r["swir22"]),
+        "bsi": indice_normalizado(r["swir16"] + r["red"], r["nir"] + r["blue"]),
+    }
+
+
+BANDAS = ("blue", "red", "nir", "nir08", "rededge1", "swir16", "swir22")
+
+
+def indices_de_escena(escena: Item, geometria: Geometria) -> PasadaSentinel | None:
     rojo = leer_recorte(escena, "red", geometria)
     forma = rojo.datos.shape
-    nir = leer_recorte(escena, "nir", geometria, forma=forma).datos
     # SCL viene a 20 m: se lleva a la grilla de 10 m del rojo.
     scl = leer_recorte(escena, "scl", geometria, forma=forma).datos
+    crudos = {b: rojo.datos if b == "red" else leer_recorte(escena, b, geometria, forma=forma).datos for b in BANDAS}
 
-    ndvi = calcular_ndvi(reflectancia(escena, "red", rojo.datos), reflectancia(escena, "nir", nir))
+    indices = calcular_indices({b: reflectancia(escena, b, c) for b, c in crudos.items()})
+    ndvi = indices["ndvi"]
     valido = rojo.dentro & np.isin(scl, SCL_DESPEJADO) & (rojo.datos > 0) & (ndvi >= -1) & (ndvi <= 1)
     fraccion = float(valido.sum() / rojo.dentro.sum())
     if fraccion < FRACCION_MINIMA_DESPEJADA:
         return None
 
-    return PuntoNdvi(
+    medianas = {nombre: round(float(np.nanmedian(valores[valido])), 4) for nombre, valores in indices.items()}
+    return PasadaSentinel(
         fecha=escena.datetime.date(),
-        ndvi=float(np.median(ndvi[valido])),
         fraccion_despejada=round(fraccion, 3),
         escena=escena.id,
+        **medianas,
+        **fracciones_de_cobertura(indices["ndvi"][valido], indices["ndti"][valido]),
     )
 
 
-def serie_ndvi(geometria: Geometria, desde: date, hasta: date, hilos: int = 16) -> list[PuntoNdvi]:
+def fracciones_de_cobertura(ndvi: np.ndarray, ndti: np.ndarray) -> dict[str, float]:
+    cultivo = ndvi >= NDVI_CULTIVO
+    rastrojo = ~cultivo & (ndti >= NDTI_RASTROJO)
+    desnudo = ~cultivo & (ndti <= NDTI_DESNUDO)
+    incierta = ~(cultivo | rastrojo | desnudo)
+    return {
+        f"fraccion_{nombre}": round(float(mascara.mean()), 3)
+        for nombre, mascara in (("cultivo", cultivo), ("rastrojo", rastrojo), ("desnudo", desnudo), ("incierta", incierta))
+    }
+
+
+def serie_pasadas(geometria: Geometria, desde: date, hasta: date, hilos: int = 16) -> list[PasadaSentinel]:
     escenas = buscar_escenas(geometria, desde, hasta)
     with ThreadPoolExecutor(max_workers=hilos) as pool:
-        puntos = pool.map(lambda escena: ndvi_de_escena(escena, geometria), escenas)
-    return [punto for punto in puntos if punto is not None]
+        pasadas = pool.map(lambda escena: indices_de_escena(escena, geometria), escenas)
+    return [p for p in pasadas if p is not None]

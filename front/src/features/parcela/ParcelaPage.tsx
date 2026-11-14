@@ -3,6 +3,8 @@ import { getHistoricoNdvi, type HistoricoNdvi } from "../../api/ndvi";
 import { getSuelo } from "../../api/suelo";
 import { Button, Card, Fuente } from "../../design-system";
 import { formatearFecha } from "../../lib/fecha";
+import { GraficoAguaVigor } from "./GraficoAguaVigor";
+import { GraficoCobertura } from "./GraficoCobertura";
 import { GraficoNdvi } from "./GraficoNdvi";
 import { MapaParcela } from "./MapaParcela";
 import { ReporteCiclos } from "./ReporteCiclos";
@@ -21,17 +23,29 @@ function Instrucciones({ cantidadVertices, cerrada }: { cantidadVertices: number
 
 function Historico({ historico }: { historico: HistoricoNdvi }) {
     const { serie, analisis } = historico;
-    const pasadasSueloDesnudo = serie.filter((p) => p.ndvi < historico.umbral_suelo_desnudo).length;
+    const pasadasSinCultivo = serie.filter((p) => p.ndvi < historico.umbral_suelo_desnudo).length;
 
     return (
         <Card className={styles.tarjeta}>
             <h2 className="subtitulo">Cómo la vio el satélite</h2>
             <p className="body">
-                En <span className="dato">{serie.length}</span> pasadas despejadas, el suelo se vio desnudo en{" "}
-                <span className="dato">{pasadasSueloDesnudo}</span>. La franja marrón marca el suelo desnudo; la curva verde, el cultivo; los números,
-                cada ciclo que se detectó ({analisis.ciclos.length}).
+                En <span className="dato">{serie.length}</span> pasadas despejadas, la parcela se vio sin cultivo en{" "}
+                <span className="dato">{pasadasSinCultivo}</span>. La curva verde es el cultivo; la franja marrón, el nivel por debajo del cual no hay
+                cultivo en pie; los números, cada ciclo que se detectó ({analisis.ciclos.length}).
             </p>
             <GraficoNdvi historico={historico} />
+
+            <h3 className="subtitulo">Qué cubrió tu parcela</h3>
+            <p className="body">En cada pasada, qué parte de la parcela tenía cultivo, rastrojo o el suelo desnudo.</p>
+            <GraficoCobertura historico={historico} />
+
+            <h3 className="subtitulo">Agua y vigor del cultivo</h3>
+            <p className="body">
+                Sólo cuando hay cultivo en pie. Si el agua en la planta baja mientras el cultivo crece, puede estar pasando sed; la clorofila sigue
+                mostrando diferencias cuando el verde ya está al máximo.
+            </p>
+            <GraficoAguaVigor historico={historico} />
+
             <ReporteCiclos historico={historico} />
             <Fuente>
                 {historico.fuente} · {formatearFecha(historico.desde)} a {formatearFecha(historico.hasta)} · píxel de {historico.resolucion_m} m ·

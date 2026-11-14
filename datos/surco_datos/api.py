@@ -117,7 +117,7 @@ def ndvi(pedido: PedidoParcelaPeriodo) -> dict:
     desde, hasta = periodo(pedido)
 
     def calcular() -> dict:
-        serie = sentinel2.serie_ndvi(geometria, desde, hasta)
+        serie = sentinel2.serie_pasadas(geometria, desde, hasta)
         return {
             "fuente": sentinel2.FUENTE,
             "resolucion_m": sentinel2.RESOLUCION_M,
@@ -131,7 +131,7 @@ def ndvi(pedido: PedidoParcelaPeriodo) -> dict:
 
     # La fecha de hoy entra en la clave: una consulta abierta ("hasta hoy") se
     # recalcula una vez por día, cuando puede haber pasadas nuevas.
-    historico = con_cache("ndvi", clave(geometria, desde, hasta, date.today()), calcular)
+    historico = con_cache("pasadas", clave(geometria, desde, hasta, date.today()), calcular)
     # El análisis no se cachea: es barato y así un ajuste del algoritmo se ve
     # sin volver a bajar imágenes.
     return ok({**historico, "analisis": analizar_historico(historico)})
@@ -142,6 +142,7 @@ def analizar_historico(historico: dict) -> dict:
     analisis = ciclos.analizar(
         [date.fromisoformat(str(p["fecha"])) for p in serie],
         [p["ndvi"] for p in serie],
+        [p["ndti"] for p in serie],
         historico["umbral_suelo_desnudo"],
     )
     return asdict(analisis)

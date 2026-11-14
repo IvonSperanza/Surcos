@@ -292,7 +292,29 @@ procesados. Hay que tratarlos como dato faltante, nunca como un número.
 
 ---
 
-## 7. Fuente fuera de la lista: SoilGrids (ISRIC)
+## 7. Índices de Sentinel-2 que calcula Surco
+
+Todos salen de la misma lectura por pasada (8 bandas, recortadas a la
+parcela). Implementación: `surco_datos/sentinel2.py`.
+
+| Índice | Bandas | Qué mide | Uso |
+|---|---|---|---|
+| NDVI | B08, B04 (10 m) | Vegetación verde | Ciclos de cultivo |
+| NDTI | B11, B12 (20 m) | Residuos secos sobre el suelo | Rastrojo o suelo desnudo |
+| BSI | B11, B04, B08, B02 | Suelo expuesto | Sólo informativo: no separó bien los casos |
+| NDMI | B8A, B11 (20 m) | Agua en la vegetación | Estrés hídrico con cultivo en pie |
+| NDRE | B8A, B05 (20 m) | Clorofila | Vigor donde el NDVI se satura |
+
+**Calibración del NDTI (14/11/2026)**, con seis lotes de prueba del oeste de
+Rosario y en las pasadas con NDVI < 0,3:
+
+- Justo después de una cosecha (rastrojo fresco): NDTI de 0,13 a 0,21.
+- Suelo trabajado, antes de sembrar o meses después de cosechar: NDTI de 0,00 a 0,08.
+- Umbrales adoptados: rastrojo ≥ 0,12; desnudo ≤ 0,08; en el medio, "no se
+  distingue". La humedad del suelo también baja el NDTI, así que la franja
+  gris es real. Son valores provisorios, a ajustar con lotes conocidos.
+
+## 8. Fuente fuera de la lista: SoilGrids (ISRIC)
 
 No está en la lista del desafío, pero es la fuente global de suelo que
 reemplaza a SSURGO.
@@ -319,7 +341,7 @@ reemplaza a SSURGO.
 
 ---
 
-## 8. Próximos pasos
+## 9. Próximos pasos
 
 1. **Crear una cuenta de Earthdata Login** (gratuita) para HLS, SMAP, IMERG,
    ECOSTRESS y SRTM. Guardar el token en `datos/.env` como `EARTHDATA_TOKEN`.

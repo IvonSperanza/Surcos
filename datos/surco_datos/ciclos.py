@@ -12,6 +12,8 @@ from typing import Literal
 import numpy as np
 from scipy.signal import find_peaks
 
+from surco_datos.sentinel2 import NDTI_DESNUDO, NDTI_RASTROJO
+
 # Un cultivo en pie supera este NDVI en su pico; por debajo es maleza rala o
 # rastrojo verdeando.
 NDVI_MINIMO_PICO = 0.4
@@ -59,17 +61,26 @@ class Ciclo:
 
 
 @dataclass(frozen=True)
-class SueloDesnudo:
+class PeriodoSinCultivo:
     desde: date  # primera pasada vista sin cultivo
     hasta: date  # última pasada vista sin cultivo
     dias_estimados: int
+    # Qué cubría el suelo, según el NDTI de cada pasada del período. Los días
+    # se reparten en proporción a las pasadas de cada clase.
+    cobertura: Literal["rastrojo", "desnudo", "incierta", "mixta"]
+    dias_rastrojo: int
+    dias_desnudo: int
+    dias_inciertos: int
 
 
 @dataclass(frozen=True)
 class AnalisisCiclos:
     ciclos: list[Ciclo]
-    suelo_desnudo: list[SueloDesnudo]
+    sin_cultivo: list[PeriodoSinCultivo]
+    dias_sin_cultivo: int
     dias_suelo_desnudo: int
+    dias_con_rastrojo: int
+    dias_inciertos: int
     pasadas_atipicas: list[date]
 
 
@@ -142,35 +153,60 @@ def detectar_ciclos(fechas: list[date], valores: np.ndarray) -> list[Ciclo]:
     return ciclos
 
 
-def detectar_suelo_desnudo(fechas: list[date], valores: np.ndarray, umbral: float) -> list[SueloDesnudo]:
-    periodos: list[SueloDesnudo] = []
+def cobertura_de_pasada(ndti: float) -> str:
+    if ndti >= NDTI_RASTROJO:
+        return "rastrojo"
+    if ndti <= NDTI_DESNUDO:
+        return "desnudo"
+    return "incierta"
+
+
+def periodo_sin_cultivo(fechas: list[date], ndti: np.ndarray, i: int, j: int) -> PeriodoSinCultivo:
+    # El período real empezó en algún momento entre la última pasada con
+    # cultivo y la primera sin él: se toma la mitad de cada hueco.
+    comienzo = medio(Ventana(fechas[i - 1], fechas[i])) if i > 0 else fechas[i]
+    final = medio(Ventana(fechas[j], fechas[j + 1])) if j + 1 < len(fechas) else fechas[j]
+    dias = max((final - comienzo).days, 1)
+
+    clases = [cobertura_de_pasada(v) for v in ndti[i : j + 1]]
+    cuenta = {c: clases.count(c) for c in ("rastrojo", "desnudo", "incierta")}
+    dias_por_clase = {c: round(dias * n / len(clases)) for c, n in cuenta.items()}
+    dominante = max(cuenta, key=cuenta.get)
+    cobertura = dominante if cuenta[dominante] > len(clases) / 2 else "mixta"
+    return PeriodoSinCultivo(
+        fechas[i], fechas[j], dias, cobertura, dias_por_clase["rastrojo"], dias_por_clase["desnudo"], dias_por_clase["incierta"]
+    )
+
+
+def detectar_sin_cultivo(fechas: list[date], ndvi: np.ndarray, ndti: np.ndarray, umbral: float) -> list[PeriodoSinCultivo]:
+    periodos: list[PeriodoSinCultivo] = []
     i = 0
-    while i < len(valores):
-        if valores[i] >= umbral:
+    while i < len(ndvi):
+        if ndvi[i] >= umbral:
             i += 1
             continue
         j = i
-        while j + 1 < len(valores) and valores[j + 1] < umbral:
+        while j + 1 < len(ndvi) and ndvi[j + 1] < umbral:
             j += 1
-        # El período real empezó en algún momento entre la última pasada con
-        # cultivo y la primera sin él: se toma la mitad de cada hueco.
-        comienzo = medio(Ventana(fechas[i - 1], fechas[i])) if i > 0 else fechas[i]
-        final = medio(Ventana(fechas[j], fechas[j + 1])) if j + 1 < len(fechas) else fechas[j]
-        periodos.append(SueloDesnudo(fechas[i], fechas[j], max((final - comienzo).days, 1)))
+        periodos.append(periodo_sin_cultivo(fechas, ndti, i, j))
         i = j + 1
     return periodos
 
 
-def analizar(fechas: list[date], ndvi: list[float], umbral_suelo_desnudo: float) -> AnalisisCiclos:
+def analizar(fechas: list[date], ndvi: list[float], ndti: list[float], umbral_sin_cultivo: float) -> AnalisisCiclos:
     valores = np.array(ndvi, dtype=float)
     atipica = pasadas_atipicas(valores)
     fechas_limpias = [f for f, a in zip(fechas, atipica) if not a]
     valores_limpios = valores[~atipica]
+    ndti_limpio = np.array(ndti, dtype=float)[~atipica]
 
-    suelo = detectar_suelo_desnudo(fechas_limpias, valores_limpios, umbral_suelo_desnudo)
+    sin_cultivo = detectar_sin_cultivo(fechas_limpias, valores_limpios, ndti_limpio, umbral_sin_cultivo)
     return AnalisisCiclos(
         ciclos=detectar_ciclos(fechas_limpias, valores_limpios),
-        suelo_desnudo=suelo,
-        dias_suelo_desnudo=sum(p.dias_estimados for p in suelo),
+        sin_cultivo=sin_cultivo,
+        dias_sin_cultivo=sum(p.dias_estimados for p in sin_cultivo),
+        dias_suelo_desnudo=sum(p.dias_desnudo for p in sin_cultivo),
+        dias_con_rastrojo=sum(p.dias_rastrojo for p in sin_cultivo),
+        dias_inciertos=sum(p.dias_inciertos for p in sin_cultivo),
         pasadas_atipicas=[f for f, a in zip(fechas, atipica) if a],
     )
