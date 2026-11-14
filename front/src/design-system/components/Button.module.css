@@ -1,0 +1,31 @@
+.boton {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 600;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.boton:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.primario {
+    background: var(--arcilla);
+    color: var(--on-color);
+}
+
+.secundario {
+    background: var(--surface-raised);
+    color: var(--ink);
+    border-color: var(--line);
+}
+
+.secundario:hover:not(:disabled) {
+    border-color: var(--ink-muted);
+}

@@ -1,0 +1,91 @@
+.pagina {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.pagina h1,
+.pagina h2,
+.pagina p {
+    margin: 0;
+}
+
+.mapa {
+    height: 480px;
+    width: 100%;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--line);
+    cursor: crosshair;
+}
+
+.acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.historico {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.reporte {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-4);
+}
+
+.reporte h3,
+.reporte dl,
+.reporte dd {
+    margin: 0;
+}
+
+.listaCiclos,
+.listaSuelo {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.listaSuelo {
+    gap: var(--space-1);
+}
+
+.ciclo {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+}
+
+.numeroCiclo {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--radius-pill);
+    background: var(--oliva-soft);
+    color: var(--ink);
+}
+
+.datosCiclo {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-1) var(--space-4);
+    align-items: baseline;
+    margin-top: var(--space-2) !important;
+}
+
+.datosCiclo dt {
+    color: var(--ink-muted);
+}

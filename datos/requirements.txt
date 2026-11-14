@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pystac-client
+rasterio
+numpy
+scipy
+requests
+matplotlib

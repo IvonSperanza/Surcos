@@ -236,7 +236,7 @@ es un borrador**: usalo para tipar los fixtures, pero puede cambiar.
 | `GET /salud` | Que el servicio está vivo |
 | `GET /clima?lat&lon&desde&hasta` | Temperatura y precipitación de NASA POWER |
 | `GET /suelo?lat&lon` | Textura, carbono orgánico y pH (SoilGrids) |
-| `GET /ndvi?lat&lon&desde&hasta` | Serie NDVI con fecha y fuente por punto |
+| `POST /ndvi` **(implementado)** | Body `{ geometria: Polygon GeoJSON [lon, lat], desde?, hasta? }` (por defecto, el último año). Devuelve la serie NDVI de Sentinel-2 dentro del polígono: `{ fuente, resolucion_m, consultado, desde, hasta, area_ha, umbral_suelo_desnudo, serie: [{ fecha, ndvi, fraccion_despejada, escena }] }`. La primera consulta tarda ~1 min; después sale de caché. Tipos en `front/src/api/ndvi.ts` |
 | `POST /verificacion` | Recibe lote + campaña declarada; devuelve lo detectado (ciclos, días de suelo desnudo, cobertura invernal) y el estado |
 
 ---
