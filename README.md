@@ -4,13 +4,19 @@
 
 NASA Space Apps Challenge 2026 · Rosario (UCEL) · desafío *Field Shift: Adapting Farms with NASA Data* · eje AgTech **01, Nutrientes y Trazabilidad**.
 
+## Para el jurado
+
 | | |
 |---|---|
-| **Demo en vivo** | <https://surcos-staging.thorque.com.ar> (panel del productor en `/productor`) |
-| **Página del QR, ejemplo** | <https://surcos-staging.thorque.com.ar/p/SUR-2026-0002>: lechuga con todas sus prácticas confirmadas por el satélite |
-| **Caso que no coincide** | <https://surcos-staging.thorque.com.ar/p/SUR-2026-0004>: lo declarado no se ve en los datos |
-| **Presentación y pitch** | [`docs/entregables/`](docs/entregables/) |
-| **Propuesta completa** | [`docs/entregables/propuesta.md`](docs/entregables/propuesta.md) · fuentes de cada número en [`fuentes.md`](docs/entregables/fuentes.md) |
+| 📑 **Presentación** | [`docs/entregables/presentacion.pdf`](docs/entregables/presentacion.pdf) (7 diapositivas) |
+| 📄 **Propuesta completa** | [`docs/entregables/propuesta.md`](docs/entregables/propuesta.md): problema, solución, justificación económica, métricas de impacto con línea de base, escalabilidad y modelo de ingresos |
+| 🔎 **Fuentes de cada número** | [`docs/entregables/fuentes.md`](docs/entregables/fuentes.md): MAGyP/SENASA, censo INTA–UNR, CAME, y lo que medimos con el prototipo |
+| 🎤 **Guion del pitch** | [`docs/entregables/pitch.md`](docs/entregables/pitch.md) |
+| 🛰️ **Demo en vivo** | <https://surcos-staging.thorque.com.ar> (panel del productor en `/productor`) |
+| 📱 **Lo que ve quien escanea el QR** | <https://surcos-staging.thorque.com.ar/p/SUR-2026-0002>: lechuga con sus prácticas confirmadas por el satélite · <https://surcos-staging.thorque.com.ar/p/SUR-2026-0004>: un caso donde lo declarado no se ve en los datos |
+| 📚 **Toda la documentación** | [`docs/`](docs/README.md) |
+
+**English summary for NASA judges:** [`docs/entregables/envio-nasa.md`](docs/entregables/envio-nasa.md).
 
 ## El problema
 
