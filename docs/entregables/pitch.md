@@ -68,20 +68,26 @@ Con Surco usamos datos del espacio para cuidar la tierra que comemos. Muchas gra
 
 ---
 
-## Cambios para las diapositivas
+## Cambios aplicados a las diapositivas
 
-Lo que hay que tocar en `presentacion.pdf` para que coincida con este guion:
+Aplicados en [`presentacion.pptx`](presentacion.pptx) el 15/11. El [`presentacion.pdf`](presentacion.pdf) es el anterior: hay que volver a exportarlo desde el .pptx.
 
-| Diapositiva | Hoy dice | Cambiar por |
+| Diapositiva | Decía | Dice ahora |
 |---|---|---|
-| 1 · Portada | "verifica prácticas reales con satélites NASA" | "verifica prácticas reales con Sentinel-2 y NASA POWER" |
-| 2 · Problema | "68% · Demanda agroecológica" | "69% · cree que lo orgánico es mejor para la salud (Fundación Colsecor 2022)" |
-| 2 · Problema | "205 · 2.930 ha sin acceso a auditorías caras" | "205 productores · 2.928 ha (censo INTA–UNR 2021)" |
-| 2 · Problema | — | Fuente al pie: "MAGyP 2026, datos SENASA 2025" para el 98% y el 1,5% |
-| 3 · Solución | "Guía NDVI y SMAP" | "Familias del INASE + historial NDVI" |
-| 3 · Solución | "03 / Sanidad · Semáforo LMR · Bloqueo automático en carencia SENASA" | "03 / Verificación · Cada práctica contrastada con Sentinel-2 y NASA POWER" |
-| 3 · Solución | "PostGIS cruza hectáreas" | "Sentinel-2 recortado al polígono del lote" |
-| 4 · Económica | "50% del valor final" | "≈18% del precio de góndola (CAME, IPOD 2026)" |
-| 4 · Económica | "15% costo a su cargo" (flete) | "54% de los traslados vía consignatarios (BCR 2024)" |
-| 5 · Métricas | ">85% suelo cubierto · Base: 40%" | "94% medido en los canteros de ejemplo · meta >85% en el piloto" |
-| 5 · Métricas | "Ahorra USD 1.200/año auditoría" | sacar el número (no tiene fuente) |
+| 1 · Portada | "verifica prácticas reales con satélites NASA" | "verifica prácticas con Sentinel-2 y NASA POWER" |
+| 2 · Problema | "68% · Demanda agroecológica · Consumidores urbanos piden origen verificado" | "69% · Confía en lo orgánico · Lo cree más sano. Fundación Colsecor 2022" |
+| 2 · Problema | "Solo 1,5% queda en el mercado interno" | "Solo 1,5% queda en el país. MAGyP 2026" |
+| 2 · Problema | "2.930 ha sin acceso a auditorías caras" | "2.928 ha. Censo INTA–UNR 2021" |
+| 3 · Solución | "Trazabilidad satelital de la NASA en cada cajón" | "Trazabilidad satelital verificada en cada cajón" |
+| 3 · Solución | "PostGIS cruza hectáreas con satélites NASA" | "Sentinel-2 recortado al polígono del lote" |
+| 3 · Solución | "Guía NDVI y SMAP para regenerar suelo" | "Familias del INASE e historial NDVI" |
+| 3 · Solución | "03 / Sanidad · Semáforo LMR · Bloqueo automático en carencia SENASA" | "03 / Contraste · Contraste satelital · Cada práctica contra satélite y clima" |
+| 3 · Solución | "QR + Retiro · Curva NDVI visible y retiro en quinta" | "QR + Marketplace · Historia verificada y venta directa" |
+| 4 · Económica | "50% del valor final" | "~18% del precio final" (CAME, IPOD 2026) |
+| 4 · Económica | "QR + Satélite NASA $0" | "QR + satélite $0" |
+| 4 · Económica | "15% costo a su cargo" | "54% vía consignatarios" (BCR 2024) |
+| 5 · Métricas | "Resultados cuantificables en Zona Núcleo" | "Metas medibles contra una línea de base" |
+| 5 · Métricas | "Base: 40% • Sentinel-2 NDVI" | "Medido: 94% en canteros" |
+| 5 · Métricas | "Rotación + LMR SENASA 100%" | "Meta: rotación de familias" |
+| 5 · Métricas | "Ahorra USD 1.200/año auditoría" | "Sin costo de certificadora" |
+| 6 · Escala | "595 productores y 7.000 ha en Santa Fe" | "… en Santa Fe (INTA)" |
