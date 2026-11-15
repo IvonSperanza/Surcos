@@ -143,7 +143,9 @@ front/src/
 
 | Ruta | Pantalla | Usuario |
 |---|---|---|
-| `/` | Landing con el hero (`design-system/hero/surco-hero.html`) | Todos |
+| `/` **(hecha)** | Landing (`features/landing/`), con la animación de marca | Todos |
+| `/productor/*` **(hecha)** | Panel del productor (`features/productor/`): Resumen, Mi lote (datos reales de `/parcela`), Productos y QR, Pedidos, Pagos. Datos de demostración en `api/fixtures/productor.ts`, salvo Mi lote | Productor |
+| `/parcela` **(hecha)** | La parcela sola: dibujo sobre el mapa, NDVI, ciclos, clima, suelo e insights | Productor |
 | `/lote/:id` | Lote en el mapa: historial detectado y clima | Productor |
 | `/lote/:id/escenarios` | Comparador de escenarios: el gráfico "me conviene" | Productor |
 | `/lote/:id/verificacion` | Semáforo por campaña y pasaporte con QR | Productor |

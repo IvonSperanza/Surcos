@@ -29,3 +29,28 @@
 .secundario:hover:not(:disabled) {
     border-color: var(--ink-muted);
 }
+
+.contorno {
+    background: transparent;
+    color: var(--on-color);
+    border-color: var(--on-color);
+}
+
+.contorno:hover {
+    background: var(--on-color);
+    color: var(--ink);
+}
+
+/* Para enlaces con forma de botón (EnlaceBoton). */
+a.boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    text-decoration: none;
+}
+
+.grande {
+    font-size: 17px;
+    padding: 14px var(--space-6);
+}

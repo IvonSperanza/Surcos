@@ -1,0 +1,258 @@
+.app {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+}
+
+/* ---------- Encabezado ---------- */
+.encabezado {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-6);
+    padding: var(--space-2) var(--space-4);
+    background: var(--surface-raised);
+    border-bottom: 1px solid var(--line);
+}
+
+.marca {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-display);
+    font-size: 28px;
+    line-height: 36px;
+    color: var(--ink);
+    text-decoration: none;
+}
+
+.rolMarca {
+    font-family: var(--font-sans);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    background: var(--oliva-soft);
+    color: var(--ink);
+}
+
+.contexto {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding-left: var(--space-6);
+    border-left: 1px solid var(--line);
+}
+
+.textoSecundario {
+    color: var(--ink-muted);
+}
+
+.verLanding {
+    margin-left: auto;
+    text-decoration: none;
+}
+
+/* ---------- Estructura ---------- */
+.shell {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        "nav escenario"
+        "lateral escenario";
+}
+
+.nav,
+.lateral {
+    background: var(--surface-raised);
+    border-right: 1px solid var(--line);
+}
+
+.nav {
+    grid-area: nav;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-4) var(--space-2);
+}
+
+.itemNav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.itemNav:hover {
+    background: var(--surface);
+    color: var(--ink);
+}
+
+.itemNavActivo,
+.itemNavActivo:hover {
+    background: var(--oliva);
+    color: var(--on-color);
+}
+
+.insignia {
+    margin-left: auto;
+    min-width: 24px;
+    padding: 0 var(--space-1);
+    text-align: center;
+    border-radius: var(--radius-sm);
+    background: var(--trigo);
+    color: var(--ink);
+}
+
+.soloLector {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.lateral {
+    grid-area: lateral;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-2) var(--space-4) var(--space-6);
+}
+
+.reiniciar {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    background: none;
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--ink-muted);
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.reiniciar:hover {
+    color: var(--ink);
+}
+
+.escenario {
+    grid-area: escenario;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    flex: 1;
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: var(--space-6) var(--space-6) var(--space-8);
+    box-sizing: border-box;
+}
+
+.pie {
+    padding: var(--space-4) var(--space-6);
+    background: var(--tierra);
+    color: var(--on-color);
+}
+
+.pie p {
+    margin: 0;
+}
+
+/* ---------- Toast ---------- */
+.toast {
+    position: fixed;
+    left: 50%;
+    bottom: var(--space-6);
+    max-width: calc(100vw - 2 * var(--space-4));
+    box-sizing: border-box;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--tierra);
+    color: var(--on-color);
+    transform: translate(-50%, var(--space-8));
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease, transform 200ms ease;
+    z-index: 30;
+}
+
+.toastVisible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .toast,
+    .itemNav {
+        transition: none;
+    }
+}
+
+/* ---------- Teléfono y tablet ---------- */
+@media (max-width: 900px) {
+    .shell {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto;
+        grid-template-areas:
+            "nav"
+            "escenario"
+            "lateral";
+    }
+
+    .nav,
+    .lateral {
+        border-right: none;
+    }
+
+    .nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: var(--space-2) var(--space-4);
+        border-bottom: 1px solid var(--line);
+    }
+
+    .itemNav {
+        padding: var(--space-1) var(--space-2);
+    }
+
+    .lateral {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+        align-items: start;
+        padding: var(--space-6) var(--space-4);
+        border-top: 1px solid var(--line);
+    }
+
+    .main {
+        padding: var(--space-6) var(--space-4) var(--space-8);
+    }
+
+    .pie {
+        padding: var(--space-4);
+    }
+}
+
+@media (max-width: 560px) {
+    .contexto {
+        padding-left: 0;
+        border-left: none;
+        order: 3;
+        flex-basis: 100%;
+    }
+}

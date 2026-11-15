@@ -1,0 +1,67 @@
+.lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: var(--space-4);
+}
+
+.tarjeta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.tarjeta h3 {
+    margin: 0;
+}
+
+.arriba,
+.identidad,
+.pie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.arriba,
+.pie {
+    justify-content: space-between;
+}
+
+.pie {
+    margin-top: auto;
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--line);
+}
+
+.parametros {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2) var(--space-4);
+    margin: 0;
+}
+
+.parametros dt {
+    color: var(--ink-muted);
+}
+
+.parametros dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.precio {
+    font-size: 20px;
+    line-height: 28px;
+    color: var(--arcilla);
+}
+
+.textoSecundario {
+    color: var(--ink-muted);
+}
+
+.botonIcono {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+}

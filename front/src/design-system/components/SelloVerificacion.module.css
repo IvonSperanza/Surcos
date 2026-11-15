@@ -1,0 +1,26 @@
+.sello {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    flex: none;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    white-space: nowrap;
+}
+
+.verificado {
+    background: var(--cielo-soft);
+    color: var(--cielo);
+}
+
+.pendiente {
+    background: var(--trigo);
+    color: var(--ink);
+}
+
+.sin_verificar {
+    background: var(--surface);
+    border-color: var(--ink-muted);
+    color: var(--ink-muted);
+}

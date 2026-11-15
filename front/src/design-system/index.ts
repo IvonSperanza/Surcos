@@ -2,5 +2,8 @@
 // src/design-system/components/ y se exporta desde acá. El resto del front
 // importa siempre desde "../design-system", nunca del archivo directo.
 export { Button } from "./components/Button";
+export { EnlaceBoton, type VarianteBoton } from "./components/EnlaceBoton";
 export { Card } from "./components/Card";
 export { Fuente } from "./components/Fuente";
+export { SelloVerificacion, type EstadoVerificacion } from "./components/SelloVerificacion";
+export { ChipCategoria, type Categoria } from "./components/ChipCategoria";

@@ -1,0 +1,1178 @@
+/* Landing de Surco: diseño de la feria (toldos, banderines, puestos)
+   llevado a los tokens oficiales de /design-system. */
+
+.pagina {
+    overflow-x: hidden;
+}
+
+.pagina h1,
+.pagina h2,
+.pagina h3,
+.pagina p {
+    margin: 0;
+}
+
+.contenedor {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+
+.seccion {
+    padding: clamp(56px, 8vw, 104px) 0;
+    /* El encabezado es sticky: el ancla no tiene que quedar tapada. */
+    scroll-margin-top: 90px;
+}
+
+/* ---------- Encabezado ---------- */
+.encabezado {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    height: 72px;
+    background: var(--surface-raised);
+    border-bottom: 1px solid var(--line);
+}
+
+.encabezadoInterior {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+}
+
+.marca {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-display);
+    font-size: 30px;
+    line-height: 1;
+    color: var(--ink);
+    text-decoration: none;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+}
+
+.nav > a:not([class*="boton"]) {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: color 150ms ease;
+}
+
+.nav > a:not([class*="boton"]):hover {
+    color: var(--ink);
+}
+
+.botonMenu {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    border-radius: var(--radius-sm);
+    padding: 6px;
+    cursor: pointer;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--oliva);
+    color: var(--on-color);
+    padding: clamp(72px, 9vw, 120px) 0 clamp(64px, 8vw, 110px);
+}
+
+.hero .contenedor {
+    position: relative;
+    z-index: 2;
+}
+
+.hoja {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+    animation: flotar 9s ease-in-out infinite;
+}
+
+.hoja1 {
+    left: -30px;
+    top: 30%;
+    width: 120px;
+    opacity: 0.5;
+}
+
+.hoja2 {
+    right: 4%;
+    bottom: -6px;
+    width: 90px;
+    opacity: 0.7;
+    animation-duration: 11s;
+    animation-direction: reverse;
+}
+
+.banderines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    gap: clamp(10px, 2vw, 20px);
+    padding: 0 var(--space-4);
+    pointer-events: none;
+}
+
+.banderines span {
+    flex: none;
+    width: clamp(20px, 2.6vw, 30px);
+    height: clamp(26px, 3.4vw, 40px);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top center;
+    animation: mecer 4s ease-in-out infinite;
+}
+
+.banderines span:nth-child(5n + 1) { background: var(--arcilla); }
+.banderines span:nth-child(5n + 2) { background: var(--trigo); }
+.banderines span:nth-child(5n + 3) { background: var(--surface-raised); }
+.banderines span:nth-child(5n + 4) { background: var(--malbec); }
+.banderines span:nth-child(5n + 5) { background: var(--cielo-soft); }
+.banderines span:nth-child(odd) { animation-delay: -1.2s; }
+.banderines span:nth-child(3n) { animation-delay: -2.4s; }
+
+.heroGrilla {
+    display: grid;
+    grid-template-columns: 1.06fr 0.94fr;
+    gap: clamp(30px, 4vw, 64px);
+    align-items: center;
+}
+
+.pastilla {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--on-color);
+    border: 1px solid var(--on-color);
+    border-radius: var(--radius-pill);
+    padding: var(--space-2) var(--space-4);
+}
+
+.puntoPulso {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--trigo);
+    animation: pulso 2.4s ease-in-out infinite;
+}
+
+.heroTitulo {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(40px, 5.2vw, 66px);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    margin: 20px 0 22px !important;
+}
+
+/* trigo nunca va como texto: se usa como marcador detrás de ink. */
+.resaltado {
+    background: var(--trigo);
+    color: var(--ink);
+    padding: 0 0.12em;
+    border-radius: var(--radius-sm);
+    box-decoration-break: clone;
+}
+
+.bajada {
+    font-size: clamp(17px, 1.9vw, 20px);
+    line-height: 1.55;
+    max-width: 34em;
+}
+
+.heroAcciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: 30px;
+}
+
+.confianza {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    margin: 30px 0 0;
+    padding: 0;
+}
+
+.confianza li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.punto {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+    flex: none;
+}
+
+.puntoTrigo { background: var(--trigo); }
+.puntoArcilla { background: var(--arcilla); }
+.puntoCielo { background: var(--cielo-soft); }
+.puntoOliva { background: var(--oliva); }
+.puntoCieloFuerte { background: var(--cielo); }
+
+/* Puesto del hero */
+.heroVisual {
+    position: relative;
+}
+
+.puesto {
+    position: relative;
+    transition: transform 300ms ease;
+}
+
+.heroVisual:hover .puesto {
+    transform: rotate(-0.7deg);
+}
+
+.puestoInterior {
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-top: 0;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    padding: var(--space-2);
+}
+
+.escena {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--cielo-soft);
+    border-radius: var(--radius-sm);
+    line-height: 0;
+}
+
+.escena svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.cartel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: var(--space-2);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-muted);
+}
+
+.cartel svg {
+    color: var(--oliva);
+}
+
+/* Toldos a rayas: franjas de color plano, sin degradé visible. */
+.toldo {
+    --toldo-a: var(--oliva);
+    --toldo-b: var(--oliva-soft);
+    position: relative;
+    z-index: 2;
+    height: 26px;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    background: repeating-linear-gradient(90deg, var(--toldo-a) 0 22px, var(--toldo-b) 22px 44px);
+}
+
+.toldo::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -12px;
+    height: 13px;
+    background:
+        radial-gradient(circle at 11px 0, var(--toldo-a) 11px, transparent 11.5px) repeat-x 0 0 / 44px 13px,
+        radial-gradient(circle at 33px 0, var(--toldo-b) 11px, transparent 11.5px) repeat-x 0 0 / 44px 13px;
+}
+
+.toldoHero { --toldo-a: var(--arcilla); --toldo-b: var(--surface-raised); }
+.toldoOliva { --toldo-a: var(--oliva); --toldo-b: var(--oliva-soft); }
+.toldoArcilla { --toldo-a: var(--arcilla); --toldo-b: var(--trigo); }
+.toldoMalbec { --toldo-a: var(--malbec); --toldo-b: var(--trigo); }
+
+/* Etiquetas de precio */
+.etiquetaPrecio {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--surface-raised);
+    border: 1px solid var(--ink-muted);
+    border-radius: var(--radius-sm);
+    padding: var(--space-2) 12px;
+    white-space: nowrap;
+}
+
+.etiquetaPrecio b {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--arcilla);
+}
+
+.agujero {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex: none;
+    border: 2px solid var(--ink-muted);
+}
+
+.etiqueta1 {
+    position: absolute;
+    left: -22px;
+    top: 6%;
+    z-index: 3;
+    rotate: -6deg;
+    animation: flotar 5.5s ease-in-out infinite;
+}
+
+.etiqueta2 {
+    position: absolute;
+    right: -16px;
+    top: 22%;
+    z-index: 3;
+    rotate: 5deg;
+    background: var(--trigo);
+    animation: flotar 7s ease-in-out infinite 0.7s;
+}
+
+/* ---------- Ticker ---------- */
+.ticker {
+    overflow: hidden;
+    background: var(--trigo);
+    color: var(--ink);
+    border-top: 2px solid var(--tierra);
+    border-bottom: 2px solid var(--tierra);
+    padding: 12px 0;
+}
+
+.tickerPista {
+    display: flex;
+    width: max-content;
+    animation: marquesina 28s linear infinite;
+}
+
+.tickerPista span {
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding-right: 10px;
+}
+
+.tickerPista i {
+    font-style: normal;
+    padding: 0 14px;
+    opacity: 0.55;
+}
+
+/* ---------- Encabezados de sección ---------- */
+.antetitulo {
+    color: var(--arcilla);
+    margin-bottom: 12px !important;
+}
+
+.antetituloClaro {
+    color: var(--trigo);
+}
+
+.tituloSeccion {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(30px, 4vw, 48px);
+    line-height: 1.08;
+    color: var(--ink);
+}
+
+.tituloClaro {
+    color: var(--on-color);
+}
+
+.subtituloSeccion {
+    font-size: clamp(16px, 1.8vw, 19px);
+    line-height: 1.55;
+    color: var(--ink-muted);
+    max-width: 46em;
+    margin-top: var(--space-4) !important;
+}
+
+.cabeceraSeccion {
+    margin-bottom: clamp(32px, 4vw, 52px);
+    max-width: 54em;
+}
+
+/* ---------- Pasos ---------- */
+.pasos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.paso {
+    padding: 22px var(--space-6) 26px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--line);
+    transition: transform 200ms ease;
+}
+
+.paso:hover {
+    transform: translateY(-4px);
+}
+
+.pasoOliva { background: var(--oliva-soft); }
+.pasoCielo { background: var(--cielo-soft); }
+.pasoArcilla { background: var(--arcilla-soft); }
+
+.pasoArte {
+    width: 120px;
+    height: 100px;
+    margin: -18px auto 10px;
+}
+
+.insignia {
+    display: inline-block;
+    color: var(--ink);
+    background: var(--surface-raised);
+    border-radius: var(--radius-sm);
+    padding: var(--space-1) 10px;
+}
+
+.paso h3 {
+    margin: 12px 0 var(--space-2) !important;
+}
+
+/* ---------- Productores ---------- */
+.panelProductores {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1.12fr 0.88fr;
+    gap: clamp(28px, 4vw, 54px);
+    align-items: center;
+    background: var(--tierra);
+    color: var(--on-color);
+    border-radius: var(--radius-md);
+    padding: clamp(28px, 4.5vw, 58px);
+}
+
+.panelProductores::before {
+    content: "";
+    position: absolute;
+    right: -90px;
+    top: -90px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: var(--oliva);
+    opacity: 0.5;
+}
+
+.copiaProductores {
+    position: relative;
+    z-index: 1;
+}
+
+.bajadaProductores {
+    font-size: clamp(16px, 1.8vw, 19px);
+    line-height: 1.55;
+    max-width: 42em;
+    margin: 18px 0 26px !important;
+}
+
+.beneficios {
+    list-style: none;
+    margin: 0 0 28px;
+    padding: 0;
+    display: grid;
+    gap: 18px;
+}
+
+.beneficios li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+.icono {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    display: grid;
+    place-items: center;
+    flex: none;
+}
+
+.iconoTrigo { background: var(--trigo); color: var(--ink); }
+.iconoCielo { background: var(--cielo-soft); color: var(--cielo); }
+.iconoArcilla { background: var(--arcilla-soft); color: var(--ink); }
+.iconoOliva { background: var(--oliva-soft); color: var(--oliva); }
+
+.beneficios strong {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.tarjetaBolsillo {
+    position: relative;
+    z-index: 1;
+    background: var(--surface-raised);
+    color: var(--ink);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+}
+
+.filaBarra {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.barra {
+    height: 16px;
+    background: var(--line);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+}
+
+.relleno {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: var(--radius-pill);
+    transform-origin: left;
+    transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.25s;
+}
+
+.visible .relleno {
+    width: var(--ancho);
+}
+
+.rellenoDesnudo { background: var(--suelo-desnudo); }
+.rellenoOliva { background: var(--oliva); }
+
+.pieBolsillo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+}
+
+/* ---------- Consumidores ---------- */
+.seccionConsumidores {
+    background: var(--oliva-soft);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.seccionConsumidores .antetitulo {
+    color: var(--oliva);
+}
+
+.grillaConsumidores {
+    display: grid;
+    grid-template-columns: 1.02fr 0.98fr;
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+}
+
+.listaConsumidor {
+    list-style: none;
+    margin: 26px 0 28px;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+}
+
+.listaConsumidor li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+}
+
+.envolturaTelefono {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: var(--space-6) 0;
+}
+
+.telefono {
+    width: 286px;
+    background: var(--ink);
+    border-radius: 38px;
+    padding: 12px;
+    rotate: 1.5deg;
+    transition: rotate 300ms ease;
+}
+
+.envolturaTelefono:hover .telefono {
+    rotate: 0deg;
+}
+
+.muesca {
+    width: 92px;
+    height: 8px;
+    border-radius: 6px;
+    background: var(--surface-raised);
+    opacity: 0.25;
+    margin: var(--space-1) auto 12px;
+}
+
+.pantalla {
+    background: var(--surface-raised);
+    border-radius: 28px;
+    padding: var(--space-4);
+}
+
+.pantallaArte {
+    background: var(--oliva-soft);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    line-height: 0;
+    margin-bottom: 14px;
+}
+
+.pantallaTitulo {
+    font-family: var(--font-display);
+    font-size: 23px;
+    line-height: 1.05;
+    margin: 3px 0 14px !important;
+}
+
+.pantallaFila {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: var(--space-2) 0;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--ink-muted);
+}
+
+.pantallaFila .dato {
+    font-size: 11px;
+    color: var(--ink);
+}
+
+.flotante {
+    position: absolute;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--surface-raised);
+    border: 1px solid var(--ink-muted);
+    border-radius: var(--radius-sm);
+    padding: var(--space-2) 11px;
+    white-space: nowrap;
+}
+
+.flotante1 {
+    left: 0;
+    top: 12%;
+    animation: flotar 6s ease-in-out infinite;
+}
+
+.flotante2 {
+    right: -6px;
+    top: 36%;
+    animation: flotar 7.5s ease-in-out infinite 0.6s;
+}
+
+.qrEjemplo {
+    position: absolute;
+    right: -8px;
+    bottom: 5%;
+    z-index: 2;
+    background: var(--surface-raised);
+    border: 1px solid var(--ink-muted);
+    border-radius: var(--radius-md);
+    padding: var(--space-2);
+    text-align: center;
+    animation: flotar 8s ease-in-out infinite 0.3s;
+}
+
+/* ---------- Feria ---------- */
+.grillaProductos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.puestoFeria {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-top: 0;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    transition: transform 220ms ease, border-color 220ms ease;
+}
+
+.puestoFeria:hover {
+    transform: translateY(-6px);
+    border-color: var(--ink-muted);
+}
+
+.arteFeria {
+    line-height: 0;
+}
+
+.arteOliva { background: var(--oliva-soft); }
+.arteArcilla { background: var(--arcilla-soft); }
+.arteMalbec { background: var(--malbec-soft); }
+
+.cuerpoFeria {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 18px 20px 22px;
+    flex: 1;
+}
+
+.cuerpoFeria p {
+    color: var(--ink-muted);
+    margin-bottom: 10px !important;
+}
+
+.filaChips {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.precioFeria {
+    align-self: flex-start;
+    margin-top: auto;
+    background: var(--trigo);
+    border: 1px dashed var(--ink-muted);
+    font-size: 15px;
+}
+
+.precioFeria em {
+    font-style: normal;
+    font-size: 12px;
+    color: var(--ink-muted);
+}
+
+.notaDemo {
+    margin-top: 22px !important;
+    color: var(--ink-muted);
+}
+
+/* ---------- Datos ---------- */
+.seccionDatos {
+    background: var(--surface-raised);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.grillaDatos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+}
+
+.tarjetaDato {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: transform 200ms ease;
+}
+
+.tarjetaDato:hover {
+    transform: translateY(-3px);
+}
+
+.tarjetaDato .icono {
+    margin-bottom: var(--space-2);
+}
+
+.tarjetaDato p {
+    color: var(--ink-muted);
+}
+
+.fuenteDato {
+    margin-top: auto;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+}
+
+.aviso {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+    background: var(--trigo);
+    color: var(--ink);
+    border-radius: var(--radius-md);
+    padding: 22px var(--space-6);
+    margin-top: 22px;
+}
+
+.aviso svg {
+    flex: none;
+}
+
+.aviso h3 {
+    margin-bottom: 6px !important;
+}
+
+.tecnico {
+    margin-top: 22px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    overflow: hidden;
+}
+
+.tecnico summary {
+    cursor: pointer;
+    padding: var(--space-4) 20px;
+    font-weight: 600;
+    list-style: none;
+}
+
+.tecnico summary::-webkit-details-marker {
+    display: none;
+}
+
+.tecnico summary::after {
+    content: "+";
+    float: right;
+    color: var(--arcilla);
+}
+
+.tecnico[open] summary::after {
+    content: "–";
+}
+
+.envolturaTabla {
+    overflow-x: auto;
+    border-top: 1px solid var(--line);
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 520px;
+}
+
+.tabla th,
+.tabla td {
+    text-align: left;
+    padding: 13px 20px;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+    vertical-align: top;
+}
+
+.tabla thead th {
+    color: var(--ink-muted);
+}
+
+.tabla tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+/* ---------- Sumate ---------- */
+.franjaSumate {
+    position: relative;
+    overflow: hidden;
+    background: var(--arcilla);
+    color: var(--on-color);
+    padding: clamp(58px, 8vw, 96px) 0;
+    border-top: 3px solid var(--tierra);
+}
+
+.interiorSumate {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 36px;
+    flex-wrap: wrap;
+    padding-top: 14px;
+}
+
+.tituloSumate {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(28px, 3.8vw, 48px);
+    line-height: 1.08;
+    max-width: 18em;
+}
+
+.bajadaSumate {
+    font-size: 17px;
+    line-height: 1.55;
+    margin-top: 14px !important;
+    max-width: 34em;
+}
+
+.accionesSumate {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* ---------- Pie ---------- */
+.pie {
+    background: var(--tierra);
+    color: var(--on-color);
+    border-top: 5px solid var(--trigo);
+    padding: clamp(40px, 6vw, 68px) 0;
+}
+
+.grillaPie {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.4fr;
+    gap: 32px;
+}
+
+.marcaPie {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-display);
+    font-size: 32px;
+    line-height: 1;
+}
+
+.navPie {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.navPie a {
+    color: var(--on-color);
+    text-decoration: none;
+    font-size: 14px;
+    width: fit-content;
+}
+
+.navPie a:hover {
+    text-decoration: underline;
+}
+
+.metaPie p {
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: var(--space-2) !important;
+    max-width: 40em;
+}
+
+/* ---------- Aparición al hacer scroll ---------- */
+.revelar {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 550ms ease, transform 550ms ease;
+}
+
+.revelar.visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* ---------- Animaciones ---------- */
+@keyframes flotar {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -10px; }
+}
+
+@keyframes mecer {
+    0%, 100% { transform: rotate(-2.5deg); }
+    50% { transform: rotate(2.5deg); }
+}
+
+@keyframes marquesina {
+    to { transform: translateX(-50%); }
+}
+
+@keyframes pulso {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.55; }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+    .heroGrilla,
+    .panelProductores,
+    .grillaConsumidores,
+    .pasos {
+        grid-template-columns: 1fr;
+    }
+
+    .heroVisual {
+        max-width: 560px;
+        margin: 12px auto 0;
+    }
+
+    .hoja2 {
+        display: none;
+    }
+
+    .grillaDatos,
+    .grillaProductos,
+    .grillaPie {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .metaPie {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 760px) {
+    .botonMenu {
+        display: inline-flex;
+    }
+
+    .nav {
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        background: var(--surface-raised);
+        border-bottom: 1px solid var(--line);
+        padding: var(--space-2) var(--space-6) 20px;
+        display: none;
+    }
+
+    .navAbierta {
+        display: flex;
+    }
+
+    .nav > a:not([class*="boton"]) {
+        padding: 13px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 16px;
+    }
+
+    .nav > a[class*="boton"] {
+        margin-top: 14px;
+    }
+
+    .grillaProductos {
+        grid-template-columns: 1fr;
+    }
+
+    .etiqueta1 {
+        left: -6px;
+    }
+
+    .etiqueta2 {
+        right: -4px;
+    }
+
+    .flotante1 {
+        left: -6px;
+    }
+
+    .interiorSumate {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 560px) {
+    .grillaDatos,
+    .grillaPie {
+        grid-template-columns: 1fr;
+    }
+
+    .telefono {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .filaBarra {
+        grid-template-columns: 84px 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .banderines span,
+    .hoja,
+    .etiqueta1,
+    .etiqueta2,
+    .flotante1,
+    .flotante2,
+    .qrEjemplo,
+    .puntoPulso,
+    .tickerPista {
+        animation: none;
+    }
+
+    .revelar {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .relleno {
+        width: var(--ancho);
+        transition: none;
+    }
+
+    .paso,
+    .puestoFeria,
+    .tarjetaDato,
+    .puesto,
+    .telefono {
+        transition: none;
+    }
+}

@@ -1,0 +1,24 @@
+.chip {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    white-space: nowrap;
+}
+
+.hortalizas {
+    background: var(--oliva-soft);
+}
+
+.frutas {
+    background: var(--arcilla-soft);
+}
+
+.vinos {
+    background: var(--malbec-soft);
+}
+
+.granos {
+    background: var(--trigo);
+}

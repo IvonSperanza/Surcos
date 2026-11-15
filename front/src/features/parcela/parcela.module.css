@@ -2,14 +2,19 @@
     max-width: 1100px;
     margin: 0 auto;
     padding: var(--space-8) var(--space-4);
+}
+
+/* Separado de .pagina para que el panel del productor muestre lo mismo sin
+   el ancho ni el padding de la página suelta. */
+.contenido {
     display: flex;
     flex-direction: column;
     gap: var(--space-6);
 }
 
-.pagina h1,
-.pagina h2,
-.pagina p {
+.contenido h1,
+.contenido h2,
+.contenido p {
     margin: 0;
 }
 

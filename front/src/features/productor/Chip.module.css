@@ -1,0 +1,47 @@
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    flex: none;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    white-space: nowrap;
+}
+
+.trigo {
+    background: var(--trigo);
+    color: var(--ink);
+}
+
+.cielo {
+    background: var(--cielo-soft);
+    color: var(--cielo);
+}
+
+.oliva {
+    background: var(--oliva-soft);
+    color: var(--ink);
+}
+
+.neutro {
+    background: var(--surface);
+    border-color: var(--ink-muted);
+    color: var(--ink-muted);
+}
+
+.barra {
+    display: block;
+    height: 8px;
+    width: 100%;
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    overflow: hidden;
+}
+
+.relleno {
+    display: block;
+    height: 100%;
+    background: var(--oliva);
+}

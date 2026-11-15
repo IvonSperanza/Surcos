@@ -1,0 +1,83 @@
+/* El fondo usa ink con transparencia derivada del token, sin color nuevo. */
+.fondo {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: grid;
+    place-items: center;
+    padding: var(--space-4);
+    background: color-mix(in srgb, var(--ink) 55%, transparent);
+    overflow-y: auto;
+}
+
+.dialogo {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-6) var(--space-4) var(--space-4);
+    text-align: center;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+}
+
+.dialogo h2,
+.dialogo p {
+    margin: 0;
+}
+
+.cerrar {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--ink-muted);
+    cursor: pointer;
+}
+
+.cerrar:hover {
+    color: var(--ink);
+    border-color: var(--line);
+}
+
+.secundario {
+    color: var(--ink-muted);
+}
+
+.marcoQr {
+    padding: var(--space-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface-raised);
+    line-height: 0;
+}
+
+.url {
+    color: var(--ink-muted);
+    overflow-wrap: anywhere;
+}
+
+.acciones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+}
+
+.botonIcono {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+}

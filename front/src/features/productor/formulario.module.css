@@ -1,0 +1,55 @@
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.grillaCampos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    gap: var(--space-4);
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+}
+
+.nombreCampo {
+    color: var(--ink-muted);
+}
+
+.campo input,
+.campo select {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--ink);
+    background: var(--surface-raised);
+    border: 1px solid var(--ink-muted);
+    border-radius: var(--radius-sm);
+    padding: var(--space-1) var(--space-2);
+    min-width: 0;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.error {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-sm);
+    background: var(--arcilla-soft);
+    color: var(--ink);
+}
+
+.acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    justify-content: flex-end;
+}
+
+.nota {
+    color: var(--ink-muted);
+}
