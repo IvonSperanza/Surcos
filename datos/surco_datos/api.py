@@ -10,13 +10,13 @@ from datetime import date, timedelta
 from typing import Any, Literal
 
 import requests
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, model_validator
 
-from surco_datos import ciclos, insights, power, sentinel2, suelo
+from surco_datos import catalogo, ciclos, insights, power, sentinel2, suelo
 from surco_datos.cache import clave, con_cache
 from surco_datos.geometria import area_ha, centroide
 
@@ -199,3 +199,25 @@ def asdict_profundo(resultado: dict) -> dict:
         "insights": [asdict(i) for i in resultado["insights"]],
         "descartados": [asdict(d) for d in resultado["descartados"]],
     }
+
+
+# --- Catálogo de cultivares (INASE) -------------------------------------------
+
+USOS_CATALOGO = {"cultivo": catalogo.GRUPOS_CULTIVO, "cobertura": catalogo.GRUPOS_COBERTURA}
+
+
+def fuente_catalogo() -> dict:
+    meta = catalogo.metadatos()
+    return {"fuente": meta["fuente"], "pagina": meta["pagina"], "descargado": meta["descargado"]}
+
+
+@app.get("/catalogo/especies")
+def especies_del_catalogo(uso: Literal["cultivo", "cobertura"] = "cultivo") -> dict:
+    especies = [{**e, "nombre_familia": catalogo.NOMBRES_FAMILIA.get(e["familia"])} for e in catalogo.especies(USOS_CATALOGO[uso])]
+    return ok({**fuente_catalogo(), "uso": uso, "especies": especies})
+
+
+@app.get("/catalogo/cultivares")
+def cultivares_del_catalogo(especie: str, q: str = "", limite: int = Query(20, ge=1, le=50)) -> dict:
+    encontrados = catalogo.buscar_cultivares(especie.upper(), q, limite)
+    return ok({**fuente_catalogo(), "especie": especie.upper(), "cultivares": [asdict(c) for c in encontrados]})

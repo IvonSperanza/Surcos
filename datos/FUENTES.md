@@ -341,7 +341,29 @@ reemplaza a SSURGO.
 
 ---
 
-## 9. Próximos pasos
+## 9. Catálogo Nacional de Cultivares (INASE)
+
+Para que el productor declare **qué variedad plantó** con nombres oficiales.
+
+- **Fuente que usamos:** el catálogo público del INASE,
+  <https://gestion.inase.gob.ar/registroCultivares/publico/catalogo>, con su
+  propia exportación a CSV. `scripts/descargar_inase.py` lo baja completo a
+  `referencias/inase_catalogo_cultivares.csv`, y deja al lado un `.json` con la
+  fecha de descarga.
+- **Qué trae:** número de inscripción, **nombre del cultivar**, especie, nombre
+  científico, grupo (HT hortícolas, FR frutales con vid, FO forrajeras, CE
+  cereales…), condición genética, fechas de inscripción y solicitante.
+  Descargado el 15/11/2026: 14.877 cultivares, inscripciones hasta el 23/10/2026.
+- **Familia botánica:** no viene en el catálogo. `surco_datos/catalogo.py` la
+  deduce del género del nombre científico (incluye abreviaturas y errores de
+  tipeo del catálogo). Es la que usa la verificación de la rotación.
+- **Descartado:** el dataset "Catálogo nacional de cultivares - RNC y RNPC" de
+  datos.gob.ar. Es una foto de septiembre de 2019 y **no trae el nombre del
+  cultivar**, sólo el número de expediente.
+- **Descartado:** UPOV PLUTO. Tiene nombres a nivel mundial pero la descarga
+  masiva es paga y no hay API pública.
+
+## 10. Próximos pasos
 
 1. **Crear una cuenta de Earthdata Login** (gratuita) para HLS, SMAP, IMERG,
    ECOSTRESS y SRTM. Guardar el token en `datos/.env` como `EARTHDATA_TOKEN`.
