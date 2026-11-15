@@ -207,21 +207,6 @@
 }
 
 /* Lo previo al cultivo va aparte y más apagado: es contexto, no el ciclo. */
-.historial {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    padding: var(--space-6);
-    background: var(--surface);
-    border: 1px dashed var(--line);
-    border-radius: var(--radius-md);
-}
-
-.historial h2,
-.historial p {
-    margin: 0;
-}
-
 @media (max-width: 900px) {
     .grillaDetalle {
         grid-template-columns: 1fr;

@@ -38,11 +38,11 @@ const foto = (nombre: keyof typeof CREDITOS) => {
 type EventoEjemplo = Pick<EventoInsert, "tipo" | "fecha"> & Partial<Omit<EventoInsert, "parcelaId">>;
 
 const HISTORIA_CANTEROS: EventoEjemplo[] = [
-    { tipo: "labranza", fecha: "2025-11-20", detalles: { labor: "Rotovator" } },
+    { tipo: "labranza", fecha: "2025-11-06", detalles: { labor: "Rotovator" } },
     { tipo: "siembra", fecha: "2025-12-05", cultivo: cultivo(LECHUGA, "CRIOLLA VERDE", "4402"), detalles: { metodo: "Trasplante", semilla: "Fiscalizada" } },
     { tipo: "riego", fecha: "2025-12-15", detalles: { metodo: "Goteo", lamina: "12" } },
     { tipo: "cosecha", fecha: "2025-12-30", detalles: { cantidad: "8500" }, foto: foto("lechuga-criolla-verde") },
-    { tipo: "labranza", fecha: "2026-03-20", detalles: { labor: "Rastra" } },
+    { tipo: "labranza", fecha: "2026-03-06", detalles: { labor: "Rastra" } },
     { tipo: "siembra", fecha: "2026-03-28", cultivo: cultivo(ACELGA, "VERDE ANUAL SEL SAN PEDRO INTA", "974"), detalles: { metodo: "Siembra directa", semilla: "Fiscalizada" } },
     { tipo: "fertilizacion", fecha: "2026-04-15", detalles: { origen: "Orgánica (compost, guano)", producto: "Compost de la quinta", dosis: "3 t/ha" } },
     { tipo: "fitosanitario", fecha: "2026-04-25", detalles: { clase: "Biológico", producto: "Bacillus thuringiensis", carencia: "0" } },
@@ -50,7 +50,7 @@ const HISTORIA_CANTEROS: EventoEjemplo[] = [
     { tipo: "siembra", fecha: "2026-06-05", cultivo: cultivo(LECHUGA, "GALLEGA", "4403"), detalles: { metodo: "Trasplante", semilla: "Fiscalizada" } },
     { tipo: "dano_climatico", fecha: "2026-07-03", detalles: { causa: "Helada", magnitud: "Leve" }, notas: "Se quemaron las puntas de las hojas exteriores." },
     { tipo: "cosecha", fecha: "2026-07-08", detalles: { cantidad: "7800" }, foto: foto("lechuga-gallega-cosecha") },
-    { tipo: "cobertura", fecha: "2026-08-01", cultivo: cultivo(VICIA, "ASCASUBI INTA", "16520") },
+    { tipo: "cobertura", fecha: "2026-07-28", cultivo: cultivo(VICIA, "ASCASUBI INTA", "16520") },
     { tipo: "incorporacion", fecha: "2026-09-25", detalles: { metodo: "Rolado" } },
     { tipo: "siembra", fecha: "2026-10-10", cultivo: cultivo(TOMATE, "PLATENSE J.J.GOMEZ", "958"), detalles: { metodo: "Trasplante", semilla: "Fiscalizada" } },
     { tipo: "riego", fecha: "2026-10-24", detalles: { metodo: "Goteo", lamina: "8" } },

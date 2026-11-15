@@ -16,3 +16,11 @@ export function tituloEvento(evento: Evento): string {
     if (!evento.cultivo) return nombre;
     return `${nombre} · ${nombreCultivo(evento.cultivo)}`;
 }
+
+export function detallesEvento(evento: Evento): string {
+    const { campos } = TIPOS_EVENTO[evento.tipo];
+    return campos
+        .filter((c) => evento.detalles[c.clave])
+        .map((c) => (c.tipo === "numero" ? `${c.etiqueta}: ${evento.detalles[c.clave]} ${c.unidad}` : evento.detalles[c.clave]))
+        .join(" · ");
+}

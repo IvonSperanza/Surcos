@@ -2,17 +2,9 @@ import { Trash2 } from "lucide-react";
 import type { Evento } from "../../api/eventos";
 import { formatearFecha } from "../../lib/fecha";
 import { CreditoFoto } from "./CreditoFoto";
-import { tituloEvento } from "./textoEvento";
+import { detallesEvento, tituloEvento } from "./textoEvento";
 import { TIPOS_EVENTO } from "./tiposEvento";
 import styles from "./eventos.module.css";
-
-function detallesEvento(evento: Evento): string {
-    const { campos } = TIPOS_EVENTO[evento.tipo];
-    return campos
-        .filter((c) => evento.detalles[c.clave])
-        .map((c) => (c.tipo === "numero" ? `${c.etiqueta}: ${evento.detalles[c.clave]} ${c.unidad}` : evento.detalles[c.clave]))
-        .join(" · ");
-}
 
 function OrigenCultivo({ evento }: { evento: Evento }) {
     if (!evento.cultivo) return null;
@@ -25,29 +17,36 @@ function OrigenCultivo({ evento }: { evento: Evento }) {
     );
 }
 
+// Lo que declaró el productor: también lo usa la historia contrastada con el satélite.
+export function CuerpoEvento({ evento }: { evento: Evento }) {
+    const detalles = detallesEvento(evento);
+    return (
+        <div className={styles.cuerpoEvento}>
+            <h3 className="subtitulo">{tituloEvento(evento)}</h3>
+            {detalles && <p className="body">{detalles}</p>}
+            <OrigenCultivo evento={evento} />
+            {evento.notas && <p className={`small ${styles.ayuda}`}>{evento.notas}</p>}
+            {evento.foto && (
+                <figure className={styles.fotoEvento}>
+                    <img src={evento.foto.url} alt={`Foto: ${tituloEvento(evento)}`} loading="lazy" />
+                    <figcaption className={`small ${styles.ayuda}`}>
+                        <CreditoFoto foto={evento.foto} />
+                    </figcaption>
+                </figure>
+            )}
+        </div>
+    );
+}
+
 function ItemEvento({ evento, onEliminar }: { evento: Evento; onEliminar?: () => void }) {
     const { Icono } = TIPOS_EVENTO[evento.tipo];
-    const detalles = detallesEvento(evento);
     return (
         <li className={styles.evento}>
             <p className={`dato ${styles.fechaEvento}`}>{formatearFecha(evento.fecha)}</p>
             <span className={styles.iconoEvento} aria-hidden>
                 <Icono size={18} strokeWidth={1.5} />
             </span>
-            <div className={styles.cuerpoEvento}>
-                <h3 className="subtitulo">{tituloEvento(evento)}</h3>
-                {detalles && <p className="body">{detalles}</p>}
-                <OrigenCultivo evento={evento} />
-                {evento.notas && <p className={`small ${styles.ayuda}`}>{evento.notas}</p>}
-                {evento.foto && (
-                    <figure className={styles.fotoEvento}>
-                        <img src={evento.foto.url} alt={`Foto: ${tituloEvento(evento)}`} loading="lazy" />
-                        <figcaption className={`small ${styles.ayuda}`}>
-                            <CreditoFoto foto={evento.foto} />
-                        </figcaption>
-                    </figure>
-                )}
-            </div>
+            <CuerpoEvento evento={evento} />
             {onEliminar && (
                 <button type="button" className={styles.eliminar} onClick={onEliminar} aria-label={`Eliminar: ${tituloEvento(evento)}`}>
                     <Trash2 size={16} strokeWidth={1.5} aria-hidden />

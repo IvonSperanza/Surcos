@@ -16,7 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, model_validator
 
-from surco_datos import catalogo, ciclos, insights, power, sentinel2, suelo
+from surco_datos import catalogo, ciclos, contraste, insights, power, sentinel2, suelo
 from surco_datos.cache import clave, con_cache
 from surco_datos.geometria import area_ha, centroide
 
@@ -199,6 +199,64 @@ def asdict_profundo(resultado: dict) -> dict:
         "insights": [asdict(i) for i in resultado["insights"]],
         "descartados": [asdict(d) for d in resultado["descartados"]],
     }
+
+
+# --- Contraste de los eventos declarados -------------------------------------
+
+TIPOS_EVENTO = Literal[
+    "siembra", "cosecha", "labranza", "cobertura", "incorporacion", "riego",
+    "fertilizacion", "fitosanitario", "desmalezado", "dano_climatico", "foto",
+]
+# Antes del primer evento hace falta ver la parcela: la pasada de "antes" de
+# una labranza, o el suelo antes de una siembra.
+DIAS_ANTES_DEL_PRIMER_EVENTO = 30
+
+
+class EventoDeclarado(BaseModel):
+    id: str
+    tipo: TIPOS_EVENTO
+    fecha: date
+    detalles: dict[str, str] = Field(default_factory=dict)
+
+
+class PedidoContraste(PedidoParcela):
+    eventos: list[EventoDeclarado] = Field(min_length=1, max_length=200)
+
+
+def periodo_de_eventos(eventos: list[EventoDeclarado], hoy: date) -> tuple[date, date]:
+    """Empieza el primer día del trimestre: así las producciones de una misma
+    parcela comparten la consulta (y la caché) en vez de pedir una cada una."""
+    primero = min(e.fecha for e in eventos) - timedelta(days=DIAS_ANTES_DEL_PRIMER_EVENTO)
+    desde = date(primero.year, 3 * ((primero.month - 1) // 3) + 1, 1)
+    return max(desde, hoy - timedelta(days=DIAS_MAXIMOS)), hoy
+
+
+@app.post("/contraste")
+def contraste_de_eventos(pedido: PedidoContraste) -> dict:
+    geometria, hectareas = geometria_valida(pedido)
+    hoy = date.today()
+    desde, hasta = periodo_de_eventos(pedido.eventos, hoy)
+    historico = obtener_historico(geometria, hectareas, desde, hasta)
+    clima_parcela = obtener_clima(geometria, desde, hasta)
+    eventos = [{**e.model_dump(), "fecha": e.fecha.isoformat()} for e in pedido.eventos if e.fecha <= hoy]
+    resultado = contraste.contrastar(eventos, historico["serie"], historico["analisis"], clima_parcela["diario"], hoy)
+    return ok(
+        {
+            **resultado,
+            "eventos": [asdict(r) for r in resultado["eventos"]],
+            "fuentes": {"satelite": historico["fuente"], "clima": clima_parcela["fuente"]},
+            "desde": desde.isoformat(),
+            "hasta": hasta.isoformat(),
+            "generado": hoy.isoformat(),
+            # La curva y los ciclos, para dibujar los eventos sobre lo que vio el satélite.
+            "serie": [
+                {k: p[k] for k in ("fecha", "ndvi", "ndti", "ndmi", "ndre", "bsi", "escena")}
+                for p in historico["serie"]
+                if str(p["fecha"]) not in {str(f) for f in historico["analisis"]["pasadas_atipicas"]}
+            ],
+            "ciclos": historico["analisis"]["ciclos"],
+        }
+    )
 
 
 # --- Catálogo de cultivares (INASE) -------------------------------------------

@@ -5,8 +5,8 @@ import { Card, DatoFicha, FichaTecnica, Fuente } from "../../design-system";
 import { formatearFecha } from "../../lib/fecha";
 import { areaHa } from "../../lib/geometria";
 import { formatearNumero } from "../../lib/numero";
+import { HistoriaVerificada } from "../contraste/HistoriaVerificada";
 import { CreditoFoto } from "../eventos/CreditoFoto";
-import { LineaTiempo } from "../eventos/LineaTiempo";
 import { nombreCultivo, nombreEspecie } from "../eventos/textoEvento";
 import { TIPOS_EVENTO } from "../eventos/tiposEvento";
 import { MapaParcelas } from "../parcelas/MapaParcelas";
@@ -106,21 +106,13 @@ export function DetalleProduccion({ produccion, enlaceParcela }: Props) {
 
             <Aplicaciones eventos={produccion.durante.filter((e) => APLICACIONES.has(e.tipo))} />
 
-            <Card className={styles.seccion}>
-                <h2 className="subtitulo">Historial</h2>
-                <LineaTiempo eventos={[...delCultivo].reverse()} />
-            </Card>
-
-            <section className={styles.historial} aria-labelledby={`historial-${produccion.id}`}>
-                <h2 id={`historial-${produccion.id}`} className="subtitulo">
-                    Antes de la siembra
-                </h2>
-                {produccion.antes.length > 0 ? (
-                    <LineaTiempo eventos={[...produccion.antes].reverse()} />
-                ) : (
-                    <p className="body">Sin eventos desde la cosecha anterior.</p>
-                )}
-            </section>
+            <HistoriaVerificada
+                geometria={produccion.parcela.geometria}
+                grupos={[
+                    { titulo: "Antes de la siembra", eventos: produccion.antes },
+                    { titulo: "El cultivo", eventos: delCultivo }
+                ]}
+            />
         </>
     );
 }
