@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Surco · Panel del productor</title>
-<meta name="description" content="Demo del panel de productor de Surco: rotación del suelo, pedidos, carga de productos con QR, maduración y pagos.">
+<meta name="description" content="Demo del panel de productor de Surco: rotación del suelo, cosecha por parcela, producción de elaborados, pasaportes QR, pedidos y pagos.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="styles.css">
@@ -375,6 +375,15 @@
             </div>
           </article>
         </div>
+
+        <article class="panel cosechas-panel">
+          <div class="panel-head">
+            <h2>Cosecha y producción por parcela</h2>
+            <span class="chip chip-oliva" id="cosechas-total">4 productos</span>
+          </div>
+          <div class="cosechas-grid" id="cosechas-parcelas"></div>
+          <p class="source">Cuando una parcela se cosecha, su producto pasa a Productos y QR con todo el historial. Los elaborados, como el vino, completan primero su producción.</p>
+        </article>
       </section>
 
       <!-- PRODUCTOS -->
@@ -382,98 +391,32 @@
         <div class="view-head">
           <div>
             <p class="kicker">Productos y QR</p>
-            <h1 class="view-title" id="title-productos">Cargá tu cosecha y generá su QR</h1>
-            <p class="view-sub">Cada producto lleva fecha de plantación, químicos, cosecha y reparto. El QR se emite según la cobertura del lote.</p>
+            <h1 class="view-title" id="title-productos">Tus cosechas y su QR</h1>
+            <p class="view-sub">Cada cosecha que registrás en una parcela llega acá con todos sus datos. Los elaborados, como el vino, completan su producción antes de salir al mercado.</p>
           </div>
           <div class="view-actions">
             <span class="demo-inline">Datos de demostración</span>
-            <button class="btn btn-forest" type="button" id="new-product-btn">+ Nuevo producto</button>
-            <button class="btn btn-cream" type="button" id="back-products-btn" data-prod-back hidden>Volver a productos cargados</button>
           </div>
         </div>
 
         <div class="prod-tab" data-prod-tab="lista">
-          <div class="panel-head products-head">
-            <h2>Productos cargados</h2>
-            <span class="chip chip-oliva" id="productos-count">4 productos</span>
+          <div class="prod-group" id="produccion-panel">
+            <div class="panel-head products-head">
+              <h2>En producción</h2>
+              <span class="chip chip-sky" id="produccion-count">0 productos</span>
+            </div>
+            <div id="products-produccion" class="products-list"></div>
+            <p class="source">El QR se emite cuando la producción finaliza y el producto sale al mercado.</p>
           </div>
-          <div id="products-list" class="products-list"></div>
-        </div>
 
-        <div class="prod-tab" data-prod-tab="nuevo" hidden>
-          <article class="panel form-panel">
-            <div class="panel-head"><h2>Nuevo producto</h2><span class="chip chip-oliva">QR automático</span></div>
-            <form id="producto-form" novalidate>
-              <div class="field-grid">
-                <label class="field">
-                  <span>Tipo de producto *</span>
-                  <select id="p-tipo" required>
-                    <option value="Hortalizas">Hortalizas</option>
-                    <option value="Frutas">Frutas</option>
-                    <option value="Vinos">Vinos</option>
-                    <option value="Granos">Granos</option>
-                  </select>
-                </label>
-                <label class="field">
-                  <span>Lote *</span>
-                  <select id="p-lote" required>
-                    <option value="SC-2026-0417">SC-2026-0417 · La Arboleda (87%)</option>
-                    <option value="SC-2026-0418">SC-2026-0418 · La Cañada (78%)</option>
-                    <option value="SC-2026-0419">SC-2026-0419 · El Sauce (92%)</option>
-                  </select>
-                </label>
-              </div>
-              <label class="field">
-                <span>Cultivo o nombre del producto *</span>
-                <input id="p-cultivo" type="text" placeholder="Tomate perita" maxlength="60" required>
-              </label>
-              <div class="field-grid">
-                <label class="field">
-                  <span>Fecha de plantación *</span>
-                  <input id="p-plantacion" type="date" required>
-                </label>
-                <label class="field">
-                  <span>Fecha de cosecha *</span>
-                  <input id="p-cosecha" type="date" required>
-                </label>
-              </div>
-              <label class="field">
-                <span>Químicos aplicados *</span>
-                <input id="p-quimicos" type="text" placeholder="Ninguno, cobre, azufre…" maxlength="80" required>
-              </label>
-              <div class="field-grid">
-                <label class="field">
-                  <span>Fecha de reparto *</span>
-                  <input id="p-reparto" type="date" required>
-                </label>
-                <label class="field">
-                  <span>Destino del reparto *</span>
-                  <select id="p-destino" required>
-                    <option value="Consumidor final">Consumidor final</option>
-                    <option value="Súper">Súper</option>
-                    <option value="Mercado">Mercado</option>
-                    <option value="PyME">PyME</option>
-                  </select>
-                </label>
-              </div>
-              <div class="field-grid">
-                <label class="field">
-                  <span>Precio de venta</span>
-                  <input id="p-precio" type="number" min="0" step="50" placeholder="4800">
-                </label>
-                <label class="field">
-                  <span>Unidad</span>
-                  <input id="p-unidad" type="text" placeholder="bolsón, cajón, botella" maxlength="20">
-                </label>
-              </div>
-              <p class="form-error" id="form-error" role="alert" hidden></p>
-              <div class="form-actions">
-                <button class="btn btn-cream" type="button" data-prod-back>Cancelar y volver a productos cargados</button>
-                <button class="btn btn-primary" type="submit">Cargar producto y generar QR</button>
-              </div>
-              <p class="w-note">Todos los campos con * son obligatorios. Con cobertura menor al 85% el QR se emite en estado pendiente.</p>
-            </form>
-          </article>
+          <div class="prod-group">
+            <div class="panel-head products-head">
+              <h2>Listos para el mercado</h2>
+              <span class="chip chip-oliva" id="productos-count">0 productos</span>
+            </div>
+            <div id="products-list" class="products-list"></div>
+            <p class="source">Cada producto conserva el historial de la parcela: plantación, aplicaciones, cosecha, producción y reparto.</p>
+          </div>
         </div>
       </section>
 
@@ -566,9 +509,45 @@
     <p class="modal-state" id="qr-state"></p>
     <p class="modal-url dato" id="qr-url">surco.app/p/SUR-2026-0001</p>
     <p class="w-note">Escaneá para ver el lote, el productor y la cosecha.</p>
+    <div class="qr-history" id="qr-history"></div>
     <div class="modal-actions">
       <button class="btn btn-cream btn-sm" type="button" id="qr-download">Descargar QR</button>
       <button class="btn btn-dark btn-sm" type="button" id="qr-done">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PRODUCCIÓN -->
+<div class="modal" id="prod-modal" hidden>
+  <div class="modal-card modal-wide" role="dialog" aria-modal="true" aria-labelledby="prod-title">
+    <button class="modal-close" type="button" id="prod-close" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <p class="kicker">Producción</p>
+    <h2 class="modal-title" id="prod-title">Producto</h2>
+    <p class="modal-id dato" id="prod-id">SUR-2026-0004</p>
+    <p class="prod-context small" id="prod-context"></p>
+    <div class="prod-form">
+      <div class="field-grid">
+        <label class="field">
+          <span>Inicio de producción</span>
+          <input id="prod-inicio" type="date">
+        </label>
+        <label class="field">
+          <span>Fin de producción</span>
+          <input id="prod-fin" type="date">
+        </label>
+      </div>
+      <label class="field">
+        <span>Cambios finales, uno por línea</span>
+        <textarea id="prod-cambios" rows="4" placeholder="Fermentación completa&#10;Crianza en roble 6 meses"></textarea>
+      </label>
+      <p class="form-error" id="prod-error" role="alert" hidden></p>
+    </div>
+    <p class="w-note">Mientras la producción sigue abierta el producto no sale al mercado. Al finalizarla se emite su QR con todo el historial.</p>
+    <div class="modal-actions">
+      <button class="btn btn-cream btn-sm" type="button" id="prod-save">Guardar cambios</button>
+      <button class="btn btn-primary btn-sm" type="button" id="prod-finish">Producción finalizada</button>
     </div>
   </div>
 </div>

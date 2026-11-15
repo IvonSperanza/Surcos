@@ -1,56 +1,57 @@
 (function () {
   'use strict';
 
-  var STORE_KEY = 'surco-productor-v1';
+  var STORE_KEY = 'surco-productor-v2';
 
-  var LOTES = {
-    'SC-2026-0417': { nombre: 'La Arboleda', cobertura: 87 },
-    'SC-2026-0418': { nombre: 'La Cañada', cobertura: 78 },
-    'SC-2026-0419': { nombre: 'El Sauce', cobertura: 92 }
-  };
+  var LOTE = { id: 'SC-2026-0417', nombre: 'La Arboleda' };
 
   var MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 
   var PARCELAS = [
     {
-      id: 'p1', nombre: 'Parcela 1', ha: '1,2 ha', cultivo: 'Tomate', cobertura: '84%',
+      id: 'p1', nombre: 'Parcela 1', ha: '1,2 ha', cultivo: 'Tomate', cobertura: '84%', coberturaNum: 84,
       desnudo: '26 días', humedad: 'Media-baja (0,24)', ndvi: '0,64 · HLS 12 oct',
       tono: 'atencion', anterior: 'Tomate', sugerido: 'Vicia + avena',
       motivo: 'La leguminosa fija nitrógeno y la avena cubre el suelo en invierno, cuando más erosión hay.',
       ventana: '15 abr – 30 may 2027',
-      cambios: ['Sembrar cobertura invernal antes del 15 may.', 'Evitar labranza profunda tras la cosecha.', 'Dejar rastrojo en superficie hasta la siembra.']
+      cambios: ['Sembrar cobertura invernal antes del 15 may.', 'Evitar labranza profunda tras la cosecha.', 'Dejar rastrojo en superficie hasta la siembra.'],
+      producto: { tipo: 'Hortalizas', nombre: 'Tomate perita', plantacion: '2026-08-12', quimicos: 'Ninguno', reparto: '2026-10-13', destino: 'Consumidor final', precio: 4800, unidad: 'bolsón', elaborado: false }
     },
     {
-      id: 'p2', nombre: 'Parcela 2', ha: '0,8 ha', cultivo: 'Lechuga', cobertura: '89%',
+      id: 'p2', nombre: 'Parcela 2', ha: '0,8 ha', cultivo: 'Lechuga', cobertura: '89%', coberturaNum: 89,
       desnudo: '14 días', humedad: 'Media (0,27)', ndvi: '0,71 · HLS 12 oct',
       tono: 'bien', anterior: 'Lechuga', sugerido: 'Maíz dulce',
       motivo: 'Rompe el ciclo de plagas de la lechuga y tiene demanda de mercados B2B en primavera.',
       ventana: '10 sep – 20 oct 2027',
-      cambios: ['Mantener el rastrojo actual.', 'Rotar con maíz dulce en la próxima campaña.']
+      cambios: ['Mantener el rastrojo actual.', 'Rotar con maíz dulce en la próxima campaña.'],
+      producto: { tipo: 'Hortalizas', nombre: 'Lechuga mantecosa', plantacion: '2026-08-02', quimicos: 'Ninguno', reparto: '2026-10-10', destino: 'Mercado', precio: 1800, unidad: 'atado', elaborado: false }
     },
     {
-      id: 'p3', nombre: 'Parcela 3', ha: '1,0 ha', cultivo: 'Acelga', cobertura: '76%',
+      id: 'p3', nombre: 'Parcela 3', ha: '1,0 ha', cultivo: 'Acelga', cobertura: '76%', coberturaNum: 76,
       desnudo: '34 días', humedad: 'Baja (0,21)', ndvi: '0,58 · HLS 12 oct',
       tono: 'mejorar', anterior: 'Acelga', sugerido: 'Descanso con trébol + siembra directa',
       motivo: 'Recupera materia orgánica y evita la erosión en una parcela con cobertura baja.',
       ventana: '1 may – 15 jul 2027',
-      cambios: ['Pasar a siembra directa, sin labranza.', 'Sembrar trébol como cobertura.', 'Corregir pH de 6,8 a 6,2 con azufre.']
+      cambios: ['Pasar a siembra directa, sin labranza.', 'Sembrar trébol como cobertura.', 'Corregir pH de 6,8 a 6,2 con azufre.'],
+      producto: { tipo: 'Hortalizas', nombre: 'Acelga de la quinta', plantacion: '2026-09-05', quimicos: 'Ninguno', reparto: '', destino: 'PyME', precio: 2100, unidad: 'atado', elaborado: false }
     },
     {
-      id: 'p4', nombre: 'Parcela 4', ha: '0,6 ha', cultivo: 'Frutilla', cobertura: '92%',
+      id: 'p4', nombre: 'Parcela 4', ha: '0,6 ha', cultivo: 'Frutilla', cobertura: '92%', coberturaNum: 92,
       desnudo: '9 días', humedad: 'Alta (0,31)', ndvi: '0,75 · HLS 12 oct',
       tono: 'bien', anterior: 'Frutilla', sugerido: 'Trigo de cobertura',
       motivo: 'El trigo deja rastrojo, reduce la erosión y aporta materia orgánica antes del próximo ciclo.',
       ventana: '20 jun – 10 ago 2027',
-      cambios: ['Dejar el rastrojo de trigo tras la cosecha.', 'Evitar el tránsito pesado sobre suelo húmedo.']
+      cambios: ['Dejar el rastrojo de trigo tras la cosecha.', 'Evitar el tránsito pesado sobre suelo húmedo.'],
+      producto: { tipo: 'Frutas', nombre: 'Frutilla del día', plantacion: '2026-07-20', quimicos: 'Cobre (1 aplicación)', reparto: '2026-10-11', destino: 'Súper', precio: 6200, unidad: 'cajón', elaborado: false }
     },
     {
-      id: 'p5', nombre: 'Parcela 5', ha: '1,0 ha', cultivo: 'Vid', cobertura: '98%',
+      id: 'p5', nombre: 'Parcela 5', ha: '1,0 ha', cultivo: 'Vid', cobertura: '98%', coberturaNum: 98,
       desnudo: '3 días', humedad: 'Media (0,26)', ndvi: '0,78 · HLS 12 oct',
       tono: 'bien', anterior: 'Vid', sugerido: 'Mantener cobertura entre filas',
       motivo: 'La vid es perenne: no rota, pero la cobertura entre filas protege el suelo todo el año.',
       ventana: 'Todo el año',
-      cambios: ['Mantener la cobertura entre filas durante el invierno.', 'Controlar la maleza sin labranza profunda.']
+      cambios: ['Mantener la cobertura entre filas durante el invierno.', 'Controlar la maleza sin labranza profunda.'],
+      producto: { tipo: 'Vinos', nombre: 'Malbec de La Arboleda', plantacion: '2019-09-15', quimicos: 'Azufre y cobre', reparto: '', destino: 'Mercado', precio: 9500, unidad: 'botella', elaborado: true }
     }
   ];
 
@@ -98,12 +99,35 @@
     box: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5-9 5z"/><path d="M3 8v8l9 5 9-5V8"/></svg>',
     truck: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4h14v11H1z"/><path d="M15 8h4l3 3v4h-7"/><circle cx="5" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
     money: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg>',
-    x: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>'
+    x: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+    leaf: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-9M12 12c0-4-3-6-7-6 0 4 3 6 7 6zM12 16c0-4 3-6 7-6 0 4-3 6-7 6z"/></svg>'
   };
+
+  function nuevoProducto(parcela, extra) {
+    var base = parcela.producto;
+    return {
+      n: extra.n,
+      parcela: parcela.id,
+      lote: LOTE.id,
+      tipo: base.tipo,
+      cultivo: base.nombre,
+      plantacion: base.plantacion,
+      cosecha: extra.cosecha,
+      quimicos: base.quimicos,
+      reparto: extra.reparto !== undefined ? extra.reparto : base.reparto,
+      destino: base.destino,
+      precio: base.precio,
+      unidad: base.unidad,
+      elaborado: base.elaborado,
+      estado: extra.estado || 'listo',
+      qrEmitido: extra.qrEmitido || '',
+      produccion: extra.produccion || null
+    };
+  }
 
   function seedState() {
     return {
-      version: 1,
+      version: 2,
       nextProduct: 5,
       nextOrder: 1043,
       nextPayment: 90,
@@ -119,10 +143,13 @@
       },
       checks: {},
       products: [
-        { n: 1, tipo: 'Hortalizas', cultivo: 'Bolsón de estación', lote: 'SC-2026-0417', plantacion: '2026-08-12', cosecha: '2026-10-12', reparto: '2026-10-13', quimicos: 'Ninguno', destino: 'Consumidor final', precio: 4800, unidad: 'bolsón' },
-        { n: 2, tipo: 'Frutas', cultivo: 'Cajón de frutillas', lote: 'SC-2026-0417', plantacion: '2026-07-20', cosecha: '2026-10-10', reparto: '2026-10-11', quimicos: 'Cobre (1 aplicación)', destino: 'Súper', precio: 6200, unidad: 'cajón' },
-        { n: 3, tipo: 'Vinos', cultivo: 'Malbec de La Arboleda', lote: 'SC-2026-0419', plantacion: '2019-09-15', cosecha: '2026-03-22', reparto: '2026-04-05', quimicos: 'Azufre y cobre', destino: 'Mercado', precio: 9500, unidad: 'botella' },
-        { n: 4, tipo: 'Hortalizas', cultivo: 'Acelga de la quinta', lote: 'SC-2026-0418', plantacion: '2026-09-05', cosecha: '2026-11-08', reparto: '2026-11-09', quimicos: 'Ninguno', destino: 'PyME', precio: 2100, unidad: 'atado' }
+        nuevoProducto(PARCELAS[0], { n: 1, cosecha: '2026-10-12', reparto: '2026-10-13', estado: 'listo', qrEmitido: '2026-10-12' }),
+        nuevoProducto(PARCELAS[1], { n: 2, cosecha: '2026-10-09', reparto: '2026-10-10', estado: 'listo', qrEmitido: '2026-10-09' }),
+        nuevoProducto(PARCELAS[3], { n: 3, cosecha: '2026-10-10', reparto: '2026-10-11', estado: 'listo', qrEmitido: '2026-10-10' }),
+        nuevoProducto(PARCELAS[4], {
+          n: 4, cosecha: '2026-03-22', reparto: '', estado: 'en_produccion',
+          produccion: { inicio: '2026-03-23', fin: '', cambios: ['Fermentación alcohólica completa', 'Crianza en roble 6 meses'] }
+        })
       ],
       orders: [
         { id: 'PED-1042', comprador: 'Mercado del Puerto', tipo: 'Mercado', detalle: '40 bolsones + 10 cajones', fecha: '2026-10-14', total: 254000, estado: 'pendiente' },
@@ -145,6 +172,7 @@
   var currentFilter = 'todos';
   var lastFocus = null;
   var toastTimer = null;
+  var produccionActual = null;
 
   function loadState() {
     var raw;
@@ -152,7 +180,7 @@
     if (!raw) return null;
     try {
       var parsed = JSON.parse(raw);
-      return parsed && parsed.version === 1 ? parsed : null;
+      return parsed && parsed.version === 2 ? parsed : null;
     } catch (e) { return null; }
   }
 
@@ -193,9 +221,37 @@
     return parseInt(parts[2], 10) + ' ' + MESES[m] + ' ' + parts[0];
   }
 
+  function findParcela(id) {
+    for (var i = 0; i < PARCELAS.length; i++) {
+      if (PARCELAS[i].id === id) return PARCELAS[i];
+    }
+    return null;
+  }
+
+  function findProduct(n) {
+    for (var i = 0; i < state.products.length; i++) {
+      if (String(state.products[i].n) === String(n)) return state.products[i];
+    }
+    return null;
+  }
+
+  function productoDeParcela(id) {
+    for (var i = 0; i < state.products.length; i++) {
+      if (state.products[i].parcela === id) return state.products[i];
+    }
+    return null;
+  }
+
+  function periodoProduccion(product) {
+    if (!product.produccion) return '';
+    var inicio = fmtDate(product.produccion.inicio);
+    return inicio + (product.produccion.fin ? ' a ' + fmtDate(product.produccion.fin) : ' · en curso');
+  }
+
   function qrState(product) {
-    var lote = LOTES[product.lote];
-    return lote && lote.cobertura >= 85 ? 'verificado' : 'pendiente';
+    if (product.estado === 'en_produccion') return 'en_produccion';
+    var parcela = findParcela(product.parcela);
+    return parcela && parcela.coberturaNum >= 85 ? 'verificado' : 'pendiente';
   }
 
   function chipState(def) {
@@ -207,10 +263,18 @@
   function orderStateEl(kind) { return chipState(ORDER_STATES[kind]); }
 
   function qrStateEl(kind) {
-    var def = kind === 'verificado'
-      ? { label: 'Verificado', cls: 'state-verificado', icon: 'check' }
-      : { label: 'QR pendiente', cls: 'state-revision', icon: 'clock' };
-    return chipState(def);
+    var defs = {
+      verificado: { label: 'Verificado', cls: 'state-verificado', icon: 'check' },
+      pendiente: { label: 'QR pendiente', cls: 'state-revision', icon: 'clock' },
+      en_produccion: { label: 'En producción', cls: 'state-produccion', icon: 'clock' }
+    };
+    return chipState(defs[kind] || defs.pendiente);
+  }
+
+  function estadoParcelaEl(product) {
+    if (!product) return chipState({ label: 'En cultivo', cls: 'state-confirmado', icon: 'leaf' });
+    if (product.estado === 'en_produccion') return chipState({ label: 'En producción', cls: 'state-produccion', icon: 'clock' });
+    return chipState({ label: 'Cosechado', cls: 'state-verificado', icon: 'check' });
   }
 
   function payStateEl(estado) {
@@ -232,20 +296,6 @@
     }
     window.history.replaceState(null, '', '#' + name);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (name === 'productos') showProductTab('lista');
-  }
-
-  function showProductTab(tab) {
-    var tabs = document.querySelectorAll('[data-prod-tab]');
-    for (var i = 0; i < tabs.length; i++) {
-      tabs[i].hidden = tabs[i].getAttribute('data-prod-tab') !== tab;
-    }
-    document.getElementById('new-product-btn').hidden = tab !== 'lista';
-    document.getElementById('back-products-btn').hidden = tab !== 'nuevo';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (tab === 'nuevo') {
-      document.getElementById('p-cultivo').focus({ preventScroll: true });
-    }
   }
 
   /* ---------- KPIs ---------- */
@@ -292,12 +342,28 @@
 
   /* ---------- Productos ---------- */
   function renderProducts() {
-    var list = document.getElementById('products-list');
-    list.innerHTML = '';
-    var count = state.products.length;
-    document.getElementById('productos-count').textContent = count + (count === 1 ? ' producto' : ' productos');
+    var listos = state.products.filter(function (p) { return p.estado !== 'en_produccion'; });
+    var enProduccion = state.products.filter(function (p) { return p.estado === 'en_produccion'; });
 
-    state.products.forEach(function (p) {
+    renderProductGroup(document.getElementById('products-list'), listos, false);
+    renderProductGroup(document.getElementById('products-produccion'), enProduccion, true);
+
+    document.getElementById('productos-count').textContent = listos.length + (listos.length === 1 ? ' producto' : ' productos');
+    document.getElementById('produccion-count').textContent = enProduccion.length + (enProduccion.length === 1 ? ' producto' : ' productos');
+    document.getElementById('produccion-panel').hidden = enProduccion.length === 0;
+
+    var total = state.products.length;
+    document.getElementById('cosechas-total').textContent = total + (total === 1 ? ' producto' : ' productos');
+  }
+
+  function renderProductGroup(container, products, enProduccion) {
+    container.innerHTML = '';
+    if (!products.length) {
+      if (!enProduccion) container.appendChild(el('p', 'prod-empty', 'Todavía no hay productos listos. Registrá una cosecha desde Mi lote.'));
+      return;
+    }
+
+    products.forEach(function (p) {
       var card = el('article', 'prod-item');
       card.setAttribute('data-n', p.n);
 
@@ -312,11 +378,14 @@
 
       card.appendChild(el('h3', null, p.cultivo));
 
+      var parcela = findParcela(p.parcela);
       var params = el('dl', 'prod-params');
       addParam(params, 'Plantación', fmtDate(p.plantacion));
-      addParam(params, 'Químicos', p.quimicos);
       addParam(params, 'Cosecha', fmtDate(p.cosecha));
-      addParam(params, 'Reparto', fmtDate(p.reparto) + ' · ' + p.destino);
+      if (p.elaborado) addParam(params, 'Producción', p.produccion ? periodoProduccion(p) : 'Sin iniciar');
+      addParam(params, 'Parcela', parcela ? parcela.nombre : p.lote);
+      addParam(params, 'Químicos', p.quimicos);
+      addParam(params, 'Reparto', p.reparto ? fmtDate(p.reparto) + ' · ' + p.destino : 'Al finalizar la producción');
       card.appendChild(params);
 
       var foot = el('div', 'prod-foot');
@@ -328,12 +397,26 @@
         foot.appendChild(el('span', 'small', 'Precio a definir'));
       }
 
-      var btn = el('button', 'btn btn-cream btn-sm', 'Ver QR');
-      btn.type = 'button';
-      btn.setAttribute('data-qr', p.n);
-      foot.appendChild(btn);
+      if (enProduccion) {
+        var prodBtn = el('button', 'btn btn-forest btn-sm', 'Producción');
+        prodBtn.type = 'button';
+        prodBtn.setAttribute('data-produccion', p.n);
+        foot.appendChild(prodBtn);
+      } else {
+        if (p.elaborado) {
+          var elaboradoBtn = el('button', 'btn btn-forest btn-sm', 'Producción');
+          elaboradoBtn.type = 'button';
+          elaboradoBtn.setAttribute('data-produccion', p.n);
+          foot.appendChild(elaboradoBtn);
+        }
+        var btn = el('button', 'btn btn-cream btn-sm', 'Ver QR');
+        btn.type = 'button';
+        btn.setAttribute('data-qr', p.n);
+        foot.appendChild(btn);
+      }
+
       card.appendChild(foot);
-      list.appendChild(card);
+      container.appendChild(card);
     });
   }
 
@@ -344,11 +427,106 @@
     dl.appendChild(wrap);
   }
 
-  function findProduct(n) {
-    for (var i = 0; i < state.products.length; i++) {
-      if (String(state.products[i].n) === String(n)) return state.products[i];
+  /* ---------- Cosecha y producción ---------- */
+  function renderCosechas() {
+    var box = document.getElementById('cosechas-parcelas');
+    if (!box) return;
+    box.innerHTML = '';
+
+    PARCELAS.forEach(function (parcela) {
+      var product = productoDeParcela(parcela.id);
+      var card = el('article', 'cosecha-card');
+      card.appendChild(el('h3', null, parcela.nombre + ' · ' + parcela.cultivo));
+      card.appendChild(el('p', 'dato', LOTE.id + ' · ' + parcela.ha + ' · ' + parcela.cobertura + ' cobertura'));
+      card.appendChild(estadoParcelaEl(product));
+
+      if (product) {
+        var lista = el('ul', 'cosecha-list');
+        lista.appendChild(cosechaLine(parcela.producto.nombre, pasaporte(product.n)));
+        lista.appendChild(cosechaLine('Cosecha', fmtDate(product.cosecha)));
+        if (product.produccion) lista.appendChild(cosechaLine('Producción', periodoProduccion(product)));
+        card.appendChild(lista);
+      } else {
+        card.appendChild(el('p', 'cosecha-empty', 'En cultivo. Sin cosecha registrada.'));
+      }
+
+      var actions = el('div', 'cosecha-actions');
+      if (!product) {
+        actions.appendChild(actionButton('Marcar cosechado', 'data-cosechar', parcela.id, 'btn btn-primary btn-sm'));
+      } else if (product.estado === 'en_produccion') {
+        actions.appendChild(actionButton('Producción', 'data-produccion', product.n, 'btn btn-forest btn-sm'));
+      } else {
+        if (product.elaborado) {
+          actions.appendChild(actionButton('Producción', 'data-produccion', product.n, 'btn btn-forest btn-sm'));
+        }
+        actions.appendChild(actionButton('Ver QR', 'data-qr', product.n, 'btn btn-cream btn-sm'));
+      }
+      card.appendChild(actions);
+      box.appendChild(card);
+    });
+  }
+
+  function cosechaLine(label, value) {
+    var li = el('li');
+    li.appendChild(el('span', null, label));
+    if (value) li.appendChild(el('span', 'small', value));
+    return li;
+  }
+
+  function actionButton(label, attr, value, cls) {
+    var btn = el('button', cls, label);
+    btn.type = 'button';
+    btn.setAttribute(attr, value);
+    return btn;
+  }
+
+  function registrarCosecha(parcelaId) {
+    var parcela = findParcela(parcelaId);
+    if (!parcela) return;
+    if (productoDeParcela(parcelaId)) {
+      toast('Esta parcela ya tiene una cosecha registrada.');
+      return;
     }
-    return null;
+
+    var base = parcela.producto;
+    var hoy = hoyISO();
+    var n = state.nextProduct++;
+    var product = {
+      n: n,
+      parcela: parcela.id,
+      lote: LOTE.id,
+      tipo: base.tipo,
+      cultivo: base.nombre,
+      plantacion: base.plantacion,
+      cosecha: hoy,
+      quimicos: base.quimicos,
+      reparto: base.elaborado ? '' : hoy,
+      destino: base.destino,
+      precio: base.precio,
+      unidad: base.unidad,
+      elaborado: base.elaborado,
+      estado: base.elaborado ? 'en_produccion' : 'listo',
+      qrEmitido: base.elaborado ? '' : hoy,
+      produccion: base.elaborado ? { inicio: hoy, fin: '', cambios: [] } : null
+    };
+
+    state.products.unshift(product);
+    save();
+    renderAll();
+    showView('productos');
+    highlightProduct(n);
+
+    if (base.elaborado) toast('Cosecha registrada. El producto entró en producción y espera su QR.');
+    else toast('Cosecha registrada. Producto enviado a Productos y QR.');
+  }
+
+  function highlightProduct(n) {
+    window.setTimeout(function () {
+      var card = document.querySelector('.prod-item[data-n="' + n + '"]');
+      if (!card) return;
+      card.classList.add('is-new');
+      window.setTimeout(function () { card.classList.remove('is-new'); }, 1600);
+    }, 80);
   }
 
   /* ---------- Pedidos ---------- */
@@ -495,10 +673,7 @@
 
   function renderParcelaDetalle(id) {
     var container = document.getElementById('parcela-detalle');
-    var p = null;
-    for (var i = 0; i < PARCELAS.length; i++) {
-      if (PARCELAS[i].id === id) { p = PARCELAS[i]; break; }
-    }
+    var p = findParcela(id);
     if (!p) return;
     container.innerHTML = '';
 
@@ -509,11 +684,16 @@
     var toneChip = p.tono === 'bien' ? 'chip-oliva' : (p.tono === 'atencion' ? 'chip-corn' : 'chip-carrot');
     container.appendChild(el('span', 'chip ' + toneChip, toneLabel + ': ' + p.cobertura + ' cobertura'));
 
+    var product = productoDeParcela(p.id);
     var stats = el('dl', 'parcela-stats');
     addParam(stats, 'Suelo desnudo', p.desnudo);
     addParam(stats, 'Humedad', p.humedad);
     addParam(stats, 'Último NDVI', p.ndvi);
     addParam(stats, 'Cultivo anterior', p.anterior);
+    addParam(stats, 'Cosecha', product ? fmtDate(product.cosecha) : 'Sin cosechar');
+    if (p.producto.elaborado) {
+      addParam(stats, 'Producción', product && product.produccion ? periodoProduccion(product) : 'Pendiente');
+    }
     container.appendChild(stats);
 
     var reco = el('div', 'reco');
@@ -526,6 +706,19 @@
     var checks = el('ul', 'mini-checks');
     p.cambios.forEach(function (c) { checks.appendChild(el('li', null, c)); });
     container.appendChild(checks);
+
+    var actions = el('div', 'parcela-actions');
+    if (!product) {
+      actions.appendChild(actionButton('Marcar cosechado', 'data-cosechar', p.id, 'btn btn-primary btn-sm'));
+    } else if (product.estado === 'en_produccion') {
+      actions.appendChild(actionButton('Producción', 'data-produccion', product.n, 'btn btn-forest btn-sm'));
+    } else {
+      if (product.elaborado) {
+        actions.appendChild(actionButton('Producción', 'data-produccion', product.n, 'btn btn-forest btn-sm'));
+      }
+      actions.appendChild(actionButton('Ver QR', 'data-qr', product.n, 'btn btn-cream btn-sm'));
+    }
+    container.appendChild(actions);
 
     var btn = el('button', 'btn btn-lime btn-sm btn-block parcela-cta', 'Programar esta rotación');
     btn.type = 'button';
@@ -651,6 +844,92 @@
     toast('Reserva aceptada. Se creó el pedido ' + order.id + '.');
   }
 
+  /* ---------- Producción ---------- */
+  function abrirProduccion(n) {
+    var product = findProduct(n);
+    if (!product) return;
+    produccionActual = product;
+
+    var parcela = findParcela(product.parcela);
+    document.getElementById('prod-title').textContent = product.cultivo;
+    document.getElementById('prod-id').textContent = pasaporte(product.n);
+    document.getElementById('prod-context').textContent =
+      (parcela ? parcela.nombre + ' · ' + parcela.cultivo + ' · ' : '') + 'cosecha ' + fmtDate(product.cosecha);
+
+    var produccion = product.produccion || { inicio: product.cosecha, fin: '', cambios: [] };
+    document.getElementById('prod-inicio').value = produccion.inicio || '';
+    document.getElementById('prod-fin').value = produccion.fin || hoyISO();
+    document.getElementById('prod-cambios').value = (produccion.cambios || []).join('\n');
+    hideProduccionError();
+
+    lastFocus = document.activeElement;
+    document.getElementById('prod-modal').hidden = false;
+    document.body.style.overflow = 'hidden';
+    document.getElementById('prod-close').focus();
+  }
+
+  function cerrarProduccion() {
+    var modal = document.getElementById('prod-modal');
+    if (!modal || modal.hidden) return;
+    modal.hidden = true;
+    document.body.style.overflow = '';
+    produccionActual = null;
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  function leerCambios() {
+    return document.getElementById('prod-cambios').value
+      .split('\n')
+      .map(function (linea) { return linea.trim(); })
+      .filter(function (linea) { return linea.length > 0; });
+  }
+
+  function showProduccionError(message) {
+    var box = document.getElementById('prod-error');
+    box.textContent = message;
+    box.hidden = false;
+  }
+
+  function hideProduccionError() {
+    var box = document.getElementById('prod-error');
+    box.hidden = true;
+    box.textContent = '';
+  }
+
+  function guardarProduccion(finalizar) {
+    var product = produccionActual;
+    if (!product) return;
+    hideProduccionError();
+
+    var inicio = document.getElementById('prod-inicio').value;
+    var fin = document.getElementById('prod-fin').value;
+    var cambios = leerCambios();
+
+    if (!inicio) { showProduccionError('Indicá cuándo empezó la producción.'); return; }
+    if (fin && fin < inicio) { showProduccionError('El fin de producción no puede ser anterior al inicio.'); return; }
+    if (finalizar && !fin) { showProduccionError('Completá la fecha de fin para finalizar la producción.'); return; }
+
+    product.produccion = { inicio: inicio, fin: finalizar ? fin : (fin || ''), cambios: cambios };
+
+    if (finalizar) {
+      product.estado = 'listo';
+      product.qrEmitido = hoyISO();
+      if (!product.reparto) product.reparto = fin;
+    }
+
+    save();
+    renderAll();
+    cerrarProduccion();
+
+    if (finalizar) {
+      showView('productos');
+      highlightProduct(product.n);
+      toast('Producción finalizada. ' + product.cultivo + ' ya tiene su QR.');
+    } else {
+      toast('Cambios de producción guardados.');
+    }
+  }
+
   /* ---------- QR ---------- */
   function renderQr(container, text, size) {
     container.innerHTML = '';
@@ -712,6 +991,11 @@
 
   function openQr(product) {
     if (!product) return;
+    if (product.estado === 'en_produccion') {
+      abrirProduccion(product.n);
+      return;
+    }
+
     var modal = document.getElementById('qr-modal');
     var id = pasaporte(product.n);
     document.getElementById('qr-title').textContent = product.cultivo;
@@ -722,11 +1006,44 @@
     stateBox.innerHTML = '';
     stateBox.appendChild(qrStateEl(qrState(product)));
 
+    renderHistorial(product);
     renderQr(document.getElementById('qr-box'), 'https://surco.app/p/' + id, 168);
     lastFocus = document.activeElement;
     modal.hidden = false;
     document.body.style.overflow = 'hidden';
     document.getElementById('qr-close').focus();
+  }
+
+  function renderHistorial(product) {
+    var box = document.getElementById('qr-history');
+    box.innerHTML = '';
+
+    var parcela = findParcela(product.parcela);
+    var dl = el('dl', 'qr-hist');
+
+    if (parcela) {
+      addParam(dl, 'Parcela', parcela.nombre + ' · ' + parcela.ha);
+      addParam(dl, 'Lote', LOTE.nombre + ' · ' + LOTE.id);
+      addParam(dl, 'Cobertura', parcela.cobertura + ' · ' + (parcela.coberturaNum >= 85 ? 'verificada' : 'pendiente'));
+      addParam(dl, 'Cultivo anterior', parcela.anterior);
+    }
+    addParam(dl, 'Plantación', fmtDate(product.plantacion));
+    addParam(dl, 'Aplicaciones', product.quimicos);
+    addParam(dl, 'Cosecha', fmtDate(product.cosecha));
+
+    if (product.produccion) {
+      addParam(dl, 'Producción', periodoProduccion(product));
+      if (product.produccion.cambios && product.produccion.cambios.length) {
+        addParam(dl, 'Cambios finales', product.produccion.cambios.join(' · '));
+      }
+    }
+
+    addParam(dl, 'Reparto', product.reparto ? fmtDate(product.reparto) + ' · ' + product.destino : 'Al finalizar la producción');
+    if (product.precio) addParam(dl, 'Precio', money(product.precio) + (product.unidad ? ' / ' + product.unidad : ''));
+    addParam(dl, 'QR emitido', product.qrEmitido ? fmtDate(product.qrEmitido) : 'Pendiente');
+
+    box.appendChild(dl);
+    box.appendChild(el('p', 'source', 'Cobertura: Sentinel-2 / HLS · 12 oct 2026. Suelo: SoilGrids · INTA.'));
   }
 
   function closeQr() {
@@ -735,6 +1052,7 @@
     modal.hidden = true;
     document.body.style.overflow = '';
     document.getElementById('qr-box').innerHTML = '';
+    document.getElementById('qr-history').innerHTML = '';
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
 
@@ -753,81 +1071,6 @@
     document.body.removeChild(a);
   }
 
-  /* ---------- Alta de producto ---------- */
-  function formValue(id) {
-    var node = document.getElementById(id);
-    return node ? node.value.trim() : '';
-  }
-
-  function showFormError(message) {
-    var box = document.getElementById('form-error');
-    box.textContent = message;
-    box.hidden = false;
-  }
-
-  function hideFormError() {
-    var box = document.getElementById('form-error');
-    box.hidden = true;
-    box.textContent = '';
-  }
-
-  function validateProduct(data) {
-    if (!data.cultivo) return 'Completá el nombre del cultivo o producto.';
-    if (!data.quimicos) return 'Indicá qué químicos se aplicaron. Si no hubo, escribí "Ninguno".';
-    if (!data.plantacion || !data.cosecha || !data.reparto) return 'Completá las tres fechas: plantación, cosecha y reparto.';
-    if (data.cosecha < data.plantacion) return 'La cosecha no puede ser anterior a la plantación.';
-    if (data.reparto < data.cosecha) return 'El reparto no puede ser anterior a la cosecha.';
-    return '';
-  }
-
-  function onProductSubmit(e) {
-    e.preventDefault();
-    hideFormError();
-
-    var data = {
-      tipo: formValue('p-tipo'),
-      cultivo: formValue('p-cultivo'),
-      lote: formValue('p-lote'),
-      plantacion: formValue('p-plantacion'),
-      cosecha: formValue('p-cosecha'),
-      quimicos: formValue('p-quimicos'),
-      reparto: formValue('p-reparto'),
-      destino: formValue('p-destino'),
-      precio: Number(formValue('p-precio')) || 0,
-      unidad: formValue('p-unidad')
-    };
-
-    var error = validateProduct(data);
-    if (error) { showFormError(error); return; }
-
-    var n = state.nextProduct++;
-    var product = {
-      n: n, tipo: data.tipo, cultivo: data.cultivo, lote: data.lote,
-      plantacion: data.plantacion, cosecha: data.cosecha, reparto: data.reparto,
-      quimicos: data.quimicos, destino: data.destino, precio: data.precio, unidad: data.unidad
-    };
-    state.products.unshift(product);
-    save();
-
-    e.target.reset();
-    document.getElementById('p-tipo').value = 'Hortalizas';
-    document.getElementById('p-lote').value = 'SC-2026-0417';
-    document.getElementById('p-destino').value = 'Consumidor final';
-
-    renderProducts();
-    renderKpis();
-    showProductTab('lista');
-
-    var card = document.querySelector('.prod-item[data-n="' + n + '"]');
-    if (card) {
-      card.classList.add('is-new');
-      window.setTimeout(function () { card.classList.remove('is-new'); }, 1600);
-    }
-
-    var qr = qrState(product);
-    toast('Producto agregado a la lista. QR ' + (qr === 'verificado' ? 'emitido' : 'en revisión') + '.');
-  }
-
   /* ---------- Toast ---------- */
   function toast(message) {
     var node = document.getElementById('toast');
@@ -842,6 +1085,7 @@
     renderKpis();
     renderResumenPedidos();
     renderProducts();
+    renderCosechas();
     renderOrders();
     renderPayments();
     renderChecks();
@@ -852,14 +1096,17 @@
 
   /* ---------- Eventos ---------- */
   document.addEventListener('click', function (e) {
-    var backBtn = e.target.closest('[data-prod-back]');
-    if (backBtn) { showProductTab('lista'); return; }
-
     var viewBtn = e.target.closest('button[data-view]');
     if (viewBtn) { showView(viewBtn.getAttribute('data-view')); return; }
 
     var qrBtn = e.target.closest('[data-qr]');
     if (qrBtn) { openQr(findProduct(qrBtn.getAttribute('data-qr'))); return; }
+
+    var prodBtn = e.target.closest('[data-produccion]');
+    if (prodBtn) { abrirProduccion(prodBtn.getAttribute('data-produccion')); return; }
+
+    var cosecharBtn = e.target.closest('[data-cosechar]');
+    if (cosecharBtn) { registrarCosecha(cosecharBtn.getAttribute('data-cosechar')); return; }
 
     var advanceBtn = e.target.closest('[data-advance]');
     if (advanceBtn) { advanceOrder(advanceBtn.getAttribute('data-advance')); return; }
@@ -903,8 +1150,6 @@
 
   document.getElementById('mad-save').addEventListener('click', saveMaduracion);
   document.getElementById('accept-reserva').addEventListener('click', acceptReserva);
-  document.getElementById('producto-form').addEventListener('submit', onProductSubmit);
-  document.getElementById('new-product-btn').addEventListener('click', function () { showProductTab('nuevo'); });
 
   document.getElementById('reset-demo').addEventListener('click', function () {
     if (!window.confirm('¿Reiniciar la demo con los datos iniciales?')) return;
@@ -926,8 +1171,16 @@
   document.getElementById('qr-modal').addEventListener('click', function (e) {
     if (e.target === this) closeQr();
   });
+
+  document.getElementById('prod-close').addEventListener('click', cerrarProduccion);
+  document.getElementById('prod-save').addEventListener('click', function () { guardarProduccion(false); });
+  document.getElementById('prod-finish').addEventListener('click', function () { guardarProduccion(true); });
+  document.getElementById('prod-modal').addEventListener('click', function (e) {
+    if (e.target === this) cerrarProduccion();
+  });
+
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeQr();
+    if (e.key === 'Escape') { closeQr(); cerrarProduccion(); }
   });
 
   var initial = (window.location.hash || '').replace('#', '');
