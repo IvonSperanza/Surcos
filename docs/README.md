@@ -9,6 +9,7 @@ NASA Space Apps Challenge 2026 · Rosario · desafío *Field Shift* · eje AgTec
 | [`entregables/presentacion.pdf`](entregables/presentacion.pdf) | Las 7 diapositivas (también es la demo que pide la plataforma) |
 | [`entregables/pitch.md`](entregables/pitch.md) | Guion de 4 minutos, diapositiva por diapositiva |
 | [`entregables/propuesta.md`](entregables/propuesta.md) | La propuesta completa: problema, solución, justificación económica, métricas con línea de base y escalabilidad |
+| [`entregables/fuentes.md`](entregables/fuentes.md) | La fuente de cada número del pitch, y qué medimos con el prototipo |
 
 ## Proyecto
 

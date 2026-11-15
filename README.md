@@ -1,6 +1,6 @@
 # Surco
 
-**Comé con historia. Cuidá la tierra.** Cada producto de la quinta lleva un QR con la historia del lote donde creció: qué se sembró, qué se le aplicó y cuándo se cosechó. Cada práctica declarada se contrasta con lo que vio el satélite sobre esa parcela.
+**Comé con historia. Cuidá la tierra.** Surco es un marketplace de alimentos trazables. Cada producto de la quinta lleva un QR con la historia del lote donde creció: qué se sembró, qué se le aplicó y cuándo se cosechó. Cada práctica declarada se contrasta con lo que vio el satélite sobre esa parcela.
 
 NASA Space Apps Challenge 2026 · Rosario (UCEL) · desafío *Field Shift: Adapting Farms with NASA Data* · eje AgTech **01, Nutrientes y Trazabilidad**.
 
@@ -10,11 +10,11 @@ NASA Space Apps Challenge 2026 · Rosario (UCEL) · desafío *Field Shift: Adapt
 | **Página del QR, ejemplo** | <https://surcos-staging.thorque.com.ar/p/SUR-2026-0002>: lechuga con todas sus prácticas confirmadas por el satélite |
 | **Caso que no coincide** | <https://surcos-staging.thorque.com.ar/p/SUR-2026-0004>: lo declarado no se ve en los datos |
 | **Presentación y pitch** | [`docs/entregables/`](docs/entregables/) |
-| **Propuesta completa** | [`docs/entregables/propuesta.md`](docs/entregables/propuesta.md) |
+| **Propuesta completa** | [`docs/entregables/propuesta.md`](docs/entregables/propuesta.md) · fuentes de cada número en [`fuentes.md`](docs/entregables/fuentes.md) |
 
 ## El problema
 
-En el cinturón hortícola de Rosario, vender a granel al mercado concentrador deja poco margen y muchas quintas terminan arrendadas para soja. Quien compra no puede distinguir una verdura cuidada de una que no, y certificar prácticas con una auditoría privada es caro para una quinta chica. Surco le da al productor una forma gratis de demostrar cómo trabaja su suelo y un canal de venta que se lo reconoce.
+El cinturón hortícola de Rosario son 205 productores sobre 2.928 ha (censo INTA–UNR 2021). Casi la mitad de lo que venden pasa por consignatarios, y en frutas y verduras el precio de góndola es unas 5,5 veces lo que cobra el productor (CAME, 2026); muchas quintas terminan arrendadas para soja. Del otro lado, el 98% de la producción orgánica certificada del país se exporta y sólo el 1,5% llega al consumidor local (MAGyP, datos SENASA 2025). Quien compra no puede distinguir una verdura cuidada de una que no. Surco le da al productor una forma gratis de demostrar cómo trabaja su suelo y un canal de venta que se lo reconoce. Fuentes: [`docs/entregables/fuentes.md`](docs/entregables/fuentes.md).
 
 ## Qué hace el prototipo
 
@@ -22,6 +22,10 @@ En el cinturón hortícola de Rosario, vender a granel al mercado concentrador d
 2. **Registra lo que hace en cada parcela:** labranza, siembra, cobertura, riego, fertilización, aplicaciones, daño por clima, fotos y cosecha. La especie y el cultivar salen del Catálogo Nacional de Cultivares del INASE, con su número de inscripción.
 3. **Cada cultivo, de la siembra a la cosecha, es una producción** con su código (`SUR-2026-0002`). Desde la producción cosechada se imprime la etiqueta del producto, con el QR.
 4. **El QR abre la historia verificada.** Cada evento declarado se contrasta con el satélite y vuelve con un veredicto: *lo confirma el satélite*, *hay un indicio*, *no se ve en los datos*, *sin imágenes cerca* o *dato del productor* (lo que no se ve desde el espacio, como una aplicación). Cada veredicto muestra por qué: el índice antes y después, lo que se esperaba ver, la escena de Sentinel-2 y su fecha.
+
+5. **Marketplace.** Cada producción cosechada se publica con su pasaporte y los compradores B2B (mercados selectos, gastronomía, dietéticas) compran por lote y retiran en quinta; Surco cobra un 6% sólo sobre la venta cerrada. En el prototipo están el panel del productor con pedidos y cobros de ejemplo y la página pública de cada producción; el catálogo de compra es el siguiente paso.
+
+**Medido con el prototipo.** En los últimos 12 meses, con 37 imágenes de Sentinel-2 sin nubes, los canteros de la quinta de ejemplo tuvieron 5 ciclos de cultivo y sólo 23 días sin cultivo (94% del año cubierto); el lote extensivo vecino, 149 días sin cultivo. Es la métrica de suelo cubierto que propone Surco, calculada sobre lotes reales.
 
 **Cómo se verifica.** Son reglas deterministas en [`datos/surco_datos/contraste.py`](datos/surco_datos/contraste.py), sin aprendizaje automático: cada una dice qué índice tiene que cambiar y cuánto. Por ejemplo, después de una siembra el verde (NDVI) sube en las semanas siguientes; después de una labranza se va el rastrojo (NDTI) y queda suelo expuesto (BSI); una helada se cruza con la temperatura mínima diaria de NASA POWER. Si no hay imágenes sin nubes cerca de la fecha, no se afirma nada.
 

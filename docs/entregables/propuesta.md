@@ -9,25 +9,32 @@
 > **Demo en vivo:** <https://surcos-staging.thorque.com.ar>
 >
 > **Ejemplo de Pasaporte QR Público:** <https://surcos-staging.thorque.com.ar/p/SUR-2026-0002>
+>
+> **Fuentes de cada número:** [`fuentes.md`](fuentes.md)
 
 ---
 
 ## 1. Problema y Usuario Objetivo
 
-En el cinturón hortícola de Rosario y la Pampa Húmeda, los pequeños y medianos productores enfrentan una crisis estructural que amenaza la producción local de alimentos frescos:
+El cinturón hortícola de Rosario son **205 productores sobre 2.928 ha**, con 11,9 ha en promedio cada uno; acelga y lechuga son sus cultivos más difundidos y el 96% de las parcelas está al aire libre *(censo INTA + FCA-UNR 2021, en BCR 2024)*. En la provincia de Santa Fe son unos **595 productores y 7.000 ha** *(INTA, 2022)*. Estos productores enfrentan una crisis estructural que amenaza la producción local de alimentos frescos:
 
-1. **Dilema económico y abandono de quintas:** Al vender a granel a intermediarios o al Mercado de Productores sin diferenciación, el margen neto es tan bajo que muchos productores optan por **arrendar su quinta para soja extensiva**, perdiendo la diversidad productiva local y degradando los suelos periurbanos.
-2. **Suelos agotados por baja rotación:** La falta de acceso gratuito a analítica satelital lleva a repetir familias de cultivos sin descanso ni cultivos de servicio, reduciendo la materia orgánica y la densidad nutricional de frutas y hortalizas.
-3. **Barrera de certificación y *greenwashing*:** Certificar buenas prácticas o producción orgánica de forma tradicional cuesta más de **USD 1.200 anuales** *(estimación del equipo, fuente pendiente)*, dejando al pequeño productor fuera de los mercados selectos mientras abundan etiquetas informales sin respaldo verificable.
+1. **Dilema económico y abandono de quintas:** El 47% de lo que venden pasa por consignatarios *(BCR 2024)*, y en frutas y hortalizas el consumidor paga en góndola unas **5,5 veces** lo que cobra el productor *(CAME, IPOD 2026)*: al productor le llega menos de una quinta parte del precio final. Vendiendo a granel y sin diferenciación, el margen neto es tan bajo que muchos productores optan por **arrendar su quinta para soja extensiva**, perdiendo la diversidad productiva local y degradando los suelos periurbanos.
+2. **Suelos agotados por baja rotación:** Prácticamente todos los productores fertilizan, en su mayoría con productos de síntesis química *(BCR 2024)*. La falta de acceso gratuito a analítica satelital lleva a repetir familias de cultivos sin descanso ni cultivos de servicio, reduciendo la materia orgánica y la densidad nutricional de frutas y hortalizas.
+3. **Demanda sin oferta local verificable:** el 69% de los argentinos cree que los alimentos orgánicos son mejores para la salud *(Fundación Colsecor, 2022)* y lo orgánico se paga entre un 10% y un 50% más en mercados estructurados *(MAGyP 2026)*. Pero el 98% de la producción orgánica certificada se exporta y sólo el 1,5% llega al consumidor local *(MAGyP, datos SENASA 2025)*. Certificar exige una certificadora privada con un cargo fijo anual e inspecciones que una quinta de 12 ha difícilmente amortiza, mientras en la verdulería abundan carteles de "natural" sin respaldo verificable.
 
 * **Usuario Primario (Oferta):** Pequeños y medianos productores hortícolas y frutícolas del cinturón verde de la Zona Núcleo.
-* **Usuario Secundario (Demanda):** Mercados selectos, dietéticas, gastronomía y PyMEs alimenticias con logística propia, más consumidores finales que escanean el QR en góndola.
+* **Usuario Secundario (Demanda):** Mercados selectos, dietéticas, gastronomía y PyMEs alimenticias con logística propia, que compran en el marketplace de Surco, más consumidores finales que escanean el QR en góndola.
 
 ---
 
 ## 2. Solución, Encaje con *Field Shift* y Trazabilidad Satelital
 
-**Surco** es una aplicación web que cruza la bitácora del productor con imágenes satelitales y datos climáticos de la NASA para emitir un **Pasaporte Digital con Código QR** por producción: cada cultivo, de la siembra a la cosecha, con su código (`SUR-2026-0002`) y su etiqueta imprimible.
+**Surco** es un marketplace de alimentos trazables. Cruza la bitácora del productor con imágenes satelitales (Sentinel-2) y datos climáticos de la NASA (POWER) para emitir un **Pasaporte Digital con Código QR** por producción, y con ese pasaporte la vende:
+
+1. **Parcelas:** el productor dibuja cada lote sobre la imagen satelital y recibe gratis su clima, su suelo y su historia de cultivos vista desde el espacio.
+2. **Bitácora:** registra lo que hace en cada lote (labranza, siembra, cobertura, riego, aplicaciones, cosecha), con la especie y el cultivar del INASE.
+3. **Producción y pasaporte:** cada cultivo, de la siembra a la cosecha, es una producción con su código (`SUR-2026-0002`), su historia verificada y su etiqueta con QR.
+4. **Marketplace:** cada producción cosechada se publica con su pasaporte. Los compradores B2B (mercados selectos, gastronomía, dietéticas) compran por lote, sabiendo de qué parcela sale y cómo se trabajó, y retiran en quinta. Surco cobra un 6% sólo sobre la venta cerrada. En el prototipo están el pasaporte, la etiqueta y la página pública del QR, y el panel del productor con sus pedidos y cobros de ejemplo; el catálogo de compra es el siguiente paso.
 
 ### Cómo respondemos al desafío *Field Shift*
 
@@ -44,9 +51,9 @@ En el cinturón hortícola de Rosario y la Pampa Húmeda, los pequeños y median
 Un horticultor del cinturón verde **no siembra soja** por escala; su dilema real es **seguir produciendo bajo el esquema tradicional**, **arrendar la tierra para soja extensiva** o **diferenciar su cosecha con trazabilidad en Surco**:
 
 ### Escenario A: Quinta Tradicional (Mercado Concentrador / Intermediario)
-* **Ingreso neto:** Bajo. El intermediario captura entre el **40% y 50%** del precio final de góndola *(Fuente: relevamiento mayorista Rosario)*.
-* **Suelo y rotación:** Desgaste continuo por repetición de cultivos de renta sin cobertura invernal (~40% días cubiertos/año).
-* **Datos y logística:** Sin acceso a datos satelitales; producto anónimo a granel con flete y comisión de puesto a cargo del quintero.
+* **Ingreso neto:** Bajo. En frutas y hortalizas el precio de góndola es unas **5,5 veces** el que cobra el productor *(CAME, IPOD 2026)*, y el 47% de las ventas pasa por consignatarios *(BCR 2024)*.
+* **Suelo y rotación:** Desgaste continuo por repetición de cultivos de renta sin cobertura invernal (~40% días cubiertos/año, *supuesto a medir en el piloto*).
+* **Datos y logística:** Sin acceso a datos satelitales; producto anónimo a granel. Más de la mitad de los traslados se tercerizan con consignatarios, sólo el 10% en vehículos refrigerados, y 17 de 205 productores tienen cámara de frío *(BCR 2024)*.
 
 ### Escenario B: Arriendo para Soja (Abandono de la actividad hortícola)
 * **Ingreso neto:** Renta fija mínima en quintales/ha, insuficiente para sostener una familia en superficies chicas de 5 a 15 ha *(Supuesto regional)*.
@@ -54,11 +61,11 @@ Un horticultor del cinturón verde **no siembra soja** por escala; su dilema rea
 * **Datos y logística:** El productor pierde la gestión directa sobre su tierra.
 
 ### Escenario C: Producción con SURCO (Trazabilidad NASA + Venta Directa)
-* **Ingreso neto:** **+25% a +35% de margen neto**. El productor recibe el **94% del precio de venta** directa a mercados selectos *(Supuesto basado en diferencial de calidad verificada)*.
+* **Ingreso neto:** **+25% a +35% de margen neto** *(supuesto del piloto, coherente con el diferencial de 10–50% que MAGyP informa para lo orgánico)*. El productor recibe el **94% del precio de venta** directa a mercados selectos; Surco cobra el 6%.
 * **Suelo y rotación:** **>85% de días al año con suelo cubierto** mediante rotación guiada por familias botánicas y cultivos de servicio.
-* **Datos y logística:** **100% Gratuito ($0)** en alertas climáticas, humedad y rotación NASA + **Pasaporte QR sin costo de certificadora** (evita USD 1.200/año) + **retiro en quinta** por compradores con flota propia.
+* **Datos y logística:** **100% Gratuito ($0)** en alertas climáticas, humedad y rotación NASA + **Pasaporte QR sin costo de certificadora** (sin el cargo anual ni las inspecciones de una certificadora privada) + **retiro en quinta** por compradores con flota propia.
 
-> **Conclusión:** Surco vuelve rentable quedarse en la quinta produciendo alimentos sanos, superando ampliamente la renta del arriendo sojero sin exigir inversión inicial en certificadoras.
+> **Conclusión:** Surco vuelve rentable quedarse en la quinta produciendo alimentos sanos, como alternativa al arriendo sojero y sin exigir inversión inicial en certificadoras.
 
 ---
 
@@ -72,6 +79,7 @@ Para evaluar el desempeño real del sistema frente al modelo hortícola convenci
    * **Línea de base:** ~145 días/año (~40%) debido a barbechos desnudos entre ciclos *(supuesto, a medir en el piloto con los 12 meses previos de cada lote)*.
    * **Meta con Surco:** **>310 días/año (>85%)** con cobertura vegetal viva.
    * **Medición (implementada en el prototipo):** sobre cada imagen **Sentinel-2** sin nubes de los últimos 12 meses, el sistema clasifica la parcela en cultivo (NDVI), rastrojo o suelo desnudo (NDTI) y suma los días de cada estado entre ciclos. $\text{Cobertura (\%)} = 1 - \frac{\text{Días de suelo desnudo}}{365}$, comparando los 12 meses previos contra la campaña activa.
+   * **Ejemplo medido con el prototipo** (15/11/2025 – 15/11/2026, 37 imágenes Sentinel-2 sin nubes): los canteros de la quinta de ejemplo tuvieron 5 ciclos de cultivo y sólo **23 días sin cultivo (94% del año cubierto)**; el lote extensivo vecino, 2 ciclos y **149 días sin cultivo (59%)**. Detalle en [`fuentes.md`](fuentes.md).
 
 2. **Eficiencia de riego por ciclo**
    * **Línea de base:** Riego por calendario fijo sin medición de humedad en raíz.
@@ -96,12 +104,12 @@ Para evaluar el desempeño real del sistema frente al modelo hortícola convenci
    * **Medición:** $\Delta \text{Ingreso} = \frac{P_{\text{Surco}} \times 0.94 - P_{\text{Mercado}}}{P_{\text{Mercado}}}$ comparando pizarra del Mercado de Productores de Rosario vs. cierres en app *(Supuesto de piloto)*.
 
 6. **Costo de certificación evitado**
-   * **Línea de base:** USD 1.200 – 1.800 / año por auditoría privada externa.
+   * **Línea de base:** el cargo anual fijo, las inspecciones y el porcentaje sobre las ventas de una certificadora privada *(sin un valor publicado en dólares; a relevar con presupuestos de certificadoras para quintas de menos de 15 ha)*.
    * **Meta con Surco:** **$0 para el productor** mediante auditoría satelital continua.
    * **Medición:** Comparativa directa contra aranceles vigentes de certificadoras privadas en Argentina para quintas (<15 ha).
 
 7. **Costo de flete y merma post-cosecha**
-   * **Línea de base:** 10%–15% del valor bruto en flete propio + merma por re-manipuleo.
+   * **Línea de base:** 10%–15% del valor bruto en flete propio + merma por re-manipuleo *(supuesto; según la BCR, más de la mitad de los traslados se tercerizan y sólo el 10% de los vehículos es refrigerado)*.
    * **Meta con Surco:** **$0 de flete para el quintero** y **-40% de merma**.
    * **Medición:** Filtro de compradores con transporte propio que retiran directo en quinta sin doble descarga *(Supuesto operativo)*.
 
