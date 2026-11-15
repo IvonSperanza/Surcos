@@ -6,3 +6,6 @@ coverage
 
 # Las migraciones reales viven en db/migrations (ver drizzle.config.ts).
 /migrations
+
+# Fotos subidas (STORAGE_DIR)
+/storage

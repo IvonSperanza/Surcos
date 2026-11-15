@@ -16,6 +16,9 @@ const schema = z
         // cualquier origen.
         CORS_ORIGIN: z.string().default("http://localhost:5173"),
 
+        // Dónde se guardan las fotos subidas (relativo al proceso).
+        STORAGE_DIR: z.string().default("storage"),
+
         DB_HOST: z.string().default("localhost"),
         DB_USER: z.string(),
         DB_PASS: z.string(),
@@ -40,4 +43,5 @@ const parseEnv = (source: NodeJS.ProcessEnv) => {
     return result.data;
 };
 
-export const env = parseEnv(process.env);
+// El one-box de Thorque le pasa la contraseña de la base como DB_PASSWORD.
+export const env = parseEnv({ ...process.env, DB_PASS: process.env.DB_PASS ?? process.env.DB_PASSWORD });

@@ -34,6 +34,9 @@ COPY --chown=node:node package.json ./
 # volver a construir la imagen.
 COPY --chown=node:node db/migrations ./db/migrations
 
+# Las fotos subidas (STORAGE_DIR). En el one-box va montada en un volumen.
+RUN mkdir -p /app/storage && chown node:node /app/storage
+
 USER node
 EXPOSE 3000
 CMD ["node", "dist/src/index.js"]
