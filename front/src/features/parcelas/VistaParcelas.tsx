@@ -95,7 +95,9 @@ export function VistaParcelas() {
 
     // Apenas se ve la lista, cada parcela empieza a traer sus datos (si no los
     // trajo ya en esta sesión): al abrir una ficha, ya están o falta poco.
-    useEffect(() => parcelas?.forEach(asegurarDatos), [parcelas]);
+    useEffect(() => {
+        parcelas?.forEach(asegurarDatos);
+    }, [parcelas]);
 
     return (
         <section className={vistas.vista} aria-label="Mis parcelas">

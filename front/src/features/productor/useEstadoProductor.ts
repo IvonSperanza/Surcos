@@ -8,7 +8,9 @@ export function useEstadoProductor() {
     // estado propio (filtros, formularios) y las listas de parcelas vuelvan al inicio.
     const [reinicios, setReinicios] = useState(0);
 
-    useEffect(() => guardarEstado(estado), [estado]);
+    useEffect(() => {
+        guardarEstado(estado);
+    }, [estado]);
 
     const reiniciar = () => {
         setEstado(estadoInicialProductor());

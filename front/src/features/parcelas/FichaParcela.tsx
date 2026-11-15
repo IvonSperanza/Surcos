@@ -56,7 +56,9 @@ function Ficha({ parcela }: { parcela: Parcela }) {
     const producciones = useMemo(() => (eventos ? conParcela(derivarProducciones(eventos), parcela) : null), [eventos, parcela]);
     const climaListo = datos.clima.tipo === "listo" ? datos.clima.datos : null;
 
-    useEffect(() => asegurarDatos(parcela), [parcela]);
+    useEffect(() => {
+        asegurarDatos(parcela);
+    }, [parcela]);
 
     const eliminar = async () => {
         if (!window.confirm(`¿Eliminar "${parcela.nombre}"? También se borran su historia y sus producciones. No se puede deshacer.`)) return;
