@@ -144,13 +144,13 @@ front/src/
 | Ruta | Pantalla | Usuario |
 |---|---|---|
 | `/` **(hecha)** | Landing (`features/landing/`), con la animación de marca | Todos |
-| `/productor/*` **(hecha)** | Panel del productor (`features/productor/`): Resumen, Mis parcelas (`/productor/parcelas`: mapa y lista; `parcelas/nueva`: dibujar y guardar; `parcelas/:id`: ficha con datos reales, su estado de generación y la historia de eventos (`features/eventos/`, guardados vía `api/eventos.ts`); ver `features/parcelas/`), Producciones (`/productor/producciones`: tabla con filtros; `producciones/:id`: ficha completa de un cultivo, la misma información que mostrará el QR; ver `features/producciones/`), Pedidos, Pagos. Las parcelas se guardan en el navegador vía `api/parcelas.ts` (misma forma que tendrá la API del back); el resto usa datos de demostración en `api/fixtures/productor.ts` | Productor |
+| `/productor/*` **(hecha)** | Panel del productor (`features/productor/`): Resumen, Mis parcelas (`/productor/parcelas`: mapa y lista; `parcelas/nueva`: dibujar y guardar; `parcelas/:id`: ficha con datos reales, su estado de generación y la historia de eventos (`features/eventos/`, guardados vía `api/eventos.ts`); ver `features/parcelas/`), Producciones (`/productor/producciones`: tabla con filtros; `producciones/:id`: ficha completa de un cultivo, la misma que muestra el QR, con su página pública y su etiqueta; ver `features/producciones/`), Pedidos, Pagos. Las parcelas se guardan en el navegador vía `api/parcelas.ts` (misma forma que tendrá la API del back); el resto usa datos de demostración en `api/fixtures/productor.ts` | Productor |
 | `/parcela` **(hecha)** | La parcela sola: dibujo sobre el mapa, NDVI, ciclos, clima, suelo e insights | Productor |
 | `/lote/:id` | Lote en el mapa: historial detectado y clima | Productor |
 | `/lote/:id/escenarios` | Comparador de escenarios: el gráfico "me conviene" | Productor |
 | `/lote/:id/verificacion` | Semáforo por campaña y pasaporte con QR | Productor |
 | `/mercado` | Catálogo con chips de categoría y sellos | Consumidor |
-| `/p/:pasaporteId` | Página pública del QR: trazabilidad del producto | Consumidor |
+| `/p/:codigo` **(hecha)** | Página pública del QR (`features/trazabilidad/`): la ficha de una producción por su código `SUR-XXXXXXXX`. La etiqueta imprimible está en el panel, `/productor/producciones/:id/etiqueta` | Consumidor |
 
 ### Sistema de diseño de Surco
 

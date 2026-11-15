@@ -12,6 +12,7 @@ export const rutasPanel = {
     parcela: (id: string) => `${RUTA_PANEL}/parcelas/${id}`,
     producciones: `${RUTA_PANEL}/producciones`,
     produccion: (id: string) => `${RUTA_PANEL}/producciones/${id}`,
+    etiqueta: (id: string) => `${RUTA_PANEL}/producciones/${id}/etiqueta`,
     pedidos: `${RUTA_PANEL}/pedidos`,
     pagos: `${RUTA_PANEL}/pagos`
 };

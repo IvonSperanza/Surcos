@@ -101,8 +101,18 @@ Una parcela tiene un cultivo a la vez y la cosecha es total; las producciones se
 deducen de los eventos (`front/src/features/producciones/producciones.ts`). La
 cosecha no pregunta qué se cosechó (es lo que se plantó), sólo los kg. Cada
 producción muestra aparte el "Historial de la parcela" (lo que pasó desde la
-cosecha anterior hasta la siembra) y "El cultivo". Siguiente: pasaporte (QR) y
-productos a la venta creados desde cada cosecha.
+cosecha anterior hasta la siembra) y "El cultivo". Siguiente: productos a la
+venta creados desde cada cosecha.
+
+**QR y etiqueta (hecha).** Cada producción tiene un código corto (`SUR-` y 8
+caracteres de su id) y una página pública en `/p/:codigo`, sin el panel y en
+tema Día, que muestra `DetalleProduccion`. Desde la ficha de una producción
+cosechada se imprime la etiqueta del producto (90 × 50 mm, diez por hoja A4):
+cultivo, cultivar con su n.º del INASE, cosecha, parcela, el QR y el código. El
+QR apunta a `VITE_URL_PUBLICA` o, si falta, a la dirección del navegador.
+Límite actual: las producciones viven en el navegador del productor, así que la
+página pública sólo las encuentra ahí. Pedido al back: `GET /producciones/:codigo`
+público, con la producción, su parcela y sus eventos.
 
 **Fase C · Contraste con el satélite.** `POST /contraste` en `datos/`, con
 reglas deterministas como las de `insights.py`: cada evento declarado vuelve

@@ -14,6 +14,7 @@ import { VistaPagos } from "./VistaPagos";
 import { VistaPedidos } from "./VistaPedidos";
 import { FichaProduccion } from "../producciones/FichaProduccion";
 import { VistaProducciones } from "../producciones/VistaProducciones";
+import { VistaEtiqueta } from "../producciones/VistaEtiqueta";
 import { VistaResumen } from "./VistaResumen";
 
 // Se monta en App.tsx como /productor/*. Las vistas cuelgan de una ruta de
@@ -44,6 +45,7 @@ export function ProductorApp() {
                 <Route path="parcelas/:id" element={<FichaParcela />} />
                 <Route path="producciones" element={<VistaProducciones />} />
                 <Route path="producciones/:id" element={<FichaProduccion />} />
+                <Route path="producciones/:id/etiqueta" element={<VistaEtiqueta />} />
                 <Route path="pedidos" element={<VistaPedidos pedidos={estado.pedidos} onAvanzar={acciones.avanzarPedido} />} />
                 <Route path="pagos" element={<VistaPagos pagos={estado.pagos} />} />
             </Route>

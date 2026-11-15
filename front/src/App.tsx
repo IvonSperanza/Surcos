@@ -3,6 +3,7 @@ import { LandingPage } from "./features/landing/LandingPage";
 import { ParcelaPage } from "./features/parcela/ParcelaPage";
 import { ProductorApp } from "./features/productor/ProductorApp";
 import { RUTA_PANEL } from "./features/productor/rutas";
+import { PaginaProduccion } from "./features/trazabilidad/PaginaProduccion";
 
 // Cada pantalla vive en src/features/<nombre>/ y se registra acá.
 // Rutas previstas: ver "Pantallas y rutas" en AGENTS.md.
@@ -13,6 +14,7 @@ export default function App() {
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/parcela" element={<ParcelaPage />} />
                 <Route path={`${RUTA_PANEL}/*`} element={<ProductorApp />} />
+                <Route path="/p/:codigo" element={<PaginaProduccion />} />
             </Routes>
         </BrowserRouter>
     );

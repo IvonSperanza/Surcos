@@ -61,3 +61,6 @@ export function fotoDeProduccion(produccion: Produccion): { foto: FotoEvento; ev
     const evento = delCultivo.find((e) => e?.foto);
     return evento?.foto ? { foto: evento.foto, evento } : null;
 }
+
+// Corto para que el QR impreso sea chico y, si no escanea, se pueda tipear.
+export const codigoProduccion = (id: string) => `SUR-${id.replace(/-/g, "").slice(0, 8).toUpperCase()}`;

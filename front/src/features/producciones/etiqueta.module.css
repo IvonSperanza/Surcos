@@ -1,0 +1,164 @@
+/* Medidas en mm y pt: es lo que sale de la impresora. 90 × 50 mm entran de a
+   diez en una hoja A4. */
+.etiqueta {
+    box-sizing: border-box;
+    width: 90mm;
+    height: 50mm;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 30mm;
+    gap: 4mm;
+    padding: 4mm;
+    background: var(--surface-raised);
+    color: var(--ink);
+    border: 1px dashed var(--line);
+    font-family: var(--font-sans);
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    break-inside: avoid;
+}
+
+.etiqueta p,
+.etiqueta dl,
+.etiqueta dd {
+    margin: 0;
+}
+
+.texto {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0;
+}
+
+.marca {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5mm;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 9pt;
+    line-height: 1;
+}
+
+.cultivo {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13pt;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+.linea {
+    font-size: 7pt;
+    line-height: 1.3;
+    color: var(--ink-muted);
+}
+
+.datos {
+    display: flex;
+    flex-direction: column;
+    gap: 1mm;
+    font-size: 7.5pt;
+    line-height: 1.25;
+}
+
+.datos div {
+    display: flex;
+    gap: 2mm;
+}
+
+.datos dt {
+    flex: none;
+    width: 13mm;
+    color: var(--ink-muted);
+}
+
+.datos dd {
+    font-family: var(--font-mono);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2mm;
+}
+
+.qr svg {
+    width: 30mm;
+    height: 30mm;
+}
+
+.codigo {
+    font-family: var(--font-mono);
+    font-size: 7pt;
+    letter-spacing: 0.04em;
+}
+
+/* ---------- Vista ---------- */
+.opciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--space-4);
+}
+
+.copias {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    color: var(--ink-muted);
+}
+
+.copias input {
+    width: 96px;
+    padding: var(--space-1) 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface-raised);
+    color: var(--ink);
+    font: inherit;
+}
+
+.vistaPrevia {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    overflow-x: auto;
+}
+
+.secundario {
+    color: var(--ink-muted);
+}
+
+.url {
+    overflow-wrap: anywhere;
+}
+
+/* ---------- Impresión ---------- */
+/* La hoja va fuera de #root (portal): en pantalla no se ve y al imprimir es lo
+   único que sale. */
+.hoja {
+    display: none;
+}
+
+@page {
+    size: A4;
+    margin: 10mm;
+}
+
+@media print {
+    :global(#root) {
+        display: none;
+    }
+
+    .hoja {
+        display: grid;
+        grid-template-columns: repeat(2, 90mm);
+        justify-content: center;
+    }
+}
