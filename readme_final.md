@@ -1,4 +1,6 @@
 # 🌱 SURCO — Pasaporte de Suelo Vivo
+## URL: https://surcos-staging.thorque.com.ar
+
 
 > **NASA Space Apps Challenge 2026 — Desafíos AgTech para la Zona Núcleo (Rosario, Argentina)**
 >
@@ -141,4 +143,12 @@ Para evitar sesgos de resolución espacial en parcelas hortícolas pequeñas (1 
 
 ---
 
+
+##7. Mercado Potencial y Oportunidad en Argentina
+
+Surco ataca una asimetría concreta en el mercado agroalimentario argentino: mientras existe una fuerte demanda urbana de alimentos saludables y con trazabilidad química, casi la totalidad de la producción certificada se exporta por los altos costos de auditoría.
+
+* **Foco Inicial (Cinturón Hortícola de Rosario y Santa Fe):** Según el Censo Hortícola (UNR / INTA), solo en el Cinturón de Rosario operan **205 productores** sobre **~2.930 hectáreas** (y **595 productores en 7.000 ha** a nivel provincial). La mayoría produce en tierras arrendadas y busca canales directos para escapar de los márgenes bajos del mercado concentrador.
+* **Brecha en el Mercado Interno Argentino:** De acuerdo con los reportes de *Alimentos Argentinos* (2025/2026), Argentina es potencia mundial en producción orgánica (más de 1.660 operadores), pero **el 98% del volumen certificado se exporta** y apenas el **1,5% abastece el mercado interno**.
+* **Oportunidad para Sur
 **Equipo de Desarrollo:** Estudiantes finales de **Ingeniería en Sistemas** (**UAI** y **UTN Rosario**), entusiastas del ecosistema **Linux** y el software abierto, en representación de la software factory rosarina **Thorque**.
