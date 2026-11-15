@@ -1,88 +1,55 @@
-import type { ReactNode } from "react";
 import { CloudRain, Droplets, Info, Layers, Sprout } from "lucide-react";
 import { ChipCategoria, EnlaceBoton, SelloVerificacion, type Categoria } from "../../design-system";
 import { HojaMarca } from "./HojaMarca";
 import { Revelar } from "./Revelar";
 import styles from "./landing.module.css";
 
-const relleno = (token: string) => ({ fill: `var(--${token})` });
-
 type Puesto = {
     categoria: Categoria;
-    fondoArte: string;
     titulo: string;
     texto: string;
     precio: string;
     unidad: string;
-    arte: ReactNode;
+    foto: string;
+    alt: string;
 };
 
+// Fotos reales con licencia libre (Wikimedia Commons), recortadas a la
+// tarjeta y sin metadatos. Los créditos van en la nota de abajo.
 const PUESTOS: Puesto[] = [
     {
         categoria: "hortalizas",
-        fondoArte: styles.arteHoja,
         titulo: "Bolsón de estación",
         texto: "Tomate, lechuga, acelga y lo que dé la quinta esa semana.",
         precio: "$ 4.800",
         unidad: "bolsón",
-        arte: (
-            <svg viewBox="0 0 240 150">
-                <rect x="0" y="120" width="240" height="30" style={relleno("cobre")} />
-                <rect x="60" y="70" width="120" height="54" rx="4" style={relleno("cobre")} />
-                {[70, 90, 110].map((y) => (
-                    <rect key={y} x="60" y={y} width="120" height="14" rx="4" style={relleno("cobre")} />
-                ))}
-                <circle cx="95" cy="62" r="18" style={relleno("hoja")} />
-                <circle cx="120" cy="54" r="20" style={relleno("hoja")} />
-                <circle cx="146" cy="62" r="17" style={relleno("hoja")} />
-                <circle cx="108" cy="60" r="12" style={relleno("cobre")} />
-                <circle cx="134" cy="58" r="11" style={relleno("sol")} />
-            </svg>
-        )
+        foto: "/feria/hortalizas.jpg",
+        alt: "Puesto de verduras agroecológicas en una plaza de Santa Fe"
     },
     {
         categoria: "frutas",
-        fondoArte: styles.arteCobre,
         titulo: "Cajón de frutas",
         texto: "De estación y del cinturón verde, cosechadas cerca.",
         precio: "$ 6.200",
         unidad: "cajón",
-        arte: (
-            <svg viewBox="0 0 240 150">
-                <rect x="0" y="120" width="240" height="30" style={relleno("cobre")} />
-                <path d="M50 84h140l-14 40H64z" style={relleno("sol")} />
-                <path d="M50 84h140" style={{ stroke: "var(--hoja)", strokeWidth: 5, strokeLinecap: "round" }} />
-                <circle cx="96" cy="74" r="18" style={relleno("cobre")} />
-                <circle cx="124" cy="64" r="20" style={relleno("cobre")} />
-                <circle cx="150" cy="76" r="16" style={relleno("sol")} />
-                <circle cx="110" cy="66" r="10" style={relleno("hoja")} />
-                <circle cx="140" cy="68" r="9" style={relleno("hoja")} />
-            </svg>
-        )
+        foto: "/feria/frutas.jpg",
+        alt: "Cajones de frutillas, arándanos y frutas de estación en un mercado"
     },
     {
         categoria: "vinos",
-        fondoArte: styles.arteUva,
         titulo: "Malbec con cobertura",
         texto: "Cobertura entre filas verificada durante todo el invierno.",
         precio: "$ 9.500",
         unidad: "botella",
-        arte: (
-            <svg viewBox="0 0 240 150">
-                <rect x="0" y="120" width="240" height="30" style={relleno("cobre")} />
-                <rect x="104" y="36" width="32" height="88" rx="6" style={relleno("cobre")} />
-                <path d="M104 42c0-14 10-16 10-24h12c0 8 10 10 10 24z" style={relleno("cobre")} />
-                <rect x="110" y="20" width="20" height="10" rx="2" style={relleno("uva")} />
-                <rect x="108" y="64" width="24" height="34" rx="3" style={relleno("uva-soft")} />
-                <rect x="110" y="70" width="20" height="6" style={relleno("sol")} />
-                {[
-                    [168, 92], [184, 92], [176, 106], [192, 106], [184, 120]
-                ].map(([cx, cy]) => (
-                    <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="9" style={relleno("uva")} />
-                ))}
-            </svg>
-        )
+        foto: "/feria/vinos.jpg",
+        alt: "Viñedo en invierno con cultivo de cobertura verde entre las filas"
     }
+];
+
+const CREDITOS = [
+    { autor: "Berna Gaitán Otarán", licencia: "CC BY-SA 4.0", pagina: "https://commons.wikimedia.org/wiki/File:Puesto_de_verduras_agroecol%C3%B3gicas_en_ciudad_de_Santa_Fe.jpg" },
+    { autor: "domdomegg", licencia: "CC BY 4.0", pagina: "https://commons.wikimedia.org/wiki/File:Fruit_stalls_at_Ljubljana_Central_Market_03.JPG" },
+    { autor: "Lore Sjoberg", licencia: "CC BY 2.0", pagina: "https://commons.wikimedia.org/wiki/File:Vineyard_in_Winter,_Sonoma_with_cover_crop.jpg" }
 ];
 
 export function Feria() {
@@ -100,9 +67,7 @@ export function Feria() {
                     {PUESTOS.map((p, i) => (
                         <Revelar as="article" key={p.titulo} orden={i}>
                             <div className={styles.puestoFeria}>
-                                <div className={`${styles.arteFeria} ${p.fondoArte}`} aria-hidden="true">
-                                    {p.arte}
-                                </div>
+                                <img className={styles.fotoFeria} src={p.foto} alt={p.alt} loading="lazy" width={960} height={600} />
                                 <div className={styles.cuerpoFeria}>
                                     <div className={styles.filaChips}>
                                         <ChipCategoria categoria={p.categoria} />
@@ -117,7 +82,18 @@ export function Feria() {
                         </Revelar>
                     ))}
                 </div>
-                <p className={`small ${styles.notaDemo}`}>Productos y precios de demostración. Cuando esté en marcha, cada puesto va a tener su productor y su lote real.</p>
+                <p className={`small ${styles.notaDemo}`}>
+                    Productos y precios de demostración. Cuando esté en marcha, cada puesto va a tener su productor y su lote real. Fotos de Wikimedia Commons:{" "}
+                    {CREDITOS.map((c, i) => (
+                        <span key={c.pagina}>
+                            {i > 0 && (i === CREDITOS.length - 1 ? " y " : ", ")}
+                            <a href={c.pagina} target="_blank" rel="noreferrer">
+                                {c.autor} ({c.licencia})
+                            </a>
+                        </span>
+                    ))}
+                    .
+                </p>
             </div>
         </section>
     );
