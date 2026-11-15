@@ -20,7 +20,12 @@ export function PanelLayout({ estado, mensajeToast, onReiniciar, tema, onCambiar
     const { pathname } = useLocation();
 
     // Al cambiar de vista se arranca desde arriba, como en una página nueva.
-    useEffect(() => window.scrollTo(0, 0), [pathname]);
+    // El cuerpo va entre llaves a propósito: `window.scrollTo` devuelve una
+    // promesa en navegadores nuevos y `useEffect` tomaría ese valor como
+    // función de limpieza ("destroy is not a function").
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
 
     return (
         <div className={styles.app}>
