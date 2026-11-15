@@ -83,4 +83,8 @@ export function createHttpClient(baseUrl: string) {
 export type HttpClient = ReturnType<typeof createHttpClient>;
 
 export const api = createHttpClient(import.meta.env.VITE_API_URL);
+
+// Sin VITE_API_URL, parcelas y eventos se guardan en el navegador: es el modo
+// de respaldo de la demo si el back no está.
+export const conBack = Boolean(import.meta.env.VITE_API_URL);
 export const datos = createHttpClient(import.meta.env.VITE_DATOS_URL);

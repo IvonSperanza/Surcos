@@ -5,12 +5,12 @@ import { nombreCultivo } from "../eventos/textoEvento";
 import { HojaMarca } from "../landing/HojaMarca";
 import { DetalleProduccion } from "../producciones/DetalleProduccion";
 import { EstadoProduccion } from "../producciones/EstadoProduccion";
-import { codigoProduccion } from "../producciones/producciones";
-import { useProducciones, type ProduccionDeParcela } from "../producciones/useProducciones";
+import type { ProduccionPublica } from "../../api/producciones";
+import { useProduccionPublica } from "./useProduccionPublica";
 import styles from "./trazabilidad.module.css";
 
-function Cabecera({ produccion }: { produccion: ProduccionDeParcela }) {
-    const { cosecha, parcela } = produccion;
+function Cabecera({ produccion }: { produccion: ProduccionPublica }) {
+    const { cosecha, parcela, productor } = produccion;
     return (
         <header className={styles.cabecera}>
             <EstadoProduccion produccion={produccion} />
@@ -24,6 +24,11 @@ function Cabecera({ produccion }: { produccion: ProduccionDeParcela }) {
                     <>En pie en {parcela.nombre}</>
                 )}
             </p>
+            {productor && (
+                <p className="body">
+                    {productor.nombre} · {productor.localidad}
+                </p>
+            )}
         </header>
     );
 }
@@ -46,8 +51,7 @@ function NoEncontrada({ codigo }: { codigo: string }) {
 export function PaginaProduccion() {
     useTema("dia");
     const codigo = (useParams().codigo ?? "").toUpperCase();
-    const producciones = useProducciones();
-    const produccion = producciones?.find((p) => codigoProduccion(p.id) === codigo);
+    const produccion = useProduccionPublica(codigo);
 
     return (
         <div className={styles.pagina}>
@@ -59,7 +63,7 @@ export function PaginaProduccion() {
                 <span className={`dato ${styles.secundario}`}>{codigo}</span>
             </header>
             <main className={styles.contenido}>
-                {producciones === null ? (
+                {produccion === undefined ? (
                     <p className="body">Cargando…</p>
                 ) : produccion ? (
                     <>

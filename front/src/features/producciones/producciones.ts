@@ -5,7 +5,8 @@ import type { CultivoDeclarado, Evento, FotoEvento } from "../../api/eventos";
 // cosecha es total, así que las producciones se deducen de los eventos sin
 // cargar nada aparte: cada siembra abre una y la cosecha siguiente la cierra.
 export type Produccion = {
-    id: string; // el de su evento de siembra
+    id: string;
+    codigo: string; // el del QR y la etiqueta
     parcelaId: string;
     cultivo: CultivoDeclarado;
     siembra: Evento;
@@ -28,7 +29,10 @@ export function derivarProducciones(eventos: Evento[]): Produccion[] {
 
     for (const evento of ordenados) {
         if (evento.tipo === "siembra" && evento.cultivo && !abierta) {
-            abierta = { id: evento.id, parcelaId: evento.parcelaId, cultivo: evento.cultivo, siembra: evento, cosecha: null, kg: null, antes: previos, durante: [] };
+            // Con back, la producción tiene id y código propios; acá se deducen
+            // de la siembra sólo para enlazar a su ficha, que los trae del back.
+            const id = evento.produccionId ?? evento.id;
+            abierta = { id, codigo: codigoProduccion(id), parcelaId: evento.parcelaId, cultivo: evento.cultivo, siembra: evento, cosecha: null, kg: null, antes: previos, durante: [] };
             producciones.push(abierta);
             previos = [];
         } else if (evento.tipo === "cosecha" && abierta) {
@@ -62,5 +66,6 @@ export function fotoDeProduccion(produccion: Produccion): { foto: FotoEvento; ev
     return evento?.foto ? { foto: evento.foto, evento } : null;
 }
 
-// Corto para que el QR impreso sea chico y, si no escanea, se pueda tipear.
+// Sin back no hay correlativo: el código sale del id de la siembra. Corto para
+// que el QR impreso sea chico y, si no escanea, se pueda tipear.
 export const codigoProduccion = (id: string) => `SUR-${id.replace(/-/g, "").slice(0, 8).toUpperCase()}`;

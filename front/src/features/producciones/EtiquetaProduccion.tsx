@@ -2,7 +2,6 @@ import { QRCodeSVG } from "qrcode.react";
 import { formatearFecha } from "../../lib/fecha";
 import { nombreEspecie } from "../eventos/textoEvento";
 import { HojaMarca } from "../landing/HojaMarca";
-import { codigoProduccion } from "./producciones";
 import type { ProduccionDeParcela } from "./useProducciones";
 import styles from "./etiqueta.module.css";
 
@@ -41,7 +40,7 @@ export function EtiquetaProduccion({ produccion, url }: Props) {
             <div className={styles.qr}>
                 {/* currentColor: el QR toma el color del texto, sin hardcodear uno. */}
                 <QRCodeSVG value={url} level="M" marginSize={0} fgColor="currentColor" bgColor="transparent" />
-                <span className={styles.codigo}>{codigoProduccion(produccion.id)}</span>
+                <span className={styles.codigo}>{produccion.codigo}</span>
             </div>
         </article>
     );

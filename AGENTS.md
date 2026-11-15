@@ -101,15 +101,20 @@ Un módulo = `schema` → `validator` → `filter` → `repository` (sólo queri
 `routes` → `index.ts` (`createXModule`). Desde afuera sólo se importa
 `index.ts` o `*.schema.ts`.
 
-Módulos previstos (ninguno creado todavía):
+Módulos (hechos):
 
-| Módulo | Qué guarda |
+| Módulo | Qué hace |
 |---|---|
-| `productor` | Nombre, localidad, desde cuándo produce, foto |
-| `lote` | Productor, tipo (`hortalizas` · `vid` · `frutales`), centro y polígono, superficie |
-| `campania` | Lo que el productor declara por campaña: cultivos, familia, siembra, cosecha |
-| `pasaporte` | Lote + campaña + estado (`verificado` · `pendiente` · `sin_verificar`) + prácticas verificadas. ID tipo `SUR-2026-0001` |
-| `producto` | Catálogo del mercado: categoría, precio, precio de referencia, unidad, lote, pasaporte, cosecha |
+| `productor` | Tabla `productores`. Sin login hay uno solo, el de la demo (`GET/PATCH /productor`) |
+| `parcela` | Tabla `parcelas` (polígono en jsonb). `/parcelas` |
+| `produccion` | Tabla `producciones`: un cultivo de la siembra a la cosecha, con su código `SUR-2026-0001`. Sin rutas: la abre y cierra `evento` |
+| `evento` | Tabla `eventos`. `POST /eventos` aplica las reglas: la siembra abre una producción, la cosecha la cierra, el resto va a la que está en pie |
+| `trazabilidad` | Sin tabla: `GET /producciones`, `GET /producciones/:id` y `GET /publico/producciones/:codigo` (la página del QR), armadas con parcela, eventos y productor |
+| `foto` | `POST /fotos` (multipart, campo `foto`): guarda en `STORAGE_DIR` y devuelve la URL (`/files/fotos/…`) |
+| `demo` | `POST /demo/reiniciar`: borra todo y carga la quinta de ejemplo (`modules/demo/ejemplos.ts`) |
+
+Pendientes: `pasaporte` (verificación contra el satélite) y `producto`/pedidos.
+Deploy en staging: `infra/README.md`.
 
 Sin login ni usuarios en la demo: no hay middleware `auth` ni PK compuesta
 `(id, user)` todavía (ver nota al inicio de `ARCHITECTURE.md`).

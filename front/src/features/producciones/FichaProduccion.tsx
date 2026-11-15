@@ -7,7 +7,6 @@ import vistas from "../productor/vistas.module.css";
 import { rutaPublica } from "../trazabilidad/rutas";
 import { DetalleProduccion } from "./DetalleProduccion";
 import { EstadoProduccion } from "./EstadoProduccion";
-import { codigoProduccion } from "./producciones";
 import { useProducciones } from "./useProducciones";
 import styles from "./producciones.module.css";
 
@@ -34,7 +33,7 @@ export function FichaProduccion() {
                 acciones={
                     <div className={styles.accionesFicha}>
                         <EstadoProduccion produccion={produccion} />
-                        <EnlaceBoton to={rutaPublica(codigoProduccion(produccion.id))}>Página pública</EnlaceBoton>
+                        <EnlaceBoton to={rutaPublica(produccion.codigo)}>Página pública</EnlaceBoton>
                         {produccion.cosecha && <EnlaceBoton to={rutasPanel.etiqueta(produccion.id)}>Etiqueta</EnlaceBoton>}
                     </div>
                 }

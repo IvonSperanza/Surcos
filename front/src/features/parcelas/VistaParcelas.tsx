@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
+import { conBack } from "../../api/client";
 import { cargarParcelasEjemplo, hayParcelasEjemplo } from "../../api/fixtures/parcelasEjemplo";
 import type { Parcela } from "../../api/parcelas";
 import { Button, Card, EnlaceBoton } from "../../design-system";
@@ -122,7 +123,7 @@ export function VistaParcelas() {
                     </ul>
                 </div>
             )}
-            {parcelas && parcelas.length > 0 && !conEjemplos && (
+            {!conBack && parcelas && parcelas.length > 0 && !conEjemplos && (
                 <div>
                     <BotonEjemplos onCargar={recargar} />
                 </div>

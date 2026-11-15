@@ -1,7 +1,7 @@
 // Eventos de manejo de una parcela: lo que el productor declara que hizo. Es
 // la historia del lote que compra el consumidor, y lo que el satélite
-// contrasta. Como las parcelas, por ahora viven en el navegador con la misma
-// forma que tendría la API del back.
+// contrasta. Como las parcelas, viven en el back o, sin él, en el navegador.
+import { api, conBack, type Envelope } from "./client";
 
 export type TipoEvento =
     | "siembra"
@@ -43,6 +43,7 @@ export type Evento = {
     detalles: Record<string, string>; // campos propios de cada tipo
     notas: string;
     foto?: FotoEvento | null; // opcional: los eventos guardados antes no la tienen
+    produccionId?: string | null; // la asigna el back: la siembra abre una producción
     registrado: string; // ISO, cuándo se cargó
 };
 
@@ -84,12 +85,29 @@ function guardarTodos(eventos: Evento[]): boolean {
 
 // Del más reciente al más viejo: así se lee la historia en la ficha.
 export async function listarEventos(parcelaId: string): Promise<Evento[]> {
-    return todos()
+    const eventos = conBack ? (await api.get<Envelope<Evento[]>>(`/eventos?parcelaId=${parcelaId}`)).data : todos();
+    return eventos
         .filter((e) => e.parcelaId === parcelaId)
         .sort((a, b) => b.fecha.localeCompare(a.fecha) || b.registrado.localeCompare(a.registrado));
 }
 
+// La foto viaja aparte, como archivo: el evento guarda sólo su URL. Las de
+// ejemplo ya son una URL; las que saca el productor llegan como data URL.
+async function subirFoto(foto: FotoEvento): Promise<FotoEvento> {
+    if (!foto.url.startsWith("data:")) return foto;
+    const formulario = new FormData();
+    formulario.append("foto", await (await fetch(foto.url)).blob(), "foto.jpg");
+    const respuesta = await fetch(`${import.meta.env.VITE_API_URL}/fotos`, { method: "POST", body: formulario });
+    if (!respuesta.ok) throw new Error("No se pudo subir la foto. Probá de nuevo o guardá el evento sin foto.");
+    const { data } = (await respuesta.json()) as Envelope<{ url: string }>;
+    return { ...foto, url: data.url };
+}
+
 export async function crearEvento(nuevo: EventoNuevo): Promise<Evento> {
+    if (conBack) {
+        const foto = nuevo.foto ? await subirFoto(nuevo.foto) : null;
+        return (await api.post<Envelope<Evento>>("/eventos", { ...nuevo, foto })).data;
+    }
     const evento: Evento = { ...nuevo, id: crypto.randomUUID(), registrado: new Date().toISOString() };
     const anteriores = todos();
     // Una foto que no entra no se pierde en silencio al recargar: se avisa.
@@ -100,11 +118,22 @@ export async function crearEvento(nuevo: EventoNuevo): Promise<Evento> {
     return evento;
 }
 
+// Para los que ya traen id, como los de ejemplo.
+export async function agregarEventos(eventos: Evento[]): Promise<void> {
+    guardarTodos([...todos(), ...eventos]);
+}
+
 export async function eliminarEvento(id: string): Promise<void> {
+    if (conBack) {
+        await api.del(`/eventos/${id}`);
+        return;
+    }
     guardarTodos(todos().filter((e) => e.id !== id));
 }
 
+// Con back no hace falta: se borran con la parcela.
 export async function eliminarEventosDeParcela(parcelaId: string): Promise<void> {
+    if (conBack) return;
     guardarTodos(todos().filter((e) => e.parcelaId !== parcelaId));
 }
 

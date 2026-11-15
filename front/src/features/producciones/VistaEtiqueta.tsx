@@ -9,7 +9,6 @@ import { rutasPanel } from "../productor/rutas";
 import vistas from "../productor/vistas.module.css";
 import { apuntaALocal, urlPublica } from "../trazabilidad/rutas";
 import { EtiquetaProduccion } from "./EtiquetaProduccion";
-import { codigoProduccion } from "./producciones";
 import { useProducciones } from "./useProducciones";
 import styles from "./etiqueta.module.css";
 
@@ -44,7 +43,7 @@ export function VistaEtiqueta() {
         );
     }
 
-    const url = urlPublica(codigoProduccion(produccion.id));
+    const url = urlPublica(produccion.codigo);
     const etiqueta = <EtiquetaProduccion produccion={produccion} url={url} />;
 
     return (

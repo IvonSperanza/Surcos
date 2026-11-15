@@ -1,6 +1,8 @@
-import { crearEvento, eliminarTodosLosEventos, type CultivoDeclarado, type EventoNuevo, type FotoEvento } from "../eventos";
+import { conBack } from "../client";
+import { reiniciarDemo } from "../producciones";
+import { agregarEventos, eliminarTodosLosEventos, type CultivoDeclarado, type Evento, type EventoNuevo, type FotoEvento } from "../eventos";
 import type { PoligonoGeoJson } from "../ndvi";
-import { crearParcela, eliminarTodasLasParcelas, listarParcelas } from "../parcelas";
+import { agregarParcelas, eliminarTodasLasParcelas, listarParcelas, type Parcela } from "../parcelas";
 import CREDITOS from "./fotosEjemplo.json";
 
 // Parcelas reales de una quinta del cinturón hortícola de Rosario (al sudeste de
@@ -73,21 +75,50 @@ export async function hayParcelasEjemplo(): Promise<boolean> {
     return EJEMPLOS.every((e) => nombres.has(e.nombre));
 }
 
+// Con forma de UUID y distintos en los primeros 8 caracteres, que es de donde
+// sale el código del QR (codigoProduccion).
+const idEjemplo = (parcela: number, evento: number) => `5ec0${parcela}${String(evento).padStart(3, "0")}-0000-4000-8000-000000000000`;
+
+// Ids y fechas de carga fijos: el código del QR sale del id, así que una
+// etiqueta impresa sigue andando después de reiniciar la demo, y la página
+// pública encuentra los ejemplos en cualquier navegador.
+export function datosEjemplo(): { parcelas: Parcela[]; eventos: Evento[] } {
+    const parcelas = EJEMPLOS.map(({ nombre, geometria }, p) => ({ id: idEjemplo(p + 1, 0), nombre, geometria, creada: `2026-11-14T12:00:0${p}.000Z` }));
+    const eventos = EJEMPLOS.flatMap(({ historia }, p) =>
+        historia.map((evento, i) => ({
+            notas: "",
+            cultivo: null,
+            detalles: {},
+            foto: null,
+            ...evento,
+            id: idEjemplo(p + 1, i + 1),
+            parcelaId: parcelas[p].id,
+            registrado: `${evento.fecha}T12:00:00.000Z`
+        }))
+    );
+    return { parcelas, eventos };
+}
+
 // Carga sólo las que falten: se puede apretar dos veces sin duplicar.
 export async function cargarParcelasEjemplo(): Promise<void> {
+    // El back sólo sabe cargarlas reiniciando: el botón se ofrece sin parcelas.
+    if (conBack) return reiniciarDemo();
     const existentes = new Set((await listarParcelas()).map((p) => p.nombre));
-    for (const ejemplo of EJEMPLOS.filter((e) => !existentes.has(e.nombre))) {
-        const parcela = await crearParcela({ nombre: ejemplo.nombre, geometria: ejemplo.geometria });
-        for (const evento of ejemplo.historia) {
-            await crearEvento({ notas: "", cultivo: null, detalles: {}, foto: null, ...evento, parcelaId: parcela.id });
-        }
-    }
+    const { parcelas, eventos } = datosEjemplo();
+    const faltan = parcelas.filter((p) => !existentes.has(p.nombre));
+    const ids = new Set(faltan.map((p) => p.id));
+    await agregarParcelas(faltan);
+    await agregarEventos(eventos.filter((e) => ids.has(e.parcelaId)));
 }
 
 // Deja el panel como al empezar la demo: sólo las parcelas de ejemplo, con su
 // historia. Devuelve los ids borrados para olvidar sus datos satelitales.
 export async function reiniciarParcelas(): Promise<string[]> {
     const borradas = (await listarParcelas()).map((p) => p.id);
+    if (conBack) {
+        await reiniciarDemo();
+        return borradas;
+    }
     await eliminarTodasLasParcelas();
     await eliminarTodosLosEventos();
     await cargarParcelasEjemplo();
