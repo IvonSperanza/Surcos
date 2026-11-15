@@ -15,6 +15,8 @@ cd /opt/onebox
 export BASE_DOMAIN=thorque.com.ar GHCR_OWNER=thorque-software
 
 bin/new-env.sh surcos-datos staging
+# new-env.sh arma los stacks de staging con front; el de datos no tiene.
+sed -i 's/^COMPOSE_PROFILES=.*/COMPOSE_PROFILES=/; s/^IMAGE_WEB=.*/IMAGE_WEB=/; s/^WEB_HOST=.*/WEB_HOST=/' stacks/surcos-datos-staging/.env
 echo "CORS_ORIGIN=https://surcos-staging.thorque.com.ar" >> stacks/surcos-datos-staging/.env
 
 # surcos-staging ya existe: le faltan el HOST del back y el volumen de fotos.
