@@ -5,12 +5,7 @@
 > **Desafío Global:** *Field Shift: Adapting Farms with NASA Data*
 >
 > **Eje AgTech Seleccionado:** **Eje 01 — Nutrientes y Trazabilidad** (*"Trazabilidad premium con datos confiables, certificación de prácticas sostenibles y cultivos de servicio"*).
->
-> **Demo en vivo (PWA):** `[INSERTAR URL DE VERCEL / NETLIFY AQUÍ]`
->
-> **Ejemplo de Pasaporte QR Público (ID Fijo para Demo Móvil):** `[INSERTAR URL]/lote/SC-2026-0417`
 
----
 
 ## 1. Problema y Usuario Objetivo
 
