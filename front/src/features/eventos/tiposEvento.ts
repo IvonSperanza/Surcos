@@ -13,7 +13,7 @@ export type DefinicionEvento = {
     // Si lleva especie y cultivar del catálogo del INASE, y de qué grupo.
     cultivo?: UsoCatalogo;
     campos: Campo[];
-    // Lo que el satélite puede decir de este evento (PLAN.md, "Eventos de manejo").
+    // Lo que el satélite puede decir de este evento (docs/proyecto/plan.md, "Fase C").
     contraste: string;
     // Cuándo lleva foto: la de la cosecha es optativa; la foto del cultivo es el evento.
     foto?: "opcional" | "obligatoria";

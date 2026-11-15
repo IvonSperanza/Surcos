@@ -91,7 +91,7 @@ la NASA usados, uso de IA.
       Cada número con fuente. Los que no tengan, van marcados como supuestos.
 - [ ] **Ojo con la comparación contra la soja.** El horticultor del cinturón no
       siembra soja. El dilema real es arrendar la quinta para soja o seguir
-      produciendo (PROYECTO.md). La comparación que convence es la quinta
+      produciendo (proyecto.md). La comparación que convence es la quinta
       vendiendo a intermediarios o al mercado concentrador contra la quinta
       vendiendo con trazabilidad por Surco, y las dos contra el arriendo.
 - [ ] **El modelo de ingresos se evalúa** (Escalabilidad). Hay que definirlo
@@ -99,7 +99,7 @@ la NASA usados, uso de IA.
       cooperativa.
 - [ ] **Alianzas:** el jurado es AFA, una cooperativa, y el criterio premia
       "integración con cooperativas y asesores". La cooperativa ya está en
-      PROYECTO.md como fase 2: conviene llevarla al pitch como canal de adopción.
+      proyecto.md como fase 2: conviene llevarla al pitch como canal de adopción.
 - [ ] **Encaje con Field Shift.** El desafío de la NASA pide explorar rotaciones
       que fortalezcan el suelo. La demo es fuerte en trazabilidad y débil en
       rotación. Mínimo: mostrar la rotación por familia de la parcela y la

@@ -114,10 +114,17 @@ Límite actual: las producciones viven en el navegador del productor, así que l
 página pública sólo las encuentra ahí. Pedido al back: `GET /producciones/:codigo`
 público, con la producción, su parcela y sus eventos.
 
-**Fase C · Contraste con el satélite.** `POST /contraste` en `datos/`, con
+**Fase C · Contraste con el satélite (hecha).** `POST /contraste` en `datos/`, con
 reglas deterministas como las de `insights.py`: cada evento declarado vuelve
 como "el satélite lo confirma", "no se ve en los datos", "no hay pasadas
-cerca" o "dato declarado (no visible desde el satélite)", con su evidencia.
+cerca" o "dato declarado (no visible desde el satélite)", con su evidencia. En la ficha
+de la producción (y en la página del QR) la "Historia verificada" muestra la
+curva de NDVI con los ciclos detectados y cada evento marcado con su
+veredicto; cada evento abre su porqué: la curva del índice alrededor de la
+fecha, el antes y el después, lo que se esperaba y la escena de Sentinel-2.
+Los eventos del ejemplo siguen lo que vio el satélite en los canteros; la
+"Parcela verde del oeste" es a propósito el caso que no coincide (el satélite
+la ve verde todo el año).
 
 | Evento | Qué se registra | Señal esperada | ¿Se contrasta? |
 |---|---|---|---|

@@ -1,61 +1,86 @@
 # Surco
 
-**Del satélite a tu mesa.** Marketplace de hortalizas, frutas y vinos trazables. Cada producto está ligado al lote donde creció, y las prácticas de suelo de ese lote (rotación, cobertura) se verifican con datos satelitales.
+**Comé con historia. Cuidá la tierra.** Cada producto de la quinta lleva un QR con la historia del lote donde creció: qué se sembró, qué se le aplicó y cuándo se cosechó. Cada práctica declarada se contrasta con lo que vio el satélite sobre esa parcela.
 
-Proyecto para NASA Space Apps Challenge 2026 — desafío *Field Shift: Adapting Farms with NASA Data*. Sede Rosario (UCEL), 14 y 15 de noviembre de 2026.
+NASA Space Apps Challenge 2026 · Rosario (UCEL) · desafío *Field Shift: Adapting Farms with NASA Data* · eje AgTech **01, Nutrientes y Trazabilidad**.
+
+| | |
+|---|---|
+| **Demo en vivo** | <https://surcos-staging.thorque.com.ar> (panel del productor en `/productor`) |
+| **Página del QR, ejemplo** | <https://surcos-staging.thorque.com.ar/p/SUR-2026-0002>: lechuga con todas sus prácticas confirmadas por el satélite |
+| **Caso que no coincide** | <https://surcos-staging.thorque.com.ar/p/SUR-2026-0004>: lo declarado no se ve en los datos |
+| **Presentación y pitch** | [`docs/entregables/`](docs/entregables/) |
+| **Propuesta completa** | [`docs/entregables/propuesta.md`](docs/entregables/propuesta.md) |
 
 ## El problema
 
-El pequeño productor no deja de cuidar el suelo por desconocimiento: lo deja porque a corto plazo no le conviene. En el cinturón hortícola de Rosario, la soja compite por la tierra desde hace décadas. Surco no le pide al productor que cuide el suelo por conciencia: le abre un mercado que le paga por hacerlo y usa datos satelitales para demostrarlo.
+En el cinturón hortícola de Rosario, vender a granel al mercado concentrador deja poco margen y muchas quintas terminan arrendadas para soja. Quien compra no puede distinguir una verdura cuidada de una que no, y certificar prácticas con una auditoría privada es caro para una quinta chica. Surco le da al productor una forma gratis de demostrar cómo trabaja su suelo y un canal de venta que se lo reconoce.
 
-## El flujo
+## Qué hace el prototipo
 
-1. **Planificar y registrar** (productor). Planificador de rotación por familias (hortalizas) o de cobertura entre filas (vid y frutales). Compara escenarios por margen —con el premium de Surco incluido— y por salud del suelo. El productor registra lo que plantó en cada lote.
-2. **Verificar → pasaporte del lote.** Se cruza lo declarado con la señal satelital (ciclos de cultivo, días de suelo desnudo, cobertura invernal) y se emite un pasaporte por lote y campaña.
-3. **Marketplace.** Cada producto (bolsón de verduras, cajón de frutas, botella de vino) está vinculado a su lote y lleva el sello de práctica verificada.
-4. **QR del producto → trazabilidad.** El consumidor ve el lote en el mapa, al productor, el historial de cultivos y de cobertura, el clima de la temporada y la fecha de cosecha.
+1. **El productor dibuja sus parcelas** sobre la imagen satelital. Cada parcela trae sola su clima (NASA POWER), su suelo (SoilGrids) y la curva de verde de Sentinel-2, con los ciclos de cultivo y los períodos de suelo desnudo detectados.
+2. **Registra lo que hace en cada parcela:** labranza, siembra, cobertura, riego, fertilización, aplicaciones, daño por clima, fotos y cosecha. La especie y el cultivar salen del Catálogo Nacional de Cultivares del INASE, con su número de inscripción.
+3. **Cada cultivo, de la siembra a la cosecha, es una producción** con su código (`SUR-2026-0002`). Desde la producción cosechada se imprime la etiqueta del producto, con el QR.
+4. **El QR abre la historia verificada.** Cada evento declarado se contrasta con el satélite y vuelve con un veredicto: *lo confirma el satélite*, *hay un indicio*, *no se ve en los datos*, *sin imágenes cerca* o *dato del productor* (lo que no se ve desde el espacio, como una aplicación). Cada veredicto muestra por qué: el índice antes y después, lo que se esperaba ver, la escena de Sentinel-2 y su fecha.
 
-**Alcance de la demo:** flujo completo con un horticultor del cinturón verde de Rosario. El vino y la fruta aparecen en el marketplace con su pasaporte ya generado.
+**Cómo se verifica.** Son reglas deterministas en [`datos/surco_datos/contraste.py`](datos/surco_datos/contraste.py), sin aprendizaje automático: cada una dice qué índice tiene que cambiar y cuánto. Por ejemplo, después de una siembra el verde (NDVI) sube en las semanas siguientes; después de una labranza se va el rastrojo (NDTI) y queda suelo expuesto (BSI); una helada se cruza con la temperatura mínima diaria de NASA POWER. Si no hay imágenes sin nubes cerca de la fecha, no se afirma nada.
 
 ## Datos
 
-| Dato | Fuente en producción | En la demo |
+Todo dato que se muestra lleva su fuente y su fecha.
+
+| Dato | Fuente | Cómo se usa |
 |---|---|---|
-| NDVI por lote | HLS (Harmonized Landsat Sentinel-2), MODIS MOD13Q1 | Series simuladas con la curva típica de cada cultivo |
-| Clima | NASA POWER | NASA POWER real, por coordenadas del lote |
-| Humedad del suelo | SMAP | Simulada |
-| Suelo | SoilGrids / INTA | Valores de referencia |
+| Verde, rastrojo, agua y clorofila de la parcela (NDVI, NDTI, NDMI, NDRE, BSI) | **Sentinel-2 L2A** (ESA Copernicus, 10 m), vía Earth Search | Ciclos de cultivo, suelo desnudo y el contraste de cada evento |
+| Lluvia, temperaturas, heladas, humedad del suelo, grados-día | **NASA POWER** (diario, comunidad agrícola) | Clima de la parcela, calendario de heladas, contraste de daños por helada y del riego |
+| Textura, carbono orgánico, pH y nutrientes del suelo | **SoilGrids** (ISRIC) | Ficha de suelo de la parcela |
+| Especies y cultivares | **Catálogo Nacional de Cultivares** (INASE) | Qué se sembró, con su número de inscripción |
 
-**Límite honesto:** con 10 m de resolución el satélite no distingue lechuga de tomate, y los invernaderos tapan la señal. Por eso el modelo es *declaración del productor + validación satelital*.
+El análisis de cada fuente del desafío (incluidas HLS, SMAP, ECOSTRESS y SRTM, que necesitan cuenta de Earthdata) está en [`datos/FUENTES.md`](datos/FUENTES.md).
 
-## Estructura
+**Límites.** Con 10 m de resolución el satélite no distingue una lechuga de un tomate, y un invernadero tapa la señal. Por eso el modelo es *declaración del productor + contraste satelital*: el satélite confirma que hubo una siembra, una cosecha o una cobertura en esa fecha, no qué especie fue. Los datos de la quinta de ejemplo (eventos y kilos) son de demostración; los datos satelitales y climáticos de sus parcelas son reales.
+
+## Arquitectura
 
 ```
-PROYECTO.md         descripción completa del proyecto
-design-system/
-  README.md        manual de marca: voz, color, estados, gráficos, tipografía, movimiento
-  tokens.json      fuente de verdad de los tokens
-  tokens.css       variables CSS y clases de tipografía, listas para importar
-  hero/
-    surco-hero.html  animación de portada (sol, paneles agrovoltaicos, satélite), sin dependencias
+front/          React + Vite: landing, panel del productor y página pública del QR
+back/           Express + TypeScript + Postgres (Drizzle): productor, parcelas, producciones, eventos, fotos
+datos/          Python (FastAPI): Sentinel-2, NASA POWER, SoilGrids, INASE y las reglas de verificación
+design-system/  tokens y manual de marca
+infra/          deploy en staging (Docker Compose)
+docs/           entregables y documentación del proyecto
 ```
 
-## Cómo usar el sistema de diseño
+El front llama al back para todo lo de negocio y a `datos/` para las series satelitales, el clima, el suelo y el contraste. Detalle de endpoints y reglas: [`AGENTS.md`](AGENTS.md).
 
-```html
-<link rel="stylesheet" href="design-system/tokens.css">
-<h1 class="display">Del satélite a tu mesa</h1>
-<p class="body" style="color: var(--ink-muted)">Mirá dónde creció.</p>
-<span class="dato">NDVI 0.72</span>
+## Cómo levantarlo
+
+Cada servicio en su terminal, desde la raíz del repo:
+
+```bash
+# Postgres
+cp back/.env.example back/.env && ln -s back/.env .env
+docker compose up -d postgresdb
+
+# back · http://localhost:3000
+cd back && npm install && npm run dev
+
+# datos · http://localhost:8000
+cd datos && python -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/uvicorn surco_datos.api:app --port 8000
+
+# front · http://localhost:5173
+cd front && cp .env.example .env && npm install && npm run dev
 ```
 
-- Colores: `var(--hoja)`, `var(--sol)`, `var(--cielo)`, `var(--cobre)`, `var(--uva)`… (ver `design-system/README.md` para qué significa cada uno).
-- Tipografía: clases `.display`, `.titulo`, `.subtitulo`, `.body`, `.small`, `.etiqueta`, `.dato`.
-- Si cambian un token, edítenlo en `tokens.json` y regeneren `tokens.css`.
-- Temas: `<html data-theme="dia">` (por defecto) o `data-theme="noche"` para paneles de datos.
-- Hero: abrí `design-system/hero/surco-hero.html` (agrovoltaica: sol, paneles, brotes y satélite). Se adapta al ancho de la ventana; se repite con un clic.
+Para cargar la quinta de ejemplo: `curl -X POST http://localhost:3000/demo/reiniciar`.
 
-## Entregas
+La primera consulta satelital de una parcela tarda uno o dos minutos; después sale de la caché.
 
-- Domingo 15/11, 15:00 — repositorio en GitHub.
-- Domingo 15/11, 23:59 — entrega final en la plataforma de NASA Space Apps.
+## Uso de inteligencia artificial
+
+Usamos asistentes de IA para programar, revisar código y redactar documentación. La verificación no usa IA: son reglas deterministas y auditables sobre datos públicos, y cada resultado muestra la medición que lo respalda.
+
+## Equipo
+
+Ivon Speranza y Lautaro Teta Musa, estudiantes de Ingeniería en Sistemas (UAI y UTN Rosario), en representación de la software factory Thorque.

@@ -3,8 +3,8 @@
 Surco es un marketplace de alimentos trazables: cada producto está ligado al
 lote donde creció, y las prácticas de suelo de ese lote (rotación, cobertura)
 se verifican con datos satelitales de la NASA. Proyecto para NASA Space Apps
-2026 (Rosario). Contexto completo del producto: `PROYECTO.md`. Fases y
-horarios: `PLAN.md`.
+2026 (Rosario). Contexto completo del producto: `docs/proyecto/proyecto.md`. Fases y
+horarios: `docs/proyecto/plan.md`. Entregables de la hackatón: `docs/entregables/`.
 
 **Prioridad de la hackatón:** que la idea se vea bien y sea implementable. No
 se publica en producción. Preferí una pantalla que cuente bien la historia a
@@ -37,7 +37,7 @@ una funcionalidad completa que nadie ve en la demo.
   verificar una campaña antes de emitir el pasaporte).
 - **No edites `datos/`** si trabajás en front o back. Si te falta un dato o un
   endpoint, usá un fixture en el front (ver más abajo) y dejá anotado qué
-  necesitás en la sección "Pedidos al equipo de datos" de `PLAN.md`.
+  necesitás en la sección "Pedidos al equipo de datos" de `docs/proyecto/plan.md`.
 
 ## Puertos y variables
 
@@ -262,6 +262,7 @@ es un borrador**: usalo para tipar los fixtures, pero puede cambiar.
 | `POST /insights` **(implementado)** | Body `{ geometria, desde?, hasta? }`. Recomendaciones con reglas deterministas (`datos/surco_datos/insights.py`): cada una trae `tipo` (alerta · oportunidad · bien · planificar), `hallazgo`, `accion`, `confianza` (alta · media) con su motivo y la `evidencia` (dato, fuente, fecha, escena). Lo que no se puede afirmar va en `descartados` con el motivo. Reutiliza la caché de `/ndvi` y `/clima`. Tipos en `front/src/api/insights.ts` |
 | `GET /catalogo/especies?uso=cultivo\|cobertura` **(implementado)** | Especies del Catálogo Nacional de Cultivares del INASE (cultivo: hortícolas y frutales, incluye vid; cobertura: forrajeras y cereales), con nombre científico y familia botánica (deducida del género; es la que usa la rotación). Trae `fuente`, `pagina` y `descargado`. Tipos en `front/src/api/catalogo.ts` |
 | `GET /catalogo/cultivares?especie=&q=&limite=` **(implementado)** | Cultivares inscriptos de una especie que contienen `q` (sin acentos; primero los que empiezan con `q`), con su número del INASE y el solicitante |
+| `POST /contraste` **(implementado)** | Body `{ geometria, eventos: [{id, tipo, fecha, detalles}] }`. Cada evento declarado vuelve con un veredicto (`confirma` · `no_se_ve` · `sin_pasadas` · `declarado`), la medición que lo decide (índice antes y después, y el cambio esperado) y su evidencia. Reglas en `datos/surco_datos/contraste.py`. Trae también la curva y los ciclos para dibujar. Tipos en `front/src/api/contraste.ts`; se muestra en `features/contraste/HistoriaVerificada.tsx` (ficha de producción y página del QR) |
 | `POST /verificacion` | Recibe lote + campaña declarada; devuelve lo detectado (ciclos, días de suelo desnudo, cobertura invernal) y el estado |
 
 ---
