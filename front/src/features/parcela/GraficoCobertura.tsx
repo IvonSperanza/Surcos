@@ -6,8 +6,8 @@ import { colorToken } from "../../lib/tokens";
 const ESTILO_DATO = { fontFamily: "var(--font-mono)", fontSize: 12 };
 
 const SERIES = [
-    { clave: "cultivo", nombre: "Cultivo", relleno: "oliva" },
-    { clave: "rastrojo", nombre: "Rastrojo", relleno: "trigo" },
+    { clave: "cultivo", nombre: "Cultivo", relleno: "hoja" },
+    { clave: "rastrojo", nombre: "Rastrojo", relleno: "sol" },
     { clave: "incierta", nombre: "Sin distinguir", relleno: "line" },
     { clave: "desnudo", nombre: "Suelo desnudo", relleno: "suelo-desnudo" }
 ] as const;
@@ -34,7 +34,7 @@ export function GraficoCobertura({ historico }: { historico: HistoricoNdvi }) {
                 <Tooltip
                     labelFormatter={(t) => formatearFecha(Number(t))}
                     formatter={(valor, nombre) => [`${valor} %`, nombre]}
-                    contentStyle={{ ...ESTILO_DATO, borderRadius: 4, borderColor: colorToken("line") }}
+                    contentStyle={{ ...ESTILO_DATO, borderRadius: 6, borderColor: colorToken("line"), backgroundColor: colorToken("surface-raised"), color: colorToken("ink") }}
                 />
                 <Legend wrapperStyle={{ fontFamily: "var(--font-sans)", fontSize: 14 }} />
                 {SERIES.map((s) => (

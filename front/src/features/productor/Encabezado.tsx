@@ -1,26 +1,22 @@
 import { Link } from "react-router-dom";
-import { PRODUCTOR } from "../../api/fixtures/productor";
-import { EnlaceBoton } from "../../design-system";
+import { EnlaceBoton, SelectorTema } from "../../design-system";
+import type { Tema } from "../../lib/tema";
 import styles from "./panel.module.css";
 
-export function Encabezado() {
+export function Encabezado({ tema, onCambiarTema }: { tema: Tema; onCambiarTema: (tema: Tema) => void }) {
     return (
         <header className={styles.encabezado}>
-            <Link to="/" className={styles.marca} aria-label="Surco, volver a la landing">
+            <Link to="/" className={styles.marca} aria-label="Surco, ir al sitio">
                 Surco
                 <span className={`etiqueta ${styles.rolMarca}`}>Productor</span>
             </Link>
 
-            <div className={styles.contexto}>
-                <strong className="small">{PRODUCTOR.nombre}</strong>
-                <span className={`small ${styles.textoSecundario}`}>
-                    Lote <span className="dato">{PRODUCTOR.lote}</span> · {PRODUCTOR.zona}
-                </span>
+            <div className={styles.accionesEncabezado}>
+                <SelectorTema tema={tema} onCambiar={onCambiarTema} />
+                <EnlaceBoton to="/" className={styles.verLanding}>
+                    Ir al sitio
+                </EnlaceBoton>
             </div>
-
-            <EnlaceBoton to="/" className={styles.verLanding}>
-                Ver landing
-            </EnlaceBoton>
         </header>
     );
 }

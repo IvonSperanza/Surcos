@@ -15,8 +15,8 @@
 }
 
 .pendiente {
-    background: var(--trigo);
-    color: var(--ink);
+    background: var(--sol);
+    color: var(--on-sol);
 }
 
 .sin_verificar {

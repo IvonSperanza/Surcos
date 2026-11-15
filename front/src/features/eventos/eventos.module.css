@@ -1,0 +1,232 @@
+.historia {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.historia h2,
+.historia h3,
+.historia p {
+    margin: 0;
+}
+
+.cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+/* ---------- Formulario ---------- */
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+}
+
+.grillaCampos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    gap: var(--space-4);
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    color: var(--ink-muted);
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+    padding: var(--space-2) 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface-raised);
+    color: var(--ink);
+    font: inherit;
+}
+
+.campo input:disabled {
+    opacity: 0.55;
+}
+
+.ayuda {
+    color: var(--ink-muted);
+    margin: 0;
+}
+
+.aviso {
+    margin: 0;
+    padding: var(--space-2) 12px;
+    border-radius: var(--radius-sm);
+    background: var(--sol-soft);
+    color: var(--ink);
+}
+
+.error {
+    color: var(--ink);
+    margin: 0;
+}
+
+.acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+/* ---------- Línea de tiempo ---------- */
+.lineaTiempo {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.evento {
+    --columna-fecha: 112px;
+    --separacion: var(--space-4);
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--columna-fecha) 36px minmax(0, 1fr) auto;
+    gap: var(--separacion);
+    padding-bottom: var(--space-6);
+}
+
+/* La línea que une los eventos pasa por el centro de los íconos: la historia
+   se lee como un recorrido. */
+.evento:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--columna-fecha) + var(--separacion) + 17px);
+    top: 36px;
+    bottom: 0;
+    width: 1px;
+    background: var(--line);
+}
+
+.iconoEvento {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--radius-pill);
+    background: var(--hoja-soft);
+    color: var(--hoja);
+}
+
+.cuerpoEvento {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.fechaEvento {
+    color: var(--ink-muted);
+    padding-top: var(--space-2);
+    text-align: right;
+}
+
+.eliminar {
+    align-self: start;
+    background: none;
+    border: none;
+    padding: var(--space-1);
+    border-radius: var(--radius-sm);
+    color: var(--ink-muted);
+    cursor: pointer;
+}
+
+.eliminar:hover {
+    color: var(--ink);
+}
+
+@media (max-width: 600px) {
+    .evento {
+        --columna-fecha: 76px;
+        --separacion: var(--space-2);
+    }
+
+    .fechaEvento {
+        font-size: 12px;
+    }
+}
+
+/* ---------- Fotos ---------- */
+.soloLector {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.elegirFoto {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    align-self: flex-start;
+    padding: var(--space-4) var(--space-6);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.elegirFoto:hover,
+.elegirFoto:focus-within {
+    border-color: var(--hoja);
+}
+
+.fotoElegida {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--space-4);
+}
+
+.fotoElegida img {
+    width: 200px;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--line);
+}
+
+.quitarFoto {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface-raised);
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.fotoEvento {
+    margin: var(--space-2) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    max-width: 280px;
+}
+
+.fotoEvento img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--line);
+}

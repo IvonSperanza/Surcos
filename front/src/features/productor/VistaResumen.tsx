@@ -1,17 +1,18 @@
-import { ArrowRight, Check, ClipboardList, Clock, CreditCard, Sprout, TrendingUp, type LucideIcon } from "lucide-react";
+import { ArrowRight, Check, Clock, CreditCard, MapPin, type LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { DEMANDA_B2B, FECHA_DEMO, LOTES, META_COBERTURA, PASOS_PASAPORTE, PRODUCTOR, type EstadoProductor } from "../../api/fixtures/productor";
-import { Card, Fuente, SelloVerificacion } from "../../design-system";
-import { formatearFecha } from "../../lib/fecha";
+import { DEMANDA_B2B, PASOS_PASAPORTE, type EstadoProductor } from "../../api/fixtures/productor";
+import { Card, SelloVerificacion } from "../../design-system";
 import { formatearPesos } from "../../lib/moneda";
 import { CabeceraVista } from "./CabeceraVista";
 import { Barra, Chip } from "./Chip";
-import { contarPendientes, pedidosAbiertos, resumirPagos } from "./estadoProductor";
+import { pedidosAbiertos, resumirPagos } from "./estadoProductor";
+import { useParcelas } from "../parcelas/useParcelas";
 import { FilaPedido } from "./FilaPedido";
 import styles from "./vistas.module.css";
+import { rutasPanel } from "./rutas";
 
-type PropsCifra = { Icono: LucideIcon; etiqueta: string; valor: string; pie: string; children?: ReactNode };
+type PropsCifra = { Icono: LucideIcon; etiqueta: string; valor: string; pie?: string; children?: ReactNode };
 
 function TarjetaCifra({ Icono, etiqueta, valor, pie, children }: PropsCifra) {
     return (
@@ -22,7 +23,7 @@ function TarjetaCifra({ Icono, etiqueta, valor, pie, children }: PropsCifra) {
             <p className={`etiqueta ${styles.etiquetaCifra}`}>{etiqueta}</p>
             <p className={`dato ${styles.valorCifra}`}>{valor}</p>
             {children}
-            <p className={`small ${styles.pieCifra}`}>{pie}</p>
+            {pie && <p className={`small ${styles.pieCifra}`}>{pie}</p>}
         </Card>
     );
 }
@@ -32,7 +33,7 @@ function ProgresoPasaporte() {
         <Card className={styles.panel} aria-labelledby="titulo-progreso">
             <div className={styles.cabeceraPanel}>
                 <h2 id="titulo-progreso" className="subtitulo">
-                    Progreso del pasaporte QR
+                    Pasaporte QR
                 </h2>
                 <SelloVerificacion estado="verificado" palabra="QR habilitado" />
             </div>
@@ -49,7 +50,6 @@ function ProgresoPasaporte() {
                     </li>
                 ))}
             </ul>
-            <Fuente>Datos de demostración. Lo que vio el satélite en tu parcela está en Mi lote.</Fuente>
         </Card>
     );
 }
@@ -60,9 +60,9 @@ function DemandaB2B() {
         <Card className={styles.panel} aria-labelledby="titulo-demanda">
             <div className={styles.cabeceraPanel}>
                 <h2 id="titulo-demanda" className="subtitulo">
-                    Demanda de mercados B2B
+                    Demanda B2B
                 </h2>
-                <Chip tono="oliva">
+                <Chip tono="hoja">
                     <span className="dato">{total}</span> interesados
                 </Chip>
             </div>
@@ -73,50 +73,36 @@ function DemandaB2B() {
                     <span className="dato">{cantidad}</span>
                 </div>
             ))}
-            <p className={`small ${styles.textoSecundario}`}>
-                3 PyMEs y 2 mercados con transporte propio están siguiendo este lote. Podés aceptar una reserva anticipada desde el panel.
-            </p>
-            <Fuente>Datos de demostración</Fuente>
         </Card>
     );
 }
 
+// La única cifra con datos reales del Resumen: el resto del panel es demostración.
+function CifraParcelas() {
+    const { parcelas } = useParcelas();
+    const total = parcelas?.length ?? 0;
+    return (
+        <Link to={rutasPanel.parcelas} className={styles.enlaceCifra}>
+            <TarjetaCifra
+                Icono={MapPin}
+                etiqueta="Mis parcelas"
+                valor={parcelas === null ? "—" : String(total)}
+                pie={total === 0 ? "Ninguna dibujada" : undefined}
+            />
+        </Link>
+    );
+}
+
 export function VistaResumen({ estado }: { estado: EstadoProductor }) {
-    const pendientes = contarPendientes(estado.pedidos);
     const { cobrado, aCobrar } = resumirPagos(estado.pagos);
-    const cobertura = LOTES.find((l) => l.id === PRODUCTOR.lote)?.cobertura ?? 0;
     const abiertos = pedidosAbiertos(estado.pedidos).slice(0, 3);
-    const interesados = DEMANDA_B2B.reduce((suma, d) => suma + d.cantidad, 0);
 
     return (
         <section className={styles.vista}>
-            <CabeceraVista
-                seccion="Resumen"
-                titulo={`Buen día, ${PRODUCTOR.nombre}`}
-                bajada={`${PRODUCTOR.campania} · ${PRODUCTOR.zona}`}
-                fuente={
-                    <>
-                        Datos de demostración · <span className="dato">{formatearFecha(FECHA_DEMO)}</span>
-                    </>
-                }
-            />
+            <CabeceraVista titulo="Resumen" />
 
             <div className={styles.grillaCifras}>
-                <TarjetaCifra
-                    Icono={Sprout}
-                    etiqueta="Pasaporte de suelo vivo"
-                    valor={`${cobertura}%`}
-                    pie={cobertura >= META_COBERTURA ? `Meta > ${META_COBERTURA}% · cumplida` : `Meta > ${META_COBERTURA}%`}
-                >
-                    <Barra porcentaje={cobertura} />
-                </TarjetaCifra>
-                <TarjetaCifra
-                    Icono={ClipboardList}
-                    etiqueta="Pedidos pendientes"
-                    valor={String(pendientes)}
-                    pie={pendientes === 0 ? "Sin pedidos nuevos" : "Esperando confirmación"}
-                />
-                <TarjetaCifra Icono={TrendingUp} etiqueta="Demanda B2B" valor={String(interesados)} pie="3 PyMEs · 2 mercados" />
+                <CifraParcelas />
                 <TarjetaCifra Icono={CreditCard} etiqueta="Cobrado en la campaña" valor={formatearPesos(cobrado)} pie={`A cobrar ${formatearPesos(aCobrar)}`} />
             </div>
 
@@ -130,8 +116,8 @@ export function VistaResumen({ estado }: { estado: EstadoProductor }) {
                     <h2 id="titulo-abiertos" className="subtitulo">
                         Pedidos abiertos
                     </h2>
-                    <Link to="pedidos" className={`small ${styles.enlace}`}>
-                        Ver historial completo
+                    <Link to={rutasPanel.pedidos} className={`small ${styles.enlace}`}>
+                        Ver todos
                         <ArrowRight size={16} strokeWidth={1.5} aria-hidden />
                     </Link>
                 </div>
@@ -142,7 +128,7 @@ export function VistaResumen({ estado }: { estado: EstadoProductor }) {
                         ))}
                     </ul>
                 ) : (
-                    <p className={`body ${styles.vacio}`}>No hay pedidos abiertos. Todo entregado y cobrado.</p>
+                    <p className={`body ${styles.vacio}`}>Sin pedidos abiertos.</p>
                 )}
             </Card>
         </section>

@@ -10,8 +10,8 @@
 }
 
 .trigo {
-    background: var(--trigo);
-    color: var(--ink);
+    background: var(--sol);
+    color: var(--on-sol);
 }
 
 .cielo {
@@ -20,7 +20,7 @@
 }
 
 .oliva {
-    background: var(--oliva-soft);
+    background: var(--hoja-soft);
     color: var(--ink);
 }
 
@@ -43,5 +43,5 @@
 .relleno {
     display: block;
     height: 100%;
-    background: var(--oliva);
+    background: var(--hoja);
 }

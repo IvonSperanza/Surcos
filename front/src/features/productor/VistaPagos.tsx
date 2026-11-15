@@ -1,5 +1,5 @@
 import type { Pago } from "../../api/fixtures/productor";
-import { Card, Fuente } from "../../design-system";
+import { Card } from "../../design-system";
 import { formatearFecha } from "../../lib/fecha";
 import { formatearPesos } from "../../lib/moneda";
 import { CabeceraVista } from "./CabeceraVista";
@@ -8,12 +8,11 @@ import { resumirPagos } from "./estadoProductor";
 import { ChipEstadoPago } from "./FilaPedido";
 import styles from "./vistas.module.css";
 
-function CifraPago({ etiqueta, monto, pie }: { etiqueta: string; monto: number; pie: string }) {
+function CifraPago({ etiqueta, monto }: { etiqueta: string; monto: number }) {
     return (
         <Card className={styles.cifra}>
             <p className={`etiqueta ${styles.etiquetaCifra}`}>{etiqueta}</p>
             <p className={`dato ${styles.valorCifra}`}>{formatearPesos(monto)}</p>
-            <p className={`small ${styles.pieCifra}`}>{pie}</p>
         </Card>
     );
 }
@@ -23,17 +22,12 @@ export function VistaPagos({ pagos }: { pagos: Pago[] }) {
 
     return (
         <section className={styles.vista}>
-            <CabeceraVista
-                seccion="Pagos"
-                titulo="Historial de pagos"
-                bajada="Lo cobrado, lo que queda a cobrar y el detalle de cada movimiento."
-                fuente="Datos de demostración"
-            />
+            <CabeceraVista titulo="Pagos" />
 
             <div className={styles.grillaCifras}>
-                <CifraPago etiqueta="Cobrado en la campaña" monto={cobrado} pie="Movimientos acreditados" />
-                <CifraPago etiqueta="A cobrar" monto={aCobrar} pie="Al entregar o contra reserva" />
-                <CifraPago etiqueta="Ticket promedio" monto={promedio} pie="Sobre pagos acreditados" />
+                <CifraPago etiqueta="Cobrado" monto={cobrado} />
+                <CifraPago etiqueta="A cobrar" monto={aCobrar} />
+                <CifraPago etiqueta="Ticket promedio" monto={promedio} />
             </div>
 
             <Card className={styles.panel} aria-labelledby="titulo-movimientos">
@@ -73,7 +67,6 @@ export function VistaPagos({ pagos }: { pagos: Pago[] }) {
                         </tbody>
                     </table>
                 </div>
-                <Fuente>Pagos de demostración. Las fechas y montos no corresponden a operaciones reales.</Fuente>
             </Card>
         </section>
     );

@@ -1,6 +1,4 @@
-import { LOTES, META_COBERTURA, RESERVA_ANTICIPADA, type EstadoPedido, type EstadoProductor, type Maduracion, type Pago, type Pedido, type Producto } from "../../api/fixtures/productor";
-
-export type ProductoNuevo = Omit<Producto, "n">;
+import type { EstadoPedido, EstadoProductor, Pago, Pedido } from "../../api/fixtures/productor";
 
 // Máquina de estados del pedido: cada estado tiene un único paso siguiente.
 export const PASO_SIGUIENTE: Partial<Record<EstadoPedido, { accion: string; siguiente: EstadoPedido }>> = {
@@ -21,11 +19,6 @@ const idPago = (n: number) => `PAG-${rellenar(n, 3)}`;
 export function hoyIso(): string {
     const hoy = new Date();
     return `${hoy.getFullYear()}-${rellenar(hoy.getMonth() + 1, 2)}-${rellenar(hoy.getDate(), 2)}`;
-}
-
-export function estadoQr(producto: Producto): "verificado" | "pendiente" {
-    const lote = LOTES.find((l) => l.id === producto.lote);
-    return lote && lote.cobertura >= META_COBERTURA ? "verificado" : "pendiente";
 }
 
 export function pedidosAbiertos(pedidos: Pedido[]): Pedido[] {
@@ -70,59 +63,4 @@ export function avanzarPedido(estado: EstadoProductor, id: string, hoy: string):
         estado: { ...estado, ...cobro, pedidos: estado.pedidos.map((p) => (p.id === id ? avanzado : p)) },
         pedido: avanzado
     };
-}
-
-export function aceptarReserva(estado: EstadoProductor, hoy: string): { estado: EstadoProductor; pedido: Pedido } | null {
-    if (estado.reservaAceptada) return null;
-
-    const pedido: Pedido = {
-        id: `PED-${estado.proximoPedido}`,
-        comprador: RESERVA_ANTICIPADA.comprador,
-        tipo: RESERVA_ANTICIPADA.tipo,
-        detalle: RESERVA_ANTICIPADA.detalle,
-        fecha: hoy,
-        total: RESERVA_ANTICIPADA.total,
-        estado: "confirmado"
-    };
-    const sena: Pago = {
-        id: idPago(estado.proximoPago),
-        fecha: hoy,
-        concepto: "Seña 30% reserva anticipada",
-        pedido: pedido.id,
-        medio: RESERVA_ANTICIPADA.medioSena,
-        monto: RESERVA_ANTICIPADA.sena,
-        estado: "pendiente"
-    };
-    return {
-        estado: {
-            ...estado,
-            reservaAceptada: true,
-            proximoPedido: estado.proximoPedido + 1,
-            proximoPago: estado.proximoPago + 1,
-            pedidos: [pedido, ...estado.pedidos],
-            pagos: [sena, ...estado.pagos]
-        },
-        pedido
-    };
-}
-
-export function agregarProducto(estado: EstadoProductor, datos: ProductoNuevo): { estado: EstadoProductor; producto: Producto } {
-    const producto: Producto = { ...datos, n: estado.proximoProducto };
-    return {
-        estado: { ...estado, proximoProducto: estado.proximoProducto + 1, productos: [producto, ...estado.productos] },
-        producto
-    };
-}
-
-export function actualizarMaduracion(estado: EstadoProductor, maduracion: Maduracion): EstadoProductor {
-    return { ...estado, maduracion };
-}
-
-export function validarProducto(datos: ProductoNuevo): string | null {
-    if (!datos.cultivo) return "Completá el nombre del cultivo o producto.";
-    if (!datos.quimicos) return 'Indicá qué químicos se aplicaron. Si no hubo, escribí "Ninguno".';
-    if (!datos.plantacion || !datos.cosecha || !datos.reparto) return "Completá las tres fechas: plantación, cosecha y reparto.";
-    if (datos.cosecha < datos.plantacion) return "La cosecha no puede ser anterior a la plantación.";
-    if (datos.reparto < datos.cosecha) return "El reparto no puede ser anterior a la cosecha.";
-    return null;
 }

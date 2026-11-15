@@ -1,0 +1,296 @@
+.textoSecundario {
+    color: var(--ink-muted);
+}
+
+.grillaParcelas {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr);
+    gap: var(--space-6);
+    align-items: start;
+}
+
+.mapa,
+.mapaCompacto {
+    width: 100%;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--line);
+}
+
+.mapa {
+    height: 520px;
+}
+
+.mapaCompacto {
+    height: 320px;
+}
+
+/* ---------- Lista ---------- */
+.listaParcelas {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    max-height: 520px;
+    overflow-y: auto;
+}
+
+.tarjetaParcela {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-4);
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    color: var(--ink);
+    text-decoration: none;
+    transition: border-color 150ms ease;
+}
+
+.tarjetaParcela:hover {
+    border-color: var(--hoja);
+}
+
+.tarjetaParcela h2,
+.tarjetaParcela p {
+    margin: 0;
+}
+
+.filaTarjeta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.vacio {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+}
+
+/* ---------- Chip de estado de los datos ---------- */
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    white-space: nowrap;
+}
+
+.chipGenerando {
+    background: var(--sol);
+    color: var(--on-sol);
+}
+
+.chipListo {
+    background: var(--hoja-soft);
+    color: var(--ink);
+}
+
+.chipIncompleto {
+    background: var(--surface);
+    border-color: var(--ink-muted);
+    color: var(--ink-muted);
+}
+
+.girando {
+    animation: girar 1.2s linear infinite;
+}
+
+@keyframes girar {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .girando {
+        animation: none;
+    }
+}
+
+/* ---------- Nueva parcela ---------- */
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    max-width: 420px;
+    color: var(--ink-muted);
+}
+
+.campo input {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface-raised);
+    color: var(--ink);
+}
+
+.acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+/* ---------- Ficha ---------- */
+.grillaFicha {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 1fr);
+    gap: var(--space-6);
+    align-items: start;
+}
+
+.columnaEstado {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.columnaEstado h2 {
+    margin: 0;
+}
+
+.panelGeneracion {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.listaGeneracion {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.filaGeneracion {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr) auto;
+    gap: var(--space-2);
+    align-items: start;
+}
+
+.filaGeneracion p {
+    margin: 0;
+}
+
+.iconoListo {
+    color: var(--hoja);
+}
+
+.iconoCargando {
+    color: var(--ink);
+}
+
+.iconoError,
+.iconoEspera {
+    color: var(--ink-muted);
+}
+
+.segundos {
+    color: var(--ink-muted);
+}
+
+.reintentar,
+.eliminar {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+@media (max-width: 900px) {
+    .grillaParcelas,
+    .grillaFicha {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .mapa {
+        height: 380px;
+    }
+
+    .listaParcelas {
+        max-height: none;
+    }
+}
+
+/* ---------- Detalle en el mapa ---------- */
+.detalleMapa {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-family: var(--font-sans);
+}
+
+.detalleMapa p {
+    margin: 0;
+}
+
+.verParcela {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--hoja);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* ---------- Pestañas de la ficha ---------- */
+.grillaResumen {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(280px, 1fr);
+    gap: var(--space-6);
+    align-items: stretch;
+}
+
+.grillaResumen .mapaCompacto {
+    height: 100%;
+    min-height: 320px;
+}
+
+.datosClave {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-4);
+}
+
+.grillaDos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: var(--space-6);
+    align-items: start;
+}
+
+.contador {
+    min-width: 22px;
+    padding: 0 var(--space-1);
+    border-radius: var(--radius-sm);
+    background: var(--hoja-soft);
+    color: var(--ink);
+    font-size: 12px;
+    text-align: center;
+}
+
+@media (max-width: 900px) {
+    .grillaResumen {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .grillaResumen .mapaCompacto {
+        height: 300px;
+    }
+}

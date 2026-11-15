@@ -4,169 +4,148 @@
 <meta charset="utf-8">
 <title>Surco — Del satélite a tu mesa</title>
 <link rel="stylesheet" href="../tokens.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Karla:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&family=Instrument+Sans:wght@400;600&family=JetBrains+Mono:wght@500;600&display=swap">
 <style>
   html, body { margin:0; height:100%; }
-  body { background:var(--surface, #f3eadb); color:var(--ink, #2b1d14); font-family:var(--font-sans, "Karla", system-ui, sans-serif); overflow:hidden; }
+  body { background:var(--surface, #f3f2e7); color:var(--ink, #13261e); font-family:var(--font-sans, "Instrument Sans", system-ui, sans-serif); overflow:hidden; }
   .cover { position:relative; width:960px; height:288px; overflow:hidden; cursor:pointer; }
-  .words { position:absolute; left:var(--space-6, 24px); bottom:62px; max-width:440px; }
-  .name { margin:0; font-family:var(--font-display, "Young Serif", Georgia, serif); font-size:112px; line-height:.95; font-weight:400; letter-spacing:-.01em; color:var(--ink, #2b1d14); }
-  .tag { margin:var(--space-2, 8px) 0 0 6px; font-size:14px; line-height:20px; color:var(--ink-muted, #6e5b49); }
+  .words { position:absolute; left:var(--space-6, 24px); bottom:62px; max-width:440px; z-index:1; }
+  .name { margin:0; font-family:var(--font-display, "Unbounded", system-ui, sans-serif); font-size:88px; line-height:.95; font-weight:600; letter-spacing:-.03em; color:var(--ink, #13261e); }
+  .tag { margin:var(--space-2, 8px) 0 0 4px; font-size:14px; line-height:20px; color:var(--ink-muted, #4a5d52); }
   #escena { position:absolute; inset:0; width:960px; height:288px; pointer-events:none; }
-  .tierra { fill:var(--tierra, #4a3020); }
-  .arcilla { fill:var(--arcilla, #a04e25); }
-  .arcilla-soft { fill:var(--arcilla-soft, #efd7c3); }
-  .trigo { fill:var(--trigo, #d8a84e); }
-  .malbec { fill:var(--malbec, #6a1d38); }
-  .malbec-soft { fill:var(--malbec-soft, #ebd3d9); }
-  .oliva { fill:var(--oliva, #556229); }
-  .tallo { stroke:var(--oliva, #556229); stroke-width:3; stroke-linecap:round; fill:none; }
-  .surco-fila { fill:var(--arcilla, #a04e25); opacity:.55; }
-  .cielo { fill:var(--cielo, #3d6177); }
-  .cielo-soft-panel { fill:var(--cielo-soft, #dce5ea); stroke:var(--cielo, #3d6177); stroke-width:1.5; }
-  .cielo-haz { fill:var(--cielo, #3d6177); opacity:0; }
-  #orbita { stroke:var(--cielo, #3d6177); stroke-width:1.5; stroke-dasharray:2 7; stroke-linecap:round; opacity:.6; }
-  #botella, .uva, #charco, .brote, #satelite { transform-box:view-box; }
-  #charco { transform-box:fill-box; transform-origin:50% 50%; }
+  .punto { fill:var(--line, #d5d8c4); }
+  .suelo { fill:var(--hoja, #1b6e45); }
+  .fila { fill:var(--hoja-soft, #e0f0e0); opacity:.35; }
+  .sol { fill:var(--sol, #f2b632); }
+  .rayos { fill:none; stroke:var(--sol, #f2b632); stroke-width:3; stroke-dasharray:3 9; stroke-linecap:round; }
+  .panel { fill:var(--cielo, #1f6e8c); }
+  .celda { stroke:var(--surface-raised, #fbfaf4); stroke-width:1.5; opacity:.7; }
+  .poste { fill:var(--ink-muted, #4a5d52); }
+  .tallo { stroke:var(--hoja, #1b6e45); stroke-width:3; stroke-linecap:round; fill:none; }
+  .hoja { fill:var(--hoja, #1b6e45); }
+  .energia { fill:var(--sol, #f2b632); }
+  .cielo { fill:var(--cielo, #1f6e8c); }
+  .cielo-panel { fill:var(--cielo-soft, #ddeef3); stroke:var(--cielo, #1f6e8c); stroke-width:1.5; }
+  .haz { fill:var(--cielo, #1f6e8c); opacity:0; }
+  #orbita { fill:none; stroke:var(--cielo, #1f6e8c); stroke-width:1.5; stroke-dasharray:2 7; stroke-linecap:round; opacity:.6; }
+  #sol, .panel-g, #satelite, .pulso { transform-box:view-box; }
   .brote { transform-box:fill-box; transform-origin:50% 100%; }
+  #anillo { transform-box:fill-box; transform-origin:50% 50%; }
 </style>
 </head>
 <body>
 <div class="cover" id="cover" title="Clic para repetir">
+<svg id="escena" viewBox="0 0 960 288" width="960" height="288" aria-hidden="true">
+<!--
+  blocks      suelo hoja 960×40 al pie (identidad: hoja viva) · sol, disco r28 + anillo de rayos · tres paneles cielo 92×10 sobre postes ink-muted (agrovoltaica) · brotes hoja · satélite cielo con paneles cielo-soft
+  arrangement escena solarpunk a pedido del equipo: amanece el sol, los paneles se orientan hacia él, la energía baja por los postes, brota el cultivo debajo y un satélite pasa y escanea el campo; "Surco" a la izquierda sobre el suelo
+  pattern     tech: grilla de puntos `line` a paso space-6 detrás de la escena, de x=480 a la derecha; surcos: filas hoja-soft a paso space-2 sobre el suelo
+  scales      paso de grilla space-6; suelo y postes en múltiplos de space-2; paneles rx radius-sm/2; animación ~5 s una vez, clic para repetir; con prefers-reduced-motion queda en el estado final y el anillo no gira
+-->
+<defs>
+  <pattern id="grilla" width="24" height="24" patternUnits="userSpaceOnUse" x="480" y="0">
+    <circle class="punto" cx="12" cy="12" r="1.4"/>
+  </pattern>
+</defs>
+<rect id="fondo-grilla" x="480" y="0" width="480" height="248" fill="url(#grilla)"/>
+
+<path id="orbita" d="M740 74 Q880 -10 1010 46"/>
+<polygon id="escaneo" class="haz" points="0,0 0,0 0,0"/>
+
+<g id="sol">
+  <circle id="anillo" class="rayos" cx="0" cy="0" r="42"/>
+  <circle class="sol" cx="0" cy="0" r="28"/>
+</g>
+
+<rect class="suelo" x="0" y="248" width="960" height="40"/>
+<rect class="fila" x="0" y="258" width="960" height="4" rx="2"/>
+<rect class="fila" x="0" y="268" width="960" height="4" rx="2"/>
+<rect class="fila" x="0" y="278" width="960" height="4" rx="2"/>
+
+<g id="brotes"></g>
+
+<g id="paneles"></g>
+
+<g id="pulsos"></g>
+
+<g id="satelite">
+  <rect class="cielo-panel" x="-24" y="-3" width="15" height="6" rx="1"/>
+  <rect class="cielo-panel" x="9" y="-3" width="15" height="6" rx="1"/>
+  <rect class="cielo" x="-8" y="-5" width="16" height="10" rx="2"/>
+  <rect class="cielo" x="-1" y="5" width="2" height="5"/>
+</g>
+</svg>
 <div class="words">
 <h1 class="name">Surco</h1>
 <p class="tag">Del satélite a tu mesa.</p>
 </div>
-<svg id="escena" viewBox="0 0 960 288" width="960" height="288" aria-hidden="true">
-<!--
-  blocks      tierra 960×40 franja de suelo al pie · cajón arcilla 200×76 sobre la tierra (listones space-6 de alto, postes tierra) · botella tierra con etiqueta trigo y cápsula malbec · uvas malbec · charco malbec
-  arrangement escena a pedido del equipo: la botella se vuelca sobre el cajón, el vino se derrama en la tierra y las uvas ruedan hasta quedar desparramadas bajo "Surco"; un satélite cielo pasa por su órbita y escanea el campo; después brotan cuatro plantines en oliva
-  pattern     surcos de arado: filas de pastillas arcilla a paso space-2 sobre la franja tierra; las uvas como discos (radio = radius-md ± 1)
-  scales      franja y cajón en múltiplos de space-2; listones space-6 + 4 de alto con gutters space-2; esquinas radius-sm; animación una vez al cargar, clic para repetir, estática con prefers-reduced-motion
--->
-<rect class="tierra" x="0" y="248" width="960" height="40"/>
-<rect class="surco-fila" x="0" y="258" width="960" height="4" rx="2"/>
-<rect class="surco-fila" x="0" y="268" width="960" height="4" rx="2"/>
-<rect class="surco-fila" x="0" y="278" width="960" height="4" rx="2"/>
-
-<polygon id="escaneo" class="cielo-haz" points="0,0 0,0 0,0"/>
-<g id="brotes">
-  <g class="brote"><path class="tallo" d="M392 248 V226"/><ellipse class="oliva" cx="385" cy="228" rx="8" ry="4" transform="rotate(-30 385 228)"/><ellipse class="oliva" cx="399" cy="223" rx="8" ry="4" transform="rotate(30 399 223)"/></g>
-  <g class="brote"><path class="tallo" d="M468 248 V220"/><ellipse class="oliva" cx="461" cy="223" rx="9" ry="4.5" transform="rotate(-30 461 223)"/><ellipse class="oliva" cx="475" cy="217" rx="9" ry="4.5" transform="rotate(30 475 217)"/></g>
-  <g class="brote"><path class="tallo" d="M548 248 V230"/><ellipse class="oliva" cx="542" cy="232" rx="7" ry="3.5" transform="rotate(-30 542 232)"/><ellipse class="oliva" cx="554" cy="228" rx="7" ry="3.5" transform="rotate(30 554 228)"/></g>
-  <g class="brote"><path class="tallo" d="M936 248 V218"/><ellipse class="oliva" cx="929" cy="221" rx="9" ry="4.5" transform="rotate(-30 929 221)"/><ellipse class="oliva" cx="943" cy="215" rx="9" ry="4.5" transform="rotate(30 943 215)"/></g>
-</g>
-
-<g id="cajon">
-  <rect class="tierra" x="700" y="172" width="200" height="76" rx="4"/>
-  <rect class="arcilla" x="700" y="172" width="200" height="20" rx="4"/>
-  <rect class="arcilla" x="700" y="200" width="200" height="20" rx="4"/>
-  <rect class="arcilla" x="700" y="228" width="200" height="20" rx="4"/>
-  <rect class="tierra" x="700" y="172" width="12" height="76" rx="4"/>
-  <rect class="tierra" x="888" y="172" width="12" height="76" rx="4"/>
-</g>
-
-<ellipse id="charco" class="malbec" cx="652" cy="250" rx="58" ry="5"/>
-
-<g id="botella">
-  <rect class="tierra" x="0" y="-120" width="44" height="120" rx="6"/>
-  <path class="tierra" d="M0 -114 C0 -136 14 -138 14 -150 L30 -150 C30 -138 44 -136 44 -114 Z"/>
-  <rect class="tierra" x="14" y="-178" width="16" height="32"/>
-  <rect class="malbec" x="12" y="-184" width="20" height="24" rx="2"/>
-  <rect class="arcilla-soft" x="5" y="-92" width="34" height="52" rx="3"/>
-  <rect class="trigo" x="5" y="-80" width="34" height="8"/>
-  <rect class="malbec" x="12" y="-62" width="20" height="4" rx="2"/>
-  <rect class="malbec" x="15" y="-54" width="14" height="4" rx="2"/>
-</g>
-
-<path id="orbita" d="M500 70 Q740 -14 980 58" fill="none"/>
-<g id="satelite">
-  <rect class="cielo-soft-panel" x="-24" y="-3" width="15" height="6" rx="1"/>
-  <rect class="cielo-soft-panel" x="9" y="-3" width="15" height="6" rx="1"/>
-  <rect class="cielo" x="-8" y="-5" width="16" height="10" rx="2"/>
-  <rect class="cielo" x="-1" y="5" width="2" height="5"/>
-</g>
-
-<g id="uvas"></g>
-</svg>
 </div>
 <script>
 (function () {
   var NS = 'http://www.w3.org/2000/svg';
-  var uvasG = document.getElementById('uvas');
-  var botella = document.getElementById('botella');
-  var charco = document.getElementById('charco');
-  var brotes = document.querySelectorAll('.brote');
+  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+  function t(x, y, rot, s) { return 'translate(' + x + 'px,' + y + 'px)' + (rot !== undefined ? ' rotate(' + rot + 'deg)' : '') + (s !== undefined ? ' scale(' + s + ')' : ''); }
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var PIVOT = { x: 840, y: 172 };
-  var BOCA = { x: 654, y: 150 };
-  var SUELO = 248;
-  var finales = [678, 662, 641, 627, 610, 588, 569, 546, 521, 498, 463, 431, 392, 334, 268, 196, 112];
-  var uvas = finales.map(function (fx, i) {
-    var r = 9 + (i % 3) - 1;
-    var g = document.createElementNS(NS, 'g');
-    g.setAttribute('class', 'uva');
-    var c = document.createElementNS(NS, 'circle');
-    c.setAttribute('r', r); c.setAttribute('class', 'malbec');
-    var b = document.createElementNS(NS, 'circle');
-    b.setAttribute('r', Math.max(2, r * 0.28)); b.setAttribute('cx', -r * 0.35); b.setAttribute('cy', -r * 0.35);
-    b.setAttribute('class', 'malbec-soft'); b.setAttribute('opacity', '.7');
-    g.appendChild(c); g.appendChild(b); uvasG.appendChild(g);
-    return { el: g, fx: fx, r: r, i: i };
+  var SUELO = 248, SOL = { x: 604, y: 86 };
+
+  var POSTES = [700, 810, 920], TOPE = 176;
+  var panelesG = document.getElementById('paneles'), paneles = [];
+  POSTES.forEach(function (c) {
+    el('rect', { 'class': 'poste', x: c - 2, y: TOPE, width: 4, height: SUELO - TOPE }, panelesG);
+    var g = el('g', { 'class': 'panel-g' }, panelesG);
+    el('rect', { 'class': 'panel', x: -46, y: -5, width: 92, height: 10, rx: 3 }, g);
+    [-23, 0, 23].forEach(function (x) { el('line', { 'class': 'celda', x1: x, y1: -5, x2: x, y2: 5 }, g); });
+    paneles.push({ el: g, c: c });
   });
-  function t(x, y, rot) { return 'translate(' + x + 'px,' + y + 'px)' + (rot !== undefined ? ' rotate(' + rot + 'deg)' : ''); }
+
+  var brotesG = document.getElementById('brotes'), brotes = [];
+  [[468, 22], [516, 28], [556, 18], [652, 30], [676, 20], [748, 32], [772, 22], [858, 30], [884, 20], [944, 26]].forEach(function (b) {
+    var x = b[0], h = b[1], g = el('g', { 'class': 'brote' }, brotesG), top = SUELO - h, r = 6 + h / 6;
+    el('path', { 'class': 'tallo', d: 'M' + x + ' ' + SUELO + ' V' + top }, g);
+    el('ellipse', { 'class': 'hoja', cx: x - r * .8, cy: top + 2, rx: r, ry: r / 2, transform: 'rotate(-30 ' + (x - r * .8) + ' ' + (top + 2) + ')' }, g);
+    el('ellipse', { 'class': 'hoja', cx: x + r * .8, cy: top - 3, rx: r, ry: r / 2, transform: 'rotate(30 ' + (x + r * .8) + ' ' + (top - 3) + ')' }, g);
+    brotes.push(g);
+  });
+
+  var pulsosG = document.getElementById('pulsos'), pulsos = POSTES.map(function () { return el('circle', { 'class': 'energia pulso', r: 3.5 }, pulsosG); });
+
   var anims = [];
   function play() {
-    anims.forEach(function (a) { a.cancel(); });
-    anims = [];
-    anims.push(botella.animate([
-      { transform: t(PIVOT.x, PIVOT.y, 0), easing: 'cubic-bezier(.55,0,1,.6)' },
-      { transform: t(PIVOT.x, PIVOT.y, -97), offset: .72, easing: 'ease-out' },
-      { transform: t(PIVOT.x, PIVOT.y, -87), offset: .86, easing: 'ease-in-out' },
-      { transform: t(PIVOT.x, PIVOT.y, -90) }
-    ], { duration: 1100, delay: 300, fill: 'both' }));
-    anims.push(charco.animate([
-      { transform: 'scaleX(0)', opacity: 0 },
-      { transform: 'scaleX(.4)', opacity: .9, offset: .25 },
-      { transform: 'scaleX(1)', opacity: .9 }
-    ], { duration: 2200, delay: 1300, fill: 'both', easing: 'ease-out' }));
-    uvas.forEach(function (u) {
-      var gy = SUELO - u.r, k = u.i % 4;
-      var x1 = Math.max(u.fx, BOCA.x - 12 - k * 6);
-      var x2 = Math.max(u.fx, BOCA.x - 28 - k * 9);
-      var x3 = Math.max(u.fx, BOCA.x - 42 - k * 12);
-      var dist = BOCA.x - u.fx;
-      var giro = -(dist / u.r) * 57.3;
-      anims.push(u.el.animate([
-        { transform: t(BOCA.x, BOCA.y, 0), opacity: 0, easing: 'cubic-bezier(.5,0,1,1)' },
-        { transform: t(BOCA.x, BOCA.y, 0), opacity: 1, offset: .04, easing: 'cubic-bezier(.5,0,1,1)' },
-        { transform: t(x1, gy, giro * .1), opacity: 1, offset: .3, easing: 'cubic-bezier(0,0,.4,1)' },
-        { transform: t(x2, gy - 14 + (u.i % 3) * 4, giro * .25), offset: .42, easing: 'cubic-bezier(.6,0,1,1)' },
-        { transform: t(x3, gy, giro * .4), offset: .54, easing: 'cubic-bezier(.15,.6,.3,1)' },
-        { transform: t(u.fx, gy, giro), opacity: 1 }
-      ], { duration: 1500 + dist * 3, delay: 1050 + u.i * 110, fill: 'both' }));
+    anims.forEach(function (a) { a.cancel(); }); anims = [];
+    anims.push(document.getElementById('fondo-grilla').animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, fill: 'both' }));
+    anims.push(document.getElementById('sol').animate([
+      { transform: t(SOL.x, 190), opacity: 0 },
+      { transform: t(SOL.x, SOL.y), opacity: 1 }
+    ], { duration: 1600, delay: 200, fill: 'both', easing: 'cubic-bezier(.2,.7,.3,1)' }));
+    paneles.forEach(function (p, i) {
+      anims.push(p.el.animate([
+        { transform: t(p.c, TOPE, 16) },
+        { transform: t(p.c, TOPE, -24), offset: .8 },
+        { transform: t(p.c, TOPE, -20) }
+      ], { duration: 1200, delay: 1300 + i * 220, fill: 'both', easing: 'cubic-bezier(.4,0,.2,1)' }));
+    });
+    pulsos.forEach(function (p, i) {
+      var c = POSTES[i];
+      anims.push(p.animate([
+        { transform: t(c, TOPE + 6), opacity: 0 },
+        { transform: t(c, TOPE + 6), opacity: 1, offset: .1 },
+        { transform: t(c, SUELO), opacity: 1, offset: .55 },
+        { transform: t(c - 70, SUELO), opacity: 0 }
+      ], { duration: 1300, delay: 2600 + i * 260, iterations: 2, fill: 'both', easing: 'ease-in-out' }));
     });
     brotes.forEach(function (b, i) {
       anims.push(b.animate([
-        { transform: 'scale(0)' },
-        { transform: 'scale(1.08)', offset: .7 },
-        { transform: 'scale(1)' }
-      ], { duration: 700, delay: 3600 + i * 220, fill: 'both', easing: 'ease-out' }));
+        { transform: 'scale(0)' }, { transform: 'scale(1.08)', offset: .7 }, { transform: 'scale(1)' }
+      ], { duration: 700, delay: 2900 + i * 120, fill: 'both', easing: 'ease-out' }));
     });
-    var orb = document.getElementById('orbita'), largo = orb.getTotalLength();
-    var pasos = [], fin = null;
-    for (var s = 0; s <= 20; s++) {
-      var p = orb.getPointAtLength(largo * (0.04 + 0.5 * s / 20));
-      pasos.push({ transform: t(p.x, p.y) });
-      fin = p;
-    }
-    anims.push(document.getElementById('satelite').animate(pasos, { duration: 3600, delay: 200, fill: 'both', easing: 'cubic-bezier(.3,.1,.4,1)' }));
+    var orb = document.getElementById('orbita'), largo = orb.getTotalLength(), pasos = [], fin;
+    for (var s = 0; s <= 20; s++) { fin = orb.getPointAtLength(largo * (0.02 + 0.55 * s / 20)); pasos.push({ transform: t(fin.x, fin.y) }); }
+    anims.push(document.getElementById('satelite').animate(pasos, { duration: 3800, delay: 400, fill: 'both', easing: 'cubic-bezier(.3,.1,.4,1)' }));
     var haz = document.getElementById('escaneo');
-    haz.setAttribute('points', fin.x + ',' + (fin.y + 10) + ' ' + (fin.x - 150) + ',' + SUELO + ' ' + (fin.x + 40) + ',' + SUELO);
-    anims.push(haz.animate([
-      { opacity: 0 }, { opacity: .16, offset: .3 }, { opacity: .16, offset: .7 }, { opacity: 0 }
-    ], { duration: 1400, delay: 4300, fill: 'both' }));
-    if (reduce) anims.forEach(function (a) { a.finish(); });
+    haz.setAttribute('points', fin.x + ',' + (fin.y + 10) + ' ' + (fin.x - 120) + ',' + SUELO + ' ' + (fin.x + 70) + ',' + SUELO);
+    anims.push(haz.animate([{ opacity: 0 }, { opacity: .14, offset: .3 }, { opacity: .14, offset: .7 }, { opacity: 0 }], { duration: 1400, delay: 4300, fill: 'both' }));
+    if (reduce) { anims.forEach(function (a) { a.finish(); }); return; }
+    anims.push(document.getElementById('anillo').animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 40000, iterations: Infinity }));
   }
   var cover = document.getElementById('cover');
   function ajustar() { var s = window.innerWidth / 960; cover.style.transformOrigin = '0 0'; cover.style.transform = 'scale(' + s + ')'; document.body.style.height = (288 * s) + 'px'; }

@@ -8,17 +8,17 @@
 }
 
 .hortalizas {
-    background: var(--oliva-soft);
+    background: var(--hoja-soft);
 }
 
 .frutas {
-    background: var(--arcilla-soft);
+    background: var(--cobre-soft);
 }
 
 .vinos {
-    background: var(--malbec-soft);
+    background: var(--uva-soft);
 }
 
 .granos {
-    background: var(--trigo);
+    background: var(--sol-soft);
 }

@@ -10,7 +10,6 @@ export type EstadoPago = "pendiente" | "acreditado";
 
 export type TipoComprador = "Mercado" | "PyME" | "Súper" | "Consumidor final";
 
-export type LoteDemo = { id: string; nombre: string; cobertura: number };
 
 export type Producto = {
     n: number;
@@ -46,44 +45,15 @@ export type Pago = {
     estado: EstadoPago;
 };
 
-export type Maduracion = {
-    rubro: Rubro;
-    brix: string;
-    firmeza: string;
-    humedad: string;
-    ventana: string;
-    actualizado: string;
-};
-
 export type EstadoProductor = {
     version: 2;
     proximoProducto: number;
     proximoPedido: number;
     proximoPago: number;
-    reservaAceptada: boolean;
-    maduracion: Maduracion;
     productos: Producto[];
     pedidos: Pedido[];
     pagos: Pago[];
 };
-
-export const FECHA_DEMO = "2026-11-14";
-
-export const PRODUCTOR = {
-    nombre: "La Arboleda",
-    lote: "SC-2026-0417",
-    zona: "cinturón verde, Rosario",
-    campania: "Campaña 2026"
-} as const;
-
-// Cobertura vegetal anual de demostración: la real sale de Sentinel-2 en "Mi lote".
-export const LOTES: LoteDemo[] = [
-    { id: "SC-2026-0417", nombre: "La Arboleda", cobertura: 87 },
-    { id: "SC-2026-0418", nombre: "La Cañada", cobertura: 78 },
-    { id: "SC-2026-0419", nombre: "El Sauce", cobertura: 92 }
-];
-
-export const META_COBERTURA = 85;
 
 export const DEMANDA_B2B = [
     { segmento: "PyMEs", cantidad: 3 },
@@ -98,15 +68,6 @@ export const PASOS_PASAPORTE = [
     { paso: "Emisión del QR", valor: "Listo", completo: true }
 ] as const;
 
-export const RESERVA_ANTICIPADA = {
-    comprador: "Mercado del Puerto",
-    tipo: "Mercado",
-    detalle: "Reserva anticipada · 200 kg de tomate",
-    total: 240000,
-    sena: 72000,
-    medioSena: "Mercado Pago"
-} as const;
-
 export const TIPOS_COMPRADOR: TipoComprador[] = ["Consumidor final", "Súper", "Mercado", "PyME"];
 
 export function estadoInicialProductor(): EstadoProductor {
@@ -115,15 +76,6 @@ export function estadoInicialProductor(): EstadoProductor {
         proximoProducto: 5,
         proximoPedido: 1043,
         proximoPago: 90,
-        reservaAceptada: false,
-        maduracion: {
-            rubro: "frutas",
-            brix: "23.5",
-            firmeza: "Media · 22 mm",
-            humedad: "13.8",
-            ventana: "15–30 abr 2027",
-            actualizado: FECHA_DEMO
-        },
         productos: [
             { n: 1, rubro: "hortalizas", cultivo: "Bolsón de estación", lote: "SC-2026-0417", plantacion: "2026-08-12", cosecha: "2026-10-12", reparto: "2026-10-13", quimicos: "Ninguno", destino: "Consumidor final", precio: 4800, unidad: "bolsón" },
             { n: 2, rubro: "frutas", cultivo: "Cajón de frutillas", lote: "SC-2026-0417", plantacion: "2026-07-20", cosecha: "2026-10-10", reparto: "2026-10-11", quimicos: "Cobre (1 aplicación)", destino: "Súper", precio: 6200, unidad: "cajón" },

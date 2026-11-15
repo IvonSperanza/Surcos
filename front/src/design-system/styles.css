@@ -9,5 +9,52 @@ body,
 }
 
 a {
-    color: var(--arcilla);
+    color: var(--hoja);
+}
+
+/* Leaflet trae sus popups y tooltips blancos con sombra: se llevan a los
+   tokens (bordes en lugar de sombras) para que sigan el tema Día o Noche. */
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip,
+.leaflet-tooltip {
+    background: var(--surface-raised);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    box-shadow: none;
+}
+
+.leaflet-popup-content-wrapper {
+    border-radius: var(--radius-md);
+}
+
+.leaflet-popup-content {
+    margin: var(--space-4);
+    font-family: var(--font-sans);
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+    color: var(--ink-muted);
+}
+
+.leaflet-tooltip {
+    font-family: var(--font-sans);
+    border-radius: var(--radius-sm);
+}
+
+.leaflet-tooltip-top::before,
+.leaflet-tooltip-bottom::before,
+.leaflet-tooltip-left::before,
+.leaflet-tooltip-right::before {
+    border-color: transparent;
+}
+
+/* Atribución de las imágenes del mapa: obligatoria, pero discreta. */
+.leaflet-container .leaflet-control-attribution {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    line-height: 14px;
+    padding: 0 var(--space-1);
+    color: var(--ink-muted);
+    background: color-mix(in srgb, var(--surface-raised) 70%, transparent);
+    border-top-left-radius: var(--radius-sm);
 }

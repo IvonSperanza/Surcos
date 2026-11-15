@@ -11,7 +11,7 @@ const NOMBRES: Record<Categoria, string> = {
 
 // design-system/README.md, "Categorías de producto": fondo suave por
 // categoría, texto ink, estilo etiqueta, radio sm. Granos no está en el
-// manual: usa trigo, el color del cereal en la paleta.
+// manual: usa sol-soft, el tono del cereal maduro en la paleta.
 export function ChipCategoria({ categoria }: { categoria: Categoria }) {
     return <span className={`etiqueta ${styles.chip} ${styles[categoria]}`}>{NOMBRES[categoria]}</span>;
 }

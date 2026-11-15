@@ -25,11 +25,11 @@ export function GraficoAguaVigor({ historico }: { historico: HistoricoNdvi }) {
                 <YAxis domain={[-0.2, 0.8]} ticks={[0, 0.4, 0.8]} {...eje} />
                 <Tooltip
                     labelFormatter={(t) => formatearFecha(Number(t))}
-                    contentStyle={{ ...ESTILO_DATO, borderRadius: 4, borderColor: colorToken("line") }}
+                    contentStyle={{ ...ESTILO_DATO, borderRadius: 6, borderColor: colorToken("line"), backgroundColor: colorToken("surface-raised"), color: colorToken("ink") }}
                 />
                 <Legend wrapperStyle={{ fontFamily: "var(--font-sans)", fontSize: 14 }} />
                 <Line dataKey="agua" name="Agua en la planta (NDMI)" stroke={colorToken("cielo")} strokeWidth={2} dot={{ r: 2 }} connectNulls={false} isAnimationActive={false} />
-                <Line dataKey="vigor" name="Clorofila (NDRE)" stroke={colorToken("oliva")} strokeWidth={2} dot={{ r: 2 }} connectNulls={false} isAnimationActive={false} />
+                <Line dataKey="vigor" name="Clorofila (NDRE)" stroke={colorToken("hoja")} strokeWidth={2} dot={{ r: 2 }} connectNulls={false} isAnimationActive={false} />
             </LineChart>
         </ResponsiveContainer>
     );

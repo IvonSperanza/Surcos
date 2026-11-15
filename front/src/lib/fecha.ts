@@ -1,17 +1,19 @@
-const fechaCorta = new Intl.DateTimeFormat("es-AR", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
-const diaMes = new Intl.DateTimeFormat("es-AR", { day: "numeric", month: "short", timeZone: "UTC" });
-const mesCorto = new Intl.DateTimeFormat("es-AR", { month: "short", year: "2-digit", timeZone: "UTC" });
+const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
 
 // Las fechas de las pasadas vienen como "YYYY-MM-DD" (día UTC): se formatean
-// en UTC para que no se corran un día por la zona horaria del navegador.
-const sinPunto = (texto: string) => texto.replace(".", "");
+// en UTC para que no se corran un día por la zona horaria del navegador. Y se
+// arman a mano ("10 oct 2026"): Intl da "10 de oct de 2026" o "10 oct. 2026"
+// según el navegador.
+const diaYMes = (fecha: Date) => `${fecha.getUTCDate()} ${MESES[fecha.getUTCMonth()]}`;
 
 export function formatearFecha(valor: string | number): string {
-    return sinPunto(fechaCorta.format(new Date(valor)));
+    const fecha = new Date(valor);
+    return `${diaYMes(fecha)} ${fecha.getUTCFullYear()}`;
 }
 
 export function formatearMes(valor: number): string {
-    return sinPunto(mesCorto.format(new Date(valor)));
+    const fecha = new Date(valor);
+    return `${MESES[fecha.getUTCMonth()]} ${String(fecha.getUTCFullYear()).slice(2)}`;
 }
 
 // "entre el 16 y el 23 dic 2025" / "entre el 26 dic 2025 y el 5 ene 2026".
@@ -24,7 +26,7 @@ export function formatearVentana(desde: string, hasta: string): string {
     const mismoMes = mismoAnio && inicio.getUTCMonth() === fin.getUTCMonth();
 
     if (mismoMes) return `entre el ${inicio.getUTCDate()} y el ${formatearFecha(hasta)}`;
-    const primera = mismoAnio ? sinPunto(diaMes.format(inicio)) : formatearFecha(desde);
+    const primera = mismoAnio ? diaYMes(inicio) : formatearFecha(desde);
     return `entre el ${primera} y el ${formatearFecha(hasta)}`;
 }
 

@@ -13,7 +13,7 @@ type Props = {
 };
 
 // Mismo aspecto que Button, pero navega. `contorno` es para fondos oscuros
-// (oliva, tierra, arcilla), donde el secundario claro pesaría demasiado.
+// (hoja, cielo, cobre, uva) o en el tema Noche, donde el secundario claro pesaría demasiado.
 export function EnlaceBoton({ to, variante = "secundario", grande = false, className, children }: Props) {
     const clases = [styles.boton, styles[variante], grande && styles.grande, className].filter(Boolean).join(" ");
     if (to.startsWith("#")) {

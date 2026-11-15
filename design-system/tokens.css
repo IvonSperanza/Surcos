@@ -1,49 +1,77 @@
 /* Surco — generado desde tokens.json. Editá tokens.json, no este archivo. */
-@import url('https://fonts.googleapis.com/css2?family=Young+Serif&family=Karla:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap');
+/* Temas: <html data-theme="dia"> (por defecto) o <html data-theme="noche">. */
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&family=Instrument+Sans:wght@400;600&family=JetBrains+Mono:wght@500;600&display=swap');
+
+:root, [data-theme="dia"] {
+  --surface: #f3f2e7;
+  --surface-raised: #fbfaf4;
+  --line: #d5d8c4;
+  --ink: #13261e;
+  --ink-muted: #4a5d52;
+  --hoja: #1b6e45;
+  --hoja-soft: #e0f0e0;
+  --on-color: #f7fbf2;
+  --sol: #f2b632;
+  --on-sol: #13261e;
+  --sol-soft: #fbebc2;
+  --cielo: #1f6e8c;
+  --cielo-soft: #ddeef3;
+  --cobre: #a8532a;
+  --cobre-soft: #f3ddcf;
+  --uva: #6e2a5c;
+  --uva-soft: #f1e0ec;
+  --suelo-desnudo: #a3825c;
+}
+
+[data-theme="noche"] {
+  --surface: #0e1a16;
+  --surface-raised: #15261f;
+  --line: #2a3f35;
+  --ink: #eaf2e3;
+  --ink-muted: #a3b5a8;
+  --hoja: #5fd38d;
+  --hoja-soft: #1d3b2c;
+  --on-color: #0e1a16;
+  --sol: #f5c451;
+  --on-sol: #13261e;
+  --sol-soft: #3a3216;
+  --cielo: #6cc3e0;
+  --cielo-soft: #16323d;
+  --cobre: #e08a5b;
+  --cobre-soft: #3b2519;
+  --uva: #d79ac7;
+  --uva-soft: #3a2234;
+  --suelo-desnudo: #8c7356;
+}
 
 :root {
-  --surface: #f3eadb;
-  --surface-raised: #fbf6ec;
-  --line: #dccdb6;
-  --ink: #2b1d14;
-  --ink-muted: #6e5b49;
-  --arcilla: #a04e25;
-  --on-color: #fff8ee;
-  --arcilla-soft: #efd7c3;
-  --tierra: #4a3020;
-  --malbec: #6a1d38;
-  --malbec-soft: #ebd3d9;
-  --oliva: #556229;
-  --oliva-soft: #e1e3c6;
-  --trigo: #d8a84e;
-  --cielo: #3d6177;
-  --cielo-soft: #dce5ea;
-  --suelo-desnudo: #a07d58;
-  --font-display: "Young Serif", Georgia, serif;
-  --font-sans: "Karla", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-display: "Unbounded", system-ui, sans-serif;
+  --font-sans: "Instrument Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --space-1: 4px;
   --space-2: 8px;
   --space-4: 16px;
   --space-6: 24px;
   --space-8: 40px;
-  --radius-sm: 4px;
-  --radius-md: 10px;
+  --radius-sm: 6px;
+  --radius-md: 14px;
+  --radius-lg: 28px;
   --radius-pill: 999px;
 }
 
 .display {
   font-family: var(--font-display);
-  font-size: 56px;
-  line-height: 60px;
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  font-size: 48px;
+  line-height: 56px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 .titulo {
   font-family: var(--font-display);
-  font-size: 32px;
-  line-height: 38px;
-  font-weight: 400;
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 .subtitulo {
   font-family: var(--font-sans);
@@ -64,11 +92,11 @@
   font-weight: 400;
 }
 .etiqueta {
-  font-family: var(--font-sans);
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   line-height: 16px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .dato {
@@ -81,3 +109,6 @@
 /* Base */
 body { margin: 0; background: var(--surface); color: var(--ink); font-family: var(--font-sans); font-size: 16px; line-height: 24px; }
 :focus-visible { outline: 2px solid var(--cielo); outline-offset: 2px; box-shadow: 0 0 0 2px var(--surface); }
+
+/* Grilla de puntos para paneles de datos */
+.grilla-datos { background-image: radial-gradient(circle, var(--line) 1.4px, transparent 1.6px); background-size: var(--space-6) var(--space-6); }

@@ -138,11 +138,14 @@ PRODUCTOR                                   CONSUMIDOR
 ## 9. Identidad
 
 - **Nombre:** Surco. **Tagline:** "Del satélite a tu mesa."
+- **Estética:** solarpunk tech, es decir, tecnología al servicio de la naturaleza. Luminosa, optimista y orgánica, con la precisión de un panel de datos.
 - **Sistema de diseño:** en `design-system/`.
-  - Paleta: tierra, arcilla, malbec, oliva, trigo y cielo de campo.
-  - Tipografía: Young Serif para titulares, Karla para el texto, IBM Plex Mono para los datos.
+  - Temas: Día (marketplace y QR) y Noche (paneles del productor y datos).
+  - Paleta: hoja, sol, cielo, cobre y uva.
+  - Tipografía: Unbounded para titulares, Instrument Sans para el texto, JetBrains Mono para datos y etiquetas.
   - Estados de verificación con color, palabra e ícono.
-- **Voz:** de vos, en rioplatense, clara. El dato siempre lleva su fuente. Sin superlativos.
+- **Hero animado:** agrovoltaica. Amanece el sol, los paneles se orientan, la energía baja por los postes, brota el cultivo y un satélite escanea el campo.
+- **Voz:** de vos, en rioplatense, optimista y concreta. El dato siempre lleva su fuente. Sin superlativos.
 
 ## 10. Equipo y roles
 
@@ -177,4 +180,4 @@ PRODUCTOR                                   CONSUMIDOR
 - [ ] Lote y productor de ejemplo del cinturón verde, con coordenadas.
 - [ ] Coeficientes del índice de suelo y valores de margen y premium, con sus fuentes.
 - [ ] Productos de ejemplo del marketplace (hortaliza, fruta y vino).
-- [ ] Logo (por ahora, el nombre escrito en Young Serif).
+- [ ] Logo (por ahora, el nombre escrito en Unbounded).

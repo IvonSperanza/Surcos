@@ -1,0 +1,52 @@
+.lista {
+    display: flex;
+    gap: var(--space-1);
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.pestana {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4) 10px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    background: none;
+    color: var(--ink-muted);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 150ms ease, border-color 150ms ease;
+}
+
+/* Alineación óptica: el texto de la primera pestaña arranca en el mismo borde
+   que el título de arriba. */
+.pestana:first-child {
+    padding-left: 0;
+}
+
+.pestana:hover {
+    color: var(--ink);
+}
+
+.pestana[aria-selected="true"] {
+    color: var(--ink);
+    border-bottom-color: var(--hoja);
+}
+
+/* La separación con las pestañas la da el contenedor (en el panel del
+   productor, el gap de la vista): el panel no suma la suya. */
+.panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.panel:focus-visible {
+    outline-offset: 4px;
+}

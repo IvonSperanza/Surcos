@@ -9,7 +9,7 @@ const PRODUCTOS_TICKER = "Tomate de la quinta · Lechuga fresca · Acelga · Fru
 export function Ticker() {
     const partes = PRODUCTOS_TICKER.split(" · ").filter(Boolean);
     const linea = (
-        <span>
+        <span className="etiqueta">
             {partes.map((p) => (
                 <span key={p}>
                     {p} <i>·</i>{" "}
@@ -32,17 +32,17 @@ const relleno = (token: string) => ({ fill: `var(--${token})` });
 
 const PASOS = [
     {
-        clase: styles.pasoOliva,
+        clase: styles.pasoHoja,
         titulo: "El productor cuida la tierra",
         texto: "Rota cultivos, deja cobertura o rastrojo entre ciclos y evita que el suelo quede desnudo.",
         arte: (
             <svg viewBox="0 0 120 100">
-                <rect x="0" y="76" width="120" height="24" style={relleno("tierra")} />
-                <rect x="0" y="82" width="120" height="3" style={{ ...relleno("arcilla"), opacity: 0.6 }} />
-                <rect x="0" y="90" width="120" height="3" style={{ ...relleno("arcilla"), opacity: 0.6 }} />
-                <path d="M60 76V38" style={{ stroke: "var(--oliva)", strokeWidth: 5, strokeLinecap: "round" }} />
-                <ellipse cx="44" cy="44" rx="18" ry="9" style={relleno("oliva")} transform="rotate(-30 44 44)" />
-                <ellipse cx="76" cy="32" rx="20" ry="10" style={relleno("oliva")} transform="rotate(30 76 32)" />
+                <rect x="0" y="76" width="120" height="24" style={relleno("cobre")} />
+                <rect x="0" y="82" width="120" height="3" style={{ ...relleno("cobre"), opacity: 0.6 }} />
+                <rect x="0" y="90" width="120" height="3" style={{ ...relleno("cobre"), opacity: 0.6 }} />
+                <path d="M60 76V38" style={{ stroke: "var(--hoja)", strokeWidth: 5, strokeLinecap: "round" }} />
+                <ellipse cx="44" cy="44" rx="18" ry="9" style={relleno("hoja")} transform="rotate(-30 44 44)" />
+                <ellipse cx="76" cy="32" rx="20" ry="10" style={relleno("hoja")} transform="rotate(30 76 32)" />
             </svg>
         )
     },
@@ -60,7 +60,7 @@ const PASOS = [
         )
     },
     {
-        clase: styles.pasoArcilla,
+        clase: styles.pasoSol,
         titulo: "Vos escaneás y ves todo",
         texto: "Abrís el código del producto y mirás el campo, el productor y la cosecha.",
         arte: (
@@ -71,7 +71,7 @@ const PASOS = [
                 <rect x="66" y="26" width="8" height="8" style={relleno("ink")} />
                 <rect x="46" y="48" width="28" height="4" rx="2" style={relleno("ink-muted")} />
                 <rect x="46" y="56" width="22" height="4" rx="2" style={relleno("ink-muted")} />
-                <rect x="46" y="70" width="28" height="8" rx="2" style={relleno("arcilla")} />
+                <rect x="46" y="70" width="28" height="8" rx="2" style={relleno("cobre")} />
             </svg>
         )
     }
@@ -82,7 +82,6 @@ export function ComoFunciona() {
         <section className={styles.seccion} id="como-funciona">
             <div className={styles.contenedor}>
                 <Revelar className={styles.cabeceraSeccion}>
-                    <p className={`etiqueta ${styles.antetitulo}`}>Cómo funciona</p>
                     <h2 className={styles.tituloSeccion}>Tres pasos. Sin letra chica.</h2>
                     <p className={styles.subtituloSeccion}>
                         No hace falta ser experto en nada. El productor hace lo suyo, el satélite mira el campo y vos ves la historia en el celular.
@@ -128,10 +127,9 @@ export function Productores() {
     return (
         <section className={styles.seccion} id="productores">
             <div className={styles.contenedor}>
-                <Revelar className={styles.panelProductores}>
-                    <div className={styles.copiaProductores}>
-                        <p className={`etiqueta ${styles.antetitulo} ${styles.antetituloClaro}`}>Para productores</p>
-                        <h2 className={`${styles.tituloSeccion} ${styles.tituloClaro}`}>Cuidar la tierra también puede pagar mejor.</h2>
+                <Revelar className={`${styles.panelProductores} grilla-datos`} tema="noche">
+                    <div>
+                        <h2 className={`${styles.tituloSeccion}`}>Cuidar la tierra también puede pagar mejor.</h2>
                         <p className={styles.bajadaProductores}>
                             No te pedimos que cuides el suelo por conciencia. Te damos una forma de demostrarlo con datos y de vender tu cosecha a mejor
                             precio, sin certificaciones caras.
@@ -139,7 +137,7 @@ export function Productores() {
                         <ul className={styles.beneficios}>
                             {BENEFICIOS.map(({ Icono, titulo, texto }) => (
                                 <li key={titulo}>
-                                    <span className={`${styles.icono} ${styles.iconoTrigo}`}>
+                                    <span className={`${styles.icono} ${styles.iconoSol}`}>
                                         <Icono size={20} strokeWidth={1.5} aria-hidden />
                                     </span>
                                     <div className="small">
@@ -149,7 +147,7 @@ export function Productores() {
                                 </li>
                             ))}
                         </ul>
-                        <EnlaceBoton to="/productor" variante="contorno" grande>
+                        <EnlaceBoton to="/productor" variante="primario" grande>
                             Quiero sumar mi quinta
                         </EnlaceBoton>
                     </div>
@@ -159,7 +157,7 @@ export function Productores() {
                             Lo que cambia en el bolsillo
                         </p>
                         <FilaBarra etiqueta="Venta común" ancho="48%" clase={styles.rellenoDesnudo} />
-                        <FilaBarra etiqueta="Con Surco" ancho="82%" clase={styles.rellenoOliva} />
+                        <FilaBarra etiqueta="Con Surco" ancho="82%" clase={styles.rellenoHoja} />
                         <p className="small" style={{ color: "var(--ink-muted)", marginTop: "var(--space-4)" }}>
                             Ejemplo de demostración, no un cálculo: la idea es que, con el sello, la práctica sustentable iguale o supere al manejo de siempre
                             en pocas campañas.
@@ -202,7 +200,6 @@ export function Consumidores() {
         <section className={`${styles.seccion} ${styles.seccionConsumidores}`} id="consumidores">
             <div className={`${styles.contenedor} ${styles.grillaConsumidores}`}>
                 <Revelar>
-                    <p className={`etiqueta ${styles.antetitulo}`}>Para consumidores</p>
                     <h2 className={styles.tituloSeccion}>Sabé qué estás comiendo.</h2>
                     <p className={styles.subtituloSeccion}>
                         Escaneá el código del producto y mirá el campo donde creció, quién lo produjo y cuándo se cosechó. Sin promesas vacías: datos con
@@ -216,13 +213,13 @@ export function Consumidores() {
                             Dónde creció
                         </li>
                         <li>
-                            <span className={`${styles.icono} ${styles.iconoArcilla}`}>
+                            <span className={`${styles.icono} ${styles.iconoCobre}`}>
                                 <UserRound size={18} strokeWidth={1.5} aria-hidden />
                             </span>
                             Quién lo hizo
                         </li>
                         <li>
-                            <span className={`${styles.icono} ${styles.iconoOliva}`}>
+                            <span className={`${styles.icono} ${styles.iconoHoja}`}>
                                 <Sprout size={18} strokeWidth={1.5} aria-hidden />
                             </span>
                             Cómo se cuidó la tierra
@@ -235,23 +232,23 @@ export function Consumidores() {
 
                 <Revelar orden={1} className={styles.envolturaTelefono}>
                     <div className={`${styles.flotante} ${styles.flotante1}`} aria-hidden="true">
-                        <span className={`${styles.punto} ${styles.puntoOliva}`} /> Suelo cubierto
+                        <span className={`${styles.punto} ${styles.puntoHoja}`} /> Suelo cubierto
                     </div>
                     <div className={`${styles.flotante} ${styles.flotante2}`} aria-hidden="true">
-                        <span className={`${styles.punto} ${styles.puntoCieloFuerte}`} /> 3 campañas verificadas
+                        <span className={`${styles.punto} ${styles.puntoCielo}`} /> 3 campañas verificadas
                     </div>
                     <div className={styles.telefono} aria-hidden="true">
                         <div className={styles.muesca} />
                         <div className={styles.pantalla}>
                             <div className={styles.pantallaArte}>
                                 <svg viewBox="0 0 220 120">
-                                    <rect x="0" y="94" width="220" height="26" style={relleno("tierra")} />
-                                    <circle cx="72" cy="60" r="24" style={relleno("oliva")} />
-                                    <circle cx="104" cy="52" r="27" style={relleno("oliva")} />
-                                    <circle cx="136" cy="62" r="23" style={relleno("oliva")} />
-                                    <circle cx="90" cy="58" r="15" style={relleno("arcilla")} />
-                                    <circle cx="122" cy="56" r="14" style={relleno("trigo")} />
-                                    <circle cx="150" cy="58" r="13" style={relleno("arcilla")} />
+                                    <rect x="0" y="94" width="220" height="26" style={relleno("cobre")} />
+                                    <circle cx="72" cy="60" r="24" style={relleno("hoja")} />
+                                    <circle cx="104" cy="52" r="27" style={relleno("hoja")} />
+                                    <circle cx="136" cy="62" r="23" style={relleno("hoja")} />
+                                    <circle cx="90" cy="58" r="15" style={relleno("cobre")} />
+                                    <circle cx="122" cy="56" r="14" style={relleno("sol")} />
+                                    <circle cx="150" cy="58" r="13" style={relleno("cobre")} />
                                 </svg>
                             </div>
                             <p className="etiqueta" style={{ color: "var(--ink-muted)" }}>

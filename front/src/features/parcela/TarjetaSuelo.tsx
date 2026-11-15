@@ -19,19 +19,13 @@ function FilaCapa({ capa }: { capa: CapaSuelo }) {
 }
 
 export function TarjetaSuelo({ suelo }: { suelo: SueloParcela }) {
-    const superficie = suelo.capas[0];
-
     return (
         <Card className={styles.tarjeta}>
-            <h2 className="subtitulo">Suelo del lugar</h2>
+            <h2 className="subtitulo">Suelo</h2>
             <div>
                 <span className="etiqueta">Textura</span>
                 <p className="titulo" style={{ margin: 0 }}>{conMayuscula(suelo.textura_superficial)}</p>
             </div>
-            <p className="body">
-                En los primeros 5 cm tiene <span className="dato">{valor(superficie.carbono_organico, 1)} g/kg</span> de carbono orgánico. Es la parte del
-                suelo que más mejora con rotaciones y cobertura, y la que se pierde cuando queda desnudo.
-            </p>
             <table className={styles.tablaSuelo}>
                 <thead>
                     <tr className="etiqueta">
@@ -48,8 +42,8 @@ export function TarjetaSuelo({ suelo }: { suelo: SueloParcela }) {
                 </tbody>
             </table>
             <Fuente>
-                {suelo.fuente} · estimación de un modelo con píxeles de {suelo.resolucion}, no una muestra de tu parcela
-                {suelo.distancia_al_centro_m > 0 && ` · consultado a ${suelo.distancia_al_centro_m} m del centro, porque el punto exacto no tenía dato`}
+                {suelo.fuente} · modelo a {suelo.resolucion}, no es una muestra
+                {suelo.distancia_al_centro_m > 0 && ` · punto a ${suelo.distancia_al_centro_m} m del centro`}
             </Fuente>
         </Card>
     );

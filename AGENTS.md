@@ -144,7 +144,7 @@ front/src/
 | Ruta | Pantalla | Usuario |
 |---|---|---|
 | `/` **(hecha)** | Landing (`features/landing/`), con la animación de marca | Todos |
-| `/productor/*` **(hecha)** | Panel del productor (`features/productor/`): Resumen, Mi lote (datos reales de `/parcela`), Productos y QR, Pedidos, Pagos. Datos de demostración en `api/fixtures/productor.ts`, salvo Mi lote | Productor |
+| `/productor/*` **(hecha)** | Panel del productor (`features/productor/`): Resumen, Mis parcelas (`/productor/parcelas`: mapa y lista; `parcelas/nueva`: dibujar y guardar; `parcelas/:id`: ficha con datos reales, su estado de generación y la historia de eventos (`features/eventos/`, guardados vía `api/eventos.ts`); ver `features/parcelas/`), Producciones (`/productor/producciones`: tabla con filtros; `producciones/:id`: ficha completa de un cultivo, la misma información que mostrará el QR; ver `features/producciones/`), Pedidos, Pagos. Las parcelas se guardan en el navegador vía `api/parcelas.ts` (misma forma que tendrá la API del back); el resto usa datos de demostración en `api/fixtures/productor.ts` | Productor |
 | `/parcela` **(hecha)** | La parcela sola: dibujo sobre el mapa, NDVI, ciclos, clima, suelo e insights | Productor |
 | `/lote/:id` | Lote en el mapa: historial detectado y clima | Productor |
 | `/lote/:id/escenarios` | Comparador de escenarios: el gráfico "me conviene" | Productor |
@@ -165,28 +165,41 @@ El **único** sistema de diseño de este proyecto es el de `/design-system/`
   Si cambia un token, se edita `tokens.json` y se regenera `tokens.css`; nunca
   se pisa en el front.
 
+Estética **solarpunk tech**: tecnología al servicio de la naturaleza, luminosa
+y optimista, con la precisión de un panel de datos.
+
+**Temas.** Día (por defecto) y Noche comparten tokens; se cambia con
+`data-theme`, nunca eligiendo colores a mano. La landing va en Día. El panel
+del productor y `/parcela` arrancan en Día y tienen un `SelectorTema` para
+pasar a Noche: usan `usePreferenciaTema()` de `front/src/lib/tema.ts`, que
+recuerda la elección y pone el atributo en `<html>` (de ahí leen los colores
+los gráficos) antes de redibujar. Para un bloque suelto en otro tema dentro de
+una página, `data-theme="noche"` en ese bloque.
+
 | Tipo | Tokens (`var(--…)`) |
 |---|---|
-| Superficies y texto | `surface`, `surface-raised`, `line`, `ink`, `ink-muted`, `on-color` |
-| Marca y significado | `arcilla` (marca, primario, precios), `oliva` (vegetación, NDVI), `cielo` (lo vio el satélite, Verificado), `trigo` (pendiente, dato destacado), `malbec` (vinos), `tierra` (suelo, footer), `suelo-desnudo` (sólo gráficos) |
-| Suaves (fondos de chips/sellos) | `oliva-soft`, `arcilla-soft`, `malbec-soft`, `cielo-soft` |
-| Tipografía | `font-display` (Young Serif), `font-sans` (Karla), `font-mono` (IBM Plex Mono) |
+| Superficies y texto | `surface`, `surface-raised`, `line`, `ink`, `ink-muted`, `on-color` (texto sobre `hoja`, `cielo`, `cobre`, `uva`) |
+| Marca y significado | `hoja` (marca y vida: primario, enlaces, curva NDVI, cultivo), `sol` (energía y atención: Pendiente, dato destacado; **nunca texto**, encima va `on-sol`), `cielo` (lo vio el satélite: Verificado, pasaporte, clima), `cobre` (cables, conexiones, Frutas), `uva` (Vinos), `suelo-desnudo` (sólo gráficos) |
+| Suaves (fondos de chips/sellos) | `hoja-soft`, `sol-soft`, `cielo-soft`, `cobre-soft`, `uva-soft` |
+| Tipografía | `font-display` (Unbounded 500/600), `font-sans` (Instrument Sans), `font-mono` (JetBrains Mono: `.etiqueta` y `.dato`) |
 | Espacio | `space-1` 4 · `space-2` 8 · `space-4` 16 · `space-6` 24 · `space-8` 40 |
-| Radio | `radius-sm` (chips, sellos, inputs) · `radius-md` (tarjetas, botones, mapas, gráficos) · `radius-pill` (sólo sello del pasaporte y avatares) |
+| Radio | `radius-sm` (chips, sellos, inputs) · `radius-md` (tarjetas, botones, mapas, gráficos) · `radius-lg` (paneles grandes, hero) · `radius-pill` (sello del pasaporte, avatares, toggles) |
 
-Clases de texto (definidas en `tokens.css`): `.display`, `.titulo`,
-`.subtitulo`, `.body`, `.small`, `.etiqueta`, `.dato`.
+Clases (definidas en `tokens.css`): `.display`, `.titulo`, `.subtitulo`,
+`.body`, `.small`, `.etiqueta`, `.dato`, y `.grilla-datos` (grilla de puntos
+para el fondo de los paneles de datos; no se usa en el marketplace).
 
-Componentes que hay que construir primero en `src/design-system/components/`
-(siguiendo las tablas de `design-system/README.md`):
+Componentes del barrel `src/design-system` (usalos antes de crear uno):
 
-| Componente | Spec en el README |
+| Componente | Para qué |
 |---|---|
-| `SelloVerificacion` | "Estados de verificación": Verificado / Pendiente / Sin verificar, con ícono y palabra |
-| `ChipCategoria` | "Categorías de producto": Hortalizas / Frutas / Vinos |
-| `Fuente` | "Voz": línea `small` con fuente y fecha del dato |
-| `Card`, `Button` | "Color" y "Espacio, forma y foco" |
-| `GraficoNdvi` | "Gráficos de datos": línea `oliva`, áreas cubierto / desnudo |
+| `Button` | Botón; `variante="primario"` (hoja, una vez por vista) o `"secundario"` |
+| `EnlaceBoton` | Enlace con forma de botón (ruta o `#ancla`); variantes `primario`, `secundario`, `contorno` |
+| `Card` | Tarjeta: `surface-raised`, borde `line`, `radius-md` |
+| `Fuente` | Línea `small` con fuente y fecha del dato |
+| `SelloVerificacion` | Verificado / Pendiente / Sin verificar, con ícono y palabra |
+| `ChipCategoria` | Hortalizas / Frutas / Vinos / Granos |
+| `SelectorTema` | Toggle Día / Noche (con `usePreferenciaTema`) |
 
 ### Reglas del front
 
@@ -217,8 +230,10 @@ Componentes que hay que construir primero en `src/design-system/components/`
 - No se usa rojo en ninguna parte. "Sin verificar" es neutro, no un error.
 - Cada estado de verificación lleva color + palabra + ícono, nunca sólo color.
 - Bordes en lugar de sombras. Sin degradés.
-- `display` (Young Serif) una vez por pantalla. Números medidos en `.dato`
-  (IBM Plex Mono).
+- `display` (Unbounded) una vez por pantalla. Números medidos en `.dato`
+  (JetBrains Mono).
+- `sol` nunca va como texto: es fondo, y encima va `on-sol`. En el tema
+  Noche `ink` es claro, así que sobre `sol` no se lee.
 
 **Antes de dar una tarea por terminada:**
 
@@ -240,6 +255,8 @@ es un borrador**: usalo para tipar los fixtures, pero puede cambiar.
 | `POST /suelo` **(implementado)** | Body `{ geometria }`. SoilGrids en el centro de la parcela (prueba puntos vecinos si cae en zona urbana): textura en palabras y, por profundidad (0–5, 5–15, 15–30 cm), arcilla, limo, arena, carbono orgánico, pH, nitrógeno, densidad y CIC. 404 si no hay dato. Tipos en `front/src/api/suelo.ts` |
 | `POST /ndvi` **(implementado)** | Body `{ geometria: Polygon GeoJSON [lon, lat], desde?, hasta? }` (por defecto, el último año). Por cada pasada despejada de Sentinel-2 dentro del polígono: medianas de NDVI, NDMI (agua), NDRE (clorofila), NDTI (rastrojo) y BSI, y qué fracción de la parcela tenía cultivo, rastrojo, suelo desnudo o no se distingue. Incluye `analisis`: ciclos (siembra, pico, cosecha) y períodos sin cultivo con su cobertura. La primera consulta tarda ~1–2 min; después sale de caché. Tipos en `front/src/api/ndvi.ts` |
 | `POST /insights` **(implementado)** | Body `{ geometria, desde?, hasta? }`. Recomendaciones con reglas deterministas (`datos/surco_datos/insights.py`): cada una trae `tipo` (alerta · oportunidad · bien · planificar), `hallazgo`, `accion`, `confianza` (alta · media) con su motivo y la `evidencia` (dato, fuente, fecha, escena). Lo que no se puede afirmar va en `descartados` con el motivo. Reutiliza la caché de `/ndvi` y `/clima`. Tipos en `front/src/api/insights.ts` |
+| `GET /catalogo/especies?uso=cultivo\|cobertura` **(implementado)** | Especies del Catálogo Nacional de Cultivares del INASE (cultivo: hortícolas y frutales, incluye vid; cobertura: forrajeras y cereales), con nombre científico y familia botánica (deducida del género; es la que usa la rotación). Trae `fuente`, `pagina` y `descargado`. Tipos en `front/src/api/catalogo.ts` |
+| `GET /catalogo/cultivares?especie=&q=&limite=` **(implementado)** | Cultivares inscriptos de una especie que contienen `q` (sin acentos; primero los que empiezan con `q`), con su número del INASE y el solicitante |
 | `POST /verificacion` | Recibe lote + campaña declarada; devuelve lo detectado (ciclos, días de suelo desnudo, cobertura invernal) y el estado |
 
 ---

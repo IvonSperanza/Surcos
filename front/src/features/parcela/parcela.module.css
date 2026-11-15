@@ -121,7 +121,7 @@
     display: grid;
     place-items: center;
     border-radius: var(--radius-pill);
-    background: var(--oliva-soft);
+    background: var(--hoja-soft);
     color: var(--ink);
 }
 
@@ -175,11 +175,12 @@
 }
 
 .chipAlerta {
-    background: var(--trigo);
+    background: var(--sol);
+    color: var(--on-sol);
 }
 
 .chipOportunidad {
-    background: var(--oliva-soft);
+    background: var(--hoja-soft);
 }
 
 .chipBien {
@@ -207,4 +208,15 @@
 details summary {
     cursor: pointer;
     color: var(--ink-muted);
+}
+
+.barraTema {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: calc(-1 * var(--space-4));
+}
+
+.leyenda {
+    color: var(--ink-muted);
+    margin: 0;
 }

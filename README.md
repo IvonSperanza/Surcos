@@ -31,12 +31,13 @@ El pequeño productor no deja de cuidar el suelo por desconocimiento: lo deja po
 ## Estructura
 
 ```
+PROYECTO.md         descripción completa del proyecto
 design-system/
   README.md        manual de marca: voz, color, estados, gráficos, tipografía, movimiento
   tokens.json      fuente de verdad de los tokens
   tokens.css       variables CSS y clases de tipografía, listas para importar
   hero/
-    surco-hero.html  animación de portada (botella, uvas, satélite), sin dependencias
+    surco-hero.html  animación de portada (sol, paneles agrovoltaicos, satélite), sin dependencias
 ```
 
 ## Cómo usar el sistema de diseño
@@ -48,10 +49,11 @@ design-system/
 <span class="dato">NDVI 0.72</span>
 ```
 
-- Colores: `var(--arcilla)`, `var(--oliva)`, `var(--malbec)`, `var(--cielo)`… (ver `design-system/README.md` para qué significa cada uno).
+- Colores: `var(--hoja)`, `var(--sol)`, `var(--cielo)`, `var(--cobre)`, `var(--uva)`… (ver `design-system/README.md` para qué significa cada uno).
 - Tipografía: clases `.display`, `.titulo`, `.subtitulo`, `.body`, `.small`, `.etiqueta`, `.dato`.
 - Si cambian un token, edítenlo en `tokens.json` y regeneren `tokens.css`.
-- Hero: abrí `design-system/hero/surco-hero.html`. Se adapta al ancho de la ventana; se repite con un clic.
+- Temas: `<html data-theme="dia">` (por defecto) o `data-theme="noche"` para paneles de datos.
+- Hero: abrí `design-system/hero/surco-hero.html` (agrovoltaica: sol, paneles, brotes y satélite). Se adapta al ancho de la ventana; se repite con un clic.
 
 ## Entregas
 

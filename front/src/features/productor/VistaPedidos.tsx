@@ -60,23 +60,14 @@ export function VistaPedidos({ pedidos, onAvanzar }: { pedidos: Pedido[]; onAvan
 
     return (
         <section className={vistas.vista}>
-            <CabeceraVista
-                seccion="Pedidos"
-                titulo="Historial de pedidos"
-                bajada="Todos los pedidos que llegaron al lote, con su estado y el próximo paso."
-                fuente={
-                    <>
-                        Datos de demostración · <span className="dato">{pedidos.length}</span> pedidos
-                    </>
-                }
-            />
+            <CabeceraVista titulo="Pedidos" />
 
-            <div className={styles.filtros} role="group" aria-label="Filtrar pedidos por estado">
+            <div className={vistas.filtros} role="group" aria-label="Filtrar pedidos por estado">
                 {FILTROS.map(({ valor, nombre }) => (
                     <button
                         key={valor}
                         type="button"
-                        className={`small ${styles.filtro}`}
+                        className={`small ${vistas.filtro}`}
                         aria-pressed={filtro === valor}
                         onClick={() => setFiltro(valor)}
                     >
@@ -92,7 +83,7 @@ export function VistaPedidos({ pedidos, onAvanzar }: { pedidos: Pedido[]; onAvan
                     ))}
                 </div>
             ) : (
-                <p className={`body ${vistas.vacio}`}>No hay pedidos en este estado.</p>
+                <p className={`body ${vistas.vacio}`}>Sin pedidos en este estado.</p>
             )}
         </section>
     );

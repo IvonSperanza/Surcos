@@ -1,0 +1,235 @@
+.secundario {
+    color: var(--ink-muted);
+}
+
+.estado {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+}
+
+.enCurso {
+    background: var(--sol);
+    color: var(--on-sol);
+}
+
+.cosechada {
+    background: var(--hoja-soft);
+    color: var(--ink);
+}
+
+/* ---------- Lista ---------- */
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--space-4);
+}
+
+.selector {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    color: var(--ink-muted);
+}
+
+.selector select {
+    min-width: 180px;
+    padding: var(--space-1) 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface-raised);
+    color: var(--ink);
+    font: inherit;
+}
+
+.contenedorTabla {
+    overflow-x: auto;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+}
+
+.tabla {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+}
+
+.tabla th,
+.tabla td {
+    padding: 12px var(--space-4);
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+    vertical-align: middle;
+}
+
+.tabla thead th {
+    color: var(--ink-muted);
+    font-weight: inherit;
+}
+
+.tabla tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.tabla .numero {
+    text-align: right;
+}
+
+.fila {
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+
+.fila:hover {
+    background: var(--surface);
+}
+
+.celdaCultivo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nombreCultivo {
+    display: flex;
+    flex-direction: column;
+}
+
+.miniatura {
+    flex: none;
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+}
+
+.sinFoto {
+    display: grid;
+    place-items: center;
+    background: var(--surface);
+    color: var(--ink-muted);
+}
+
+.tabla .fecha,
+.tabla .numero {
+    white-space: nowrap;
+}
+
+.enlace {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.fila:hover .enlace {
+    color: var(--hoja);
+}
+
+/* ---------- Ficha ---------- */
+.foto {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.foto img {
+    width: 100%;
+    height: clamp(220px, 40vw, 420px);
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+}
+
+.foto figcaption {
+    color: var(--ink-muted);
+}
+
+.grillaDetalle {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(280px, 1fr);
+    gap: var(--space-6);
+    align-items: stretch;
+}
+
+.grillaDetalle > :first-child {
+    height: 100%;
+    min-height: 320px;
+}
+
+.datosClave {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-4);
+}
+
+.seccion {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.aplicaciones {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.aplicacion {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-4);
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.aplicacion:last-child {
+    border-bottom: none;
+}
+
+.aplicacion p {
+    margin: 0;
+}
+
+/* Lo previo al cultivo va aparte y más apagado: es contexto, no el ciclo. */
+.historial {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-6);
+    background: var(--surface);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-md);
+}
+
+.historial h2,
+.historial p {
+    margin: 0;
+}
+
+@media (max-width: 900px) {
+    .grillaDetalle {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fila {
+        transition: none;
+    }
+}
+
+.sinResultados {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+}

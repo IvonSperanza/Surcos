@@ -1,86 +1,90 @@
 import { useCallback, useEffect, useRef } from "react";
 import styles from "./landing.module.css";
 
-// Animación de marca (design-system/README.md, "Movimiento"): la botella se
-// vuelca sobre el cajón, el vino se derrama, las uvas ruedan, el satélite
-// escanea el campo y brotan los plantines. Un clic la repite.
-const PIVOTE = { x: 840, y: 172 };
-const BOCA = { x: 654, y: 150 };
+// Animación de marca (design-system/hero/surco-hero.html): amanece el sol, los
+// paneles agrovoltaicos se orientan hacia él, la energía baja por los postes,
+// brota el cultivo y un satélite pasa y escanea el campo. Un clic la repite.
 const SUELO = 248;
-const DESTINOS_UVAS = [678, 662, 641, 627, 610, 588, 569, 546, 521, 498, 463, 431, 392, 334, 268, 196, 112];
-const UVAS = DESTINOS_UVAS.map((destino, i) => ({ destino, radio: 9 + (i % 3) - 1, i }));
-
-const BROTES = [
-    { x: 392, alto: 22, rx: 8 },
-    { x: 468, alto: 28, rx: 9 },
-    { x: 548, alto: 18, rx: 7 },
-    { x: 936, alto: 30, rx: 9 }
+const SOL = { x: 604, y: 86 };
+const TOPE_POSTE = 176;
+const POSTES = [700, 810, 920];
+const BROTES: [number, number][] = [
+    [468, 22], [516, 28], [556, 18], [652, 30], [676, 20], [748, 32], [772, 22], [858, 30], [884, 20], [944, 26]
 ];
 
 const mover = (x: number, y: number, giro?: number) => `translate(${x}px,${y}px)${giro === undefined ? "" : ` rotate(${giro}deg)`}`;
 
-// Colores como variables CSS dentro del SVG: el estilo inline sí resuelve var().
+// Los colores salen de los tokens: con estilo inline, var() sí se resuelve
+// dentro del SVG y la escena cambia sola entre Día y Noche.
 const relleno = (token: string) => ({ fill: `var(--${token})` });
 
+function Brote({ x, alto, refBrote }: { x: number; alto: number; refBrote: (el: SVGGElement | null) => void }) {
+    const tope = SUELO - alto;
+    const r = 6 + alto / 6;
+    return (
+        <g ref={refBrote} style={{ transformBox: "fill-box", transformOrigin: "50% 100%" }}>
+            <path d={`M${x} ${SUELO} V${tope}`} style={{ stroke: "var(--hoja)", strokeWidth: 3, strokeLinecap: "round", fill: "none" }} />
+            <ellipse style={relleno("hoja")} cx={x - r * 0.8} cy={tope + 2} rx={r} ry={r / 2} transform={`rotate(-30 ${x - r * 0.8} ${tope + 2})`} />
+            <ellipse style={relleno("hoja")} cx={x + r * 0.8} cy={tope - 3} rx={r} ry={r / 2} transform={`rotate(30 ${x + r * 0.8} ${tope - 3})`} />
+        </g>
+    );
+}
+
 export function EscenaMarca() {
-    const botella = useRef<SVGGElement>(null);
-    const charco = useRef<SVGEllipseElement>(null);
+    const grilla = useRef<SVGRectElement>(null);
+    const sol = useRef<SVGGElement>(null);
+    const anillo = useRef<SVGCircleElement>(null);
     const satelite = useRef<SVGGElement>(null);
     const orbita = useRef<SVGPathElement>(null);
     const haz = useRef<SVGPolygonElement>(null);
-    const uvas = useRef<(SVGGElement | null)[]>([]);
+    const paneles = useRef<(SVGGElement | null)[]>([]);
+    const pulsos = useRef<(SVGCircleElement | null)[]>([]);
     const brotes = useRef<(SVGGElement | null)[]>([]);
     const animaciones = useRef<Animation[]>([]);
 
     const reproducir = useCallback(() => {
-        if (!botella.current || !charco.current || !satelite.current || !orbita.current || !haz.current) return;
+        if (!grilla.current || !sol.current || !anillo.current || !satelite.current || !orbita.current || !haz.current) return;
         animaciones.current.forEach((a) => a.cancel());
         const nuevas: Animation[] = [];
 
+        nuevas.push(grilla.current.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, fill: "both" }));
         nuevas.push(
-            botella.current.animate(
+            sol.current.animate(
                 [
-                    { transform: mover(PIVOTE.x, PIVOTE.y, 0), easing: "cubic-bezier(.55,0,1,.6)" },
-                    { transform: mover(PIVOTE.x, PIVOTE.y, -97), offset: 0.72, easing: "ease-out" },
-                    { transform: mover(PIVOTE.x, PIVOTE.y, -87), offset: 0.86, easing: "ease-in-out" },
-                    { transform: mover(PIVOTE.x, PIVOTE.y, -90) }
+                    { transform: mover(SOL.x, 190), opacity: 0 },
+                    { transform: mover(SOL.x, SOL.y), opacity: 1 }
                 ],
-                { duration: 1100, delay: 300, fill: "both" }
+                { duration: 1600, delay: 200, fill: "both", easing: "cubic-bezier(.2,.7,.3,1)" }
             )
         );
 
-        nuevas.push(
-            charco.current.animate(
-                [
-                    { transform: "scaleX(0)", opacity: 0 },
-                    { transform: "scaleX(.4)", opacity: 0.9, offset: 0.25 },
-                    { transform: "scaleX(1)", opacity: 0.9 }
-                ],
-                { duration: 2200, delay: 1300, fill: "both", easing: "ease-out" }
-            )
-        );
-
-        UVAS.forEach((u) => {
-            const elemento = uvas.current[u.i];
-            if (!elemento) return;
-            const y = SUELO - u.radio;
-            const k = u.i % 4;
-            const x1 = Math.max(u.destino, BOCA.x - 12 - k * 6);
-            const x2 = Math.max(u.destino, BOCA.x - 28 - k * 9);
-            const x3 = Math.max(u.destino, BOCA.x - 42 - k * 12);
-            const distancia = BOCA.x - u.destino;
-            const giro = -(distancia / u.radio) * 57.3;
+        paneles.current.forEach((panel, i) => {
+            if (!panel) return;
+            const x = POSTES[i];
             nuevas.push(
-                elemento.animate(
+                panel.animate(
                     [
-                        { transform: mover(BOCA.x, BOCA.y, 0), opacity: 0, easing: "cubic-bezier(.5,0,1,1)" },
-                        { transform: mover(BOCA.x, BOCA.y, 0), opacity: 1, offset: 0.04, easing: "cubic-bezier(.5,0,1,1)" },
-                        { transform: mover(x1, y, giro * 0.1), opacity: 1, offset: 0.3, easing: "cubic-bezier(0,0,.4,1)" },
-                        { transform: mover(x2, y - 14 + (u.i % 3) * 4, giro * 0.25), offset: 0.42, easing: "cubic-bezier(.6,0,1,1)" },
-                        { transform: mover(x3, y, giro * 0.4), offset: 0.54, easing: "cubic-bezier(.15,.6,.3,1)" },
-                        { transform: mover(u.destino, y, giro), opacity: 1 }
+                        { transform: mover(x, TOPE_POSTE, 16) },
+                        { transform: mover(x, TOPE_POSTE, -24), offset: 0.8 },
+                        { transform: mover(x, TOPE_POSTE, -20) }
                     ],
-                    { duration: 1500 + distancia * 3, delay: 1050 + u.i * 110, fill: "both" }
+                    { duration: 1200, delay: 1300 + i * 220, fill: "both", easing: "cubic-bezier(.4,0,.2,1)" }
+                )
+            );
+        });
+
+        pulsos.current.forEach((pulso, i) => {
+            if (!pulso) return;
+            const x = POSTES[i];
+            nuevas.push(
+                pulso.animate(
+                    [
+                        { transform: mover(x, TOPE_POSTE + 6), opacity: 0 },
+                        { transform: mover(x, TOPE_POSTE + 6), opacity: 1, offset: 0.1 },
+                        { transform: mover(x, SUELO), opacity: 1, offset: 0.55 },
+                        { transform: mover(x - 70, SUELO), opacity: 0 }
+                    ],
+                    { duration: 1300, delay: 2600 + i * 260, iterations: 2, fill: "both", easing: "ease-in-out" }
                 )
             );
         });
@@ -90,7 +94,7 @@ export function EscenaMarca() {
             nuevas.push(
                 brote.animate([{ transform: "scale(0)" }, { transform: "scale(1.08)", offset: 0.7 }, { transform: "scale(1)" }], {
                     duration: 700,
-                    delay: 3600 + i * 220,
+                    delay: 2900 + i * 120,
                     fill: "both",
                     easing: "ease-out"
                 })
@@ -98,25 +102,29 @@ export function EscenaMarca() {
         });
 
         const largo = orbita.current.getTotalLength();
-        const pasos = Array.from({ length: 21 }, (_, s) => orbita.current!.getPointAtLength(largo * (0.04 + (0.5 * s) / 20)));
+        const pasos = Array.from({ length: 21 }, (_, s) => orbita.current!.getPointAtLength(largo * (0.02 + (0.55 * s) / 20)));
         const fin = pasos[pasos.length - 1];
         nuevas.push(
             satelite.current.animate(
                 pasos.map((p) => ({ transform: mover(p.x, p.y) })),
-                { duration: 3600, delay: 200, fill: "both", easing: "cubic-bezier(.3,.1,.4,1)" }
+                { duration: 3800, delay: 400, fill: "both", easing: "cubic-bezier(.3,.1,.4,1)" }
             )
         );
-
-        haz.current.setAttribute("points", `${fin.x},${fin.y + 10} ${fin.x - 150},${SUELO} ${fin.x + 40},${SUELO}`);
+        haz.current.setAttribute("points", `${fin.x},${fin.y + 10} ${fin.x - 120},${SUELO} ${fin.x + 70},${SUELO}`);
         nuevas.push(
-            haz.current.animate([{ opacity: 0 }, { opacity: 0.16, offset: 0.3 }, { opacity: 0.16, offset: 0.7 }, { opacity: 0 }], {
+            haz.current.animate([{ opacity: 0 }, { opacity: 0.14, offset: 0.3 }, { opacity: 0.14, offset: 0.7 }, { opacity: 0 }], {
                 duration: 1400,
                 delay: 4300,
                 fill: "both"
             })
         );
 
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) nuevas.forEach((a) => a.finish());
+        // Con movimiento reducido: estado final y sin rotaciones continuas.
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            nuevas.forEach((a) => a.finish());
+        } else {
+            nuevas.push(anillo.current.animate([{ transform: "rotate(0deg)" }, { transform: "rotate(360deg)" }], { duration: 40000, iterations: Infinity }));
+        }
         animaciones.current = nuevas;
     }, []);
 
@@ -129,69 +137,86 @@ export function EscenaMarca() {
     return (
         <div className={styles.escena} title="Clic para repetir la animación" onClick={reproducir}>
             <svg viewBox="0 0 960 288" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-                <rect style={relleno("tierra")} x="0" y="248" width="960" height="40" />
-                {[258, 268, 278].map((y) => (
-                    <rect key={y} style={{ ...relleno("arcilla"), opacity: 0.55 }} x="0" y={y} width="960" height="4" rx="2" />
-                ))}
+                <defs>
+                    <pattern id="escena-grilla" width="24" height="24" patternUnits="userSpaceOnUse" x="480" y="0">
+                        <circle style={relleno("line")} cx="12" cy="12" r="1.4" />
+                    </pattern>
+                </defs>
+                <rect ref={grilla} x="480" y="0" width="480" height="248" fill="url(#escena-grilla)" />
+
+                <path
+                    ref={orbita}
+                    d="M740 74 Q880 -10 1010 46"
+                    style={{ fill: "none", stroke: "var(--cielo)", strokeWidth: 1.5, strokeDasharray: "2 7", strokeLinecap: "round", opacity: 0.6 }}
+                />
                 <polygon ref={haz} style={{ ...relleno("cielo"), opacity: 0 }} points="0,0 0,0 0,0" />
+
+                <g ref={sol} style={{ transformBox: "view-box" }}>
+                    <circle
+                        ref={anillo}
+                        cx="0"
+                        cy="0"
+                        r="42"
+                        style={{ fill: "none", stroke: "var(--sol)", strokeWidth: 3, strokeDasharray: "3 9", strokeLinecap: "round", transformBox: "fill-box", transformOrigin: "50% 50%" }}
+                    />
+                    <circle style={relleno("sol")} cx="0" cy="0" r="28" />
+                </g>
+
+                <rect style={relleno("hoja")} x="0" y={SUELO} width="960" height="40" />
+                {[258, 268, 278].map((y) => (
+                    <rect key={y} style={{ ...relleno("hoja-soft"), opacity: 0.35 }} x="0" y={y} width="960" height="4" rx="2" />
+                ))}
+
                 <g>
-                    {BROTES.map((b, i) => (
-                        <g
-                            key={b.x}
-                            ref={(el) => {
+                    {BROTES.map(([x, alto], i) => (
+                        <Brote
+                            key={x}
+                            x={x}
+                            alto={alto}
+                            refBrote={(el) => {
                                 brotes.current[i] = el;
                             }}
-                            style={{ transformBox: "fill-box", transformOrigin: "50% 100%" }}
-                        >
-                            <path d={`M${b.x} 248 V${248 - b.alto}`} style={{ stroke: "var(--oliva)", strokeWidth: 3, strokeLinecap: "round", fill: "none" }} />
-                            <ellipse style={relleno("oliva")} cx={b.x - 7} cy={250 - b.alto} rx={b.rx} ry={b.rx / 2} transform={`rotate(-30 ${b.x - 7} ${250 - b.alto})`} />
-                            <ellipse style={relleno("oliva")} cx={b.x + 7} cy={245 - b.alto} rx={b.rx} ry={b.rx / 2} transform={`rotate(30 ${b.x + 7} ${245 - b.alto})`} />
+                        />
+                    ))}
+                </g>
+
+                <g>
+                    {POSTES.map((x, i) => (
+                        <g key={x}>
+                            <rect style={relleno("ink-muted")} x={x - 2} y={TOPE_POSTE} width="4" height={SUELO - TOPE_POSTE} />
+                            <g
+                                ref={(el) => {
+                                    paneles.current[i] = el;
+                                }}
+                                style={{ transformBox: "view-box", transform: mover(x, TOPE_POSTE, -20) }}
+                            >
+                                <rect style={relleno("cielo")} x="-46" y="-5" width="92" height="10" rx="3" />
+                                {[-23, 0, 23].map((cx) => (
+                                    <line key={cx} x1={cx} y1="-5" x2={cx} y2="5" style={{ stroke: "var(--surface-raised)", strokeWidth: 1.5, opacity: 0.7 }} />
+                                ))}
+                            </g>
                         </g>
                     ))}
                 </g>
+
                 <g>
-                    <rect style={relleno("tierra")} x="700" y="172" width="200" height="76" rx="4" />
-                    {[172, 200, 228].map((y) => (
-                        <rect key={y} style={relleno("arcilla")} x="700" y={y} width="200" height="20" rx="4" />
+                    {POSTES.map((x, i) => (
+                        <circle
+                            key={x}
+                            ref={(el) => {
+                                pulsos.current[i] = el;
+                            }}
+                            r="3.5"
+                            style={{ ...relleno("sol"), transformBox: "view-box", opacity: 0 }}
+                        />
                     ))}
-                    <rect style={relleno("tierra")} x="700" y="172" width="12" height="76" rx="4" />
-                    <rect style={relleno("tierra")} x="888" y="172" width="12" height="76" rx="4" />
                 </g>
-                <ellipse ref={charco} style={{ ...relleno("malbec"), transformBox: "fill-box", transformOrigin: "50% 50%" }} cx="652" cy="250" rx="58" ry="5" />
-                <g ref={botella} style={{ transformBox: "view-box" }}>
-                    <rect style={relleno("tierra")} x="0" y="-120" width="44" height="120" rx="6" />
-                    <path style={relleno("tierra")} d="M0 -114 C0 -136 14 -138 14 -150 L30 -150 C30 -138 44 -136 44 -114 Z" />
-                    <rect style={relleno("tierra")} x="14" y="-178" width="16" height="32" />
-                    <rect style={relleno("malbec")} x="12" y="-184" width="20" height="24" rx="2" />
-                    <rect style={relleno("arcilla-soft")} x="5" y="-92" width="34" height="52" rx="3" />
-                    <rect style={relleno("trigo")} x="5" y="-80" width="34" height="8" />
-                    <rect style={relleno("malbec")} x="12" y="-62" width="20" height="4" rx="2" />
-                    <rect style={relleno("malbec")} x="15" y="-54" width="14" height="4" rx="2" />
-                </g>
-                <path
-                    ref={orbita}
-                    d="M500 70 Q740 -14 980 58"
-                    style={{ fill: "none", stroke: "var(--cielo)", strokeWidth: 1.5, strokeDasharray: "2 7", strokeLinecap: "round", opacity: 0.65 }}
-                />
+
                 <g ref={satelite} style={{ transformBox: "view-box" }}>
                     <rect style={{ ...relleno("cielo-soft"), stroke: "var(--cielo)", strokeWidth: 1.5 }} x="-24" y="-3" width="15" height="6" rx="1" />
                     <rect style={{ ...relleno("cielo-soft"), stroke: "var(--cielo)", strokeWidth: 1.5 }} x="9" y="-3" width="15" height="6" rx="1" />
                     <rect style={relleno("cielo")} x="-8" y="-5" width="16" height="10" rx="2" />
                     <rect style={relleno("cielo")} x="-1" y="5" width="2" height="5" />
-                </g>
-                <g>
-                    {UVAS.map((u) => (
-                        <g
-                            key={u.i}
-                            ref={(el) => {
-                                uvas.current[u.i] = el;
-                            }}
-                            style={{ transformBox: "view-box", opacity: 0 }}
-                        >
-                            <circle style={relleno("malbec")} r={u.radio} />
-                            <circle style={{ ...relleno("malbec-soft"), opacity: 0.7 }} r={Math.max(2, u.radio * 0.28)} cx={-u.radio * 0.35} cy={-u.radio * 0.35} />
-                        </g>
-                    ))}
                 </g>
             </svg>
         </div>

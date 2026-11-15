@@ -5,7 +5,7 @@ import { formatearFecha } from "../../lib/fecha";
 import styles from "./parcela.module.css";
 
 // Cada tipo lleva color, ícono y palabra: nunca sólo el color. Sin rojo: una
-// alerta usa trigo, el color de lo que pide atención.
+// alerta usa sol, el color de lo que pide atención.
 const TIPOS: Record<TipoInsight, { palabra: string; Icono: LucideIcon; clase: string }> = {
     alerta: { palabra: "Atención", Icono: TriangleAlert, clase: styles.chipAlerta },
     oportunidad: { palabra: "Oportunidad", Icono: Sprout, clase: styles.chipOportunidad },
@@ -41,14 +41,14 @@ function ItemInsight({ insight }: { insight: Insight }) {
             <h3 className="subtitulo">{insight.titulo}</h3>
             <p className="body">{insight.hallazgo}</p>
             <p className="body">
-                <span className="etiqueta">Qué hacer · </span>
+                <span className="etiqueta">Acción · </span>
                 {insight.accion}
             </p>
             <p className="small" style={{ color: "var(--ink-muted)" }}>
                 Confianza {insight.confianza}: {insight.motivo_confianza}.
             </p>
             <details>
-                <summary className="small">Ver en qué datos se apoya ({insight.evidencia.length})</summary>
+                <summary className="small">Evidencia ({insight.evidencia.length})</summary>
                 <ul className={styles.listaEvidencia}>
                     {insight.evidencia.map((e, i) => (
                         <ItemEvidencia key={`${e.fecha}-${i}`} evidencia={e} />
@@ -62,9 +62,9 @@ function ItemInsight({ insight }: { insight: Insight }) {
 export function TarjetaInsights({ datos }: { datos: InsightsParcela }) {
     return (
         <Card className={styles.tarjeta}>
-            <h2 className="subtitulo">Qué podés hacer</h2>
+            <h2 className="subtitulo">Recomendaciones</h2>
             {datos.insights.length === 0 ? (
-                <p className="body">Con los datos de este período no encontramos nada para señalar.</p>
+                <p className="body">Sin recomendaciones para este período.</p>
             ) : (
                 <ul className={styles.listaInsights}>
                     {datos.insights.map((insight) => (
@@ -75,7 +75,7 @@ export function TarjetaInsights({ datos }: { datos: InsightsParcela }) {
 
             {datos.descartados.length > 0 && (
                 <details>
-                    <summary className="small">Lo que no pudimos afirmar ({datos.descartados.length})</summary>
+                    <summary className="small">Descartadas ({datos.descartados.length})</summary>
                     <ul className={styles.listaEvidencia}>
                         {datos.descartados.map((d) => (
                             <li key={d.id} className="small">
@@ -87,8 +87,7 @@ export function TarjetaInsights({ datos }: { datos: InsightsParcela }) {
             )}
 
             <Fuente>
-                Reglas de Surco v{datos.version_reglas} · generado el {formatearFecha(datos.generado)} · cada recomendación muestra los datos en que se
-                apoya; cuando los datos no alcanzan, no afirmamos nada.
+                Actualizado el {formatearFecha(datos.generado)}
             </Fuente>
         </Card>
     );

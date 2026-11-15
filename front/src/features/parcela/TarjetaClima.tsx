@@ -33,7 +33,7 @@ function GraficoMensual({ clima }: { clima: ClimaParcela }) {
                 <Tooltip
                     labelFormatter={(t) => formatearMes(Number(t))}
                     formatter={(valor, nombre) => (nombre === "lluvia" ? [`${valor} mm`, "Lluvia"] : [`${valor} °C`, "Temperatura media"])}
-                    contentStyle={{ ...ESTILO_DATO, borderRadius: 4, borderColor: colorToken("line") }}
+                    contentStyle={{ ...ESTILO_DATO, borderRadius: 6, borderColor: colorToken("line"), backgroundColor: colorToken("surface-raised"), color: colorToken("ink") }}
                 />
                 <Bar yAxisId="lluvia" dataKey="lluvia" fill={colorToken("cielo-soft")} stroke={colorToken("cielo")} isAnimationActive={false} />
                 <Line yAxisId="temperatura" dataKey="temperatura" stroke={colorToken("cielo")} strokeWidth={2} dot={false} isAnimationActive={false} />
@@ -46,8 +46,8 @@ export function TarjetaClima({ clima }: { clima: ClimaParcela }) {
     const r = clima.resumen;
 
     return (
-        <Card className={styles.tarjeta}>
-            <h2 className="subtitulo">Clima de la zona</h2>
+        <Card className={`${styles.tarjeta} grilla-datos`}>
+            <h2 className="subtitulo">Clima</h2>
             <div className={styles.cifras}>
                 <Cifra
                     etiqueta="Lluvia"
@@ -67,13 +67,12 @@ export function TarjetaClima({ clima }: { clima: ClimaParcela }) {
                 <Cifra
                     etiqueta="Agua en las raíces"
                     valor={r.humedad_raiz_media === null ? "sin dato" : `${formatearNumero(r.humedad_raiz_media * 100)} %`}
-                    detalle="promedio del primer metro: 0 % seco, 100 % saturado"
+                    detalle="primer metro · 0 % seco, 100 % saturado"
                 />
             </div>
             <GraficoMensual clima={clima} />
             <Fuente>
-                {clima.fuente} ({clima.fuentes_originales.join(", ")}) · celda de {clima.resolucion.replace("~", "unos ")}: es el clima de la zona, no medido en tu parcela ·
-                datos hasta el {r.ultimo_dato ? formatearFecha(r.ultimo_dato) : "—"} · los meses de los extremos están incompletos
+                NASA POWER · celda de ~50 km · hasta el {r.ultimo_dato ? formatearFecha(r.ultimo_dato) : "—"}
             </Fuente>
         </Card>
     );

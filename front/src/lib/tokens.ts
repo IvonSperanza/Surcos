@@ -6,12 +6,12 @@ export type ColorToken =
     | "line"
     | "surface"
     | "surface-raised"
-    | "arcilla"
-    | "oliva"
-    | "oliva-soft"
+    | "cobre"
+    | "hoja"
+    | "hoja-soft"
     | "cielo"
     | "cielo-soft"
-    | "trigo"
+    | "sol"
     | "suelo-desnudo";
 
 export function colorToken(nombre: ColorToken): string {

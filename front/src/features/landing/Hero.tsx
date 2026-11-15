@@ -1,9 +1,7 @@
-import { ArrowRight, MapPin } from "lucide-react";
+import { ArrowRight, MapPin, Satellite } from "lucide-react";
 import { EnlaceBoton } from "../../design-system";
 import { EscenaMarca } from "./EscenaMarca";
 import styles from "./landing.module.css";
-
-const BANDERINES = Array.from({ length: 18 }, (_, i) => i);
 
 function HojaDecorativa({ className, color }: { className: string; color: string }) {
     return (
@@ -18,68 +16,56 @@ function HojaDecorativa({ className, color }: { className: string; color: string
 export function Hero() {
     return (
         <section className={styles.hero} id="inicio">
-            <div className={styles.banderines} aria-hidden="true">
-                {BANDERINES.map((i) => (
-                    <span key={i} />
-                ))}
-            </div>
-            <HojaDecorativa className={styles.hoja1} color="oliva-soft" />
-            <HojaDecorativa className={styles.hoja2} color="trigo" />
+            <HojaDecorativa className={styles.hoja1} color="hoja-soft" />
+            <HojaDecorativa className={styles.hoja2} color="sol-soft" />
 
             <div className={`${styles.contenedor} ${styles.heroGrilla}`}>
                 <div>
-                    <span className={styles.pastilla}>
-                        <span className={styles.puntoPulso} aria-hidden="true" /> Feria directa · del productor a tu mesa
-                    </span>
-                    {/* `display` va una sola vez por pantalla: es este título. */}
+                    {/* El título grande de la pantalla: `display` va una sola vez. */}
                     <h1 className={styles.heroTitulo}>
-                        Comé con historia.
-                        <br />
-                        Cuidá <span className={styles.resaltado}>la tierra</span>.
+                        Comé con historia. Cuidá <span className={styles.resaltado}>la tierra</span>.
                     </h1>
                     <p className={styles.bajada}>
                         Surco es la feria donde cada alimento muestra de dónde viene. Escaneá el código y mirá el campo, el productor y la cosecha. Y el
-                        productor cobra mejor por cuidar el suelo.
+                        productor cobra mejor por cuidar el suelo, con datos de satélite que lo prueban.
                     </p>
                     <div className={styles.heroAcciones}>
                         <EnlaceBoton to="#feria" variante="primario" grande>
                             Ver la feria
                             <ArrowRight size={18} strokeWidth={1.5} aria-hidden />
                         </EnlaceBoton>
-                        <EnlaceBoton to="/productor" variante="contorno" grande>
+                        <EnlaceBoton to="/productor" variante="secundario" grande>
                             Soy productor
                         </EnlaceBoton>
                     </div>
                     <ul className={styles.confianza} aria-label="Qué ofrece Surco">
                         <li>
-                            <span className={`${styles.punto} ${styles.puntoTrigo}`} aria-hidden="true" /> Origen real
+                            <span className={`${styles.punto} ${styles.puntoHoja}`} aria-hidden="true" /> Origen real
                         </li>
                         <li>
-                            <span className={`${styles.punto} ${styles.puntoCielo}`} aria-hidden="true" /> Suelo cuidado
+                            <span className={`${styles.punto} ${styles.puntoCielo}`} aria-hidden="true" /> Suelo verificado
                         </li>
                         <li>
-                            <span className={`${styles.punto} ${styles.puntoArcilla}`} aria-hidden="true" /> Precio justo
+                            <span className={`${styles.punto} ${styles.puntoSol}`} aria-hidden="true" /> Precio justo
                         </li>
                     </ul>
                 </div>
 
                 <div className={styles.heroVisual}>
-                    <div className={styles.puesto}>
-                        <div className={`${styles.toldo} ${styles.toldoHero}`} aria-hidden="true" />
-                        <div className={styles.puestoInterior}>
-                            <EscenaMarca />
-                            <div className={styles.cartel}>
+                    <div className={styles.marcoEscena}>
+                        <EscenaMarca />
+                        <div className={`small ${styles.cartel}`}>
+                            <span>
                                 <MapPin size={14} strokeWidth={1.5} aria-hidden />
                                 Cinturón hortícola de Rosario
-                            </div>
+                            </span>
+                            <span className="dato">Sentinel-2 · NASA POWER</span>
                         </div>
                     </div>
-                    <span className={`${styles.etiquetaPrecio} ${styles.etiqueta1}`}>
-                        <i className={styles.agujero} aria-hidden="true" /> Tomate <b>$1.200/kg</b>
+                    <span className={`${styles.etiquetaFlotante} ${styles.etiqueta1}`}>
+                        <Satellite size={14} strokeWidth={1.5} aria-hidden /> NDVI <b>0,72</b>
                     </span>
-                    <span className={`${styles.etiquetaPrecio} ${styles.etiqueta2}`}>
-                        <i className={styles.agujero} aria-hidden="true" /> Recién cosechado
-                    </span>
+                    <span className={`${styles.etiquetaFlotante} ${styles.etiqueta2}`}>Suelo cubierto todo el año</span>
                 </div>
             </div>
         </section>
