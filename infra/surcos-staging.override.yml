@@ -1,0 +1,13 @@
+# Va en /opt/onebox/stacks/surcos-staging/docker-compose.override.yml.
+# `docker compose` lo suma solo al compose del template, así que no hay que
+# tocar el template del one-box. Sin esto, las fotos subidas se pierden en
+# cada deploy.
+services:
+  api:
+    environment:
+      STORAGE_DIR: /app/storage
+    volumes:
+      - fotos:/app/storage
+
+volumes:
+  fotos:
